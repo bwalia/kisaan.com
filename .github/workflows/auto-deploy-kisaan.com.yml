@@ -59,7 +59,7 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
-        command: helm dependency update && helm install sealed-secrets ./kissan.com-devops/sealed-secrets -n kube-system
+        command: helm dependency update ./kisaan.com-devops/sealed-secrets && helm install sealed-secrets ./kisaan.com-devops/sealed-secrets -n kube-system
         
     - name: helm deploy
       uses: koslib/helm-eks-action@master
