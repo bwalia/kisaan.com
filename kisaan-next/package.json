@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^4.0.2",
+    "@stripe/stripe-js": "^7.9.0",
     "@types/js-cookie": "^3.0.6",
     "axios": "^1.10.0",
     "clsx": "^2.1.1",

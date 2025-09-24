@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -47,6 +47,8 @@ export default function Login() {
 
   const { login, loginWithGoogle, loginWithFacebook } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,10 +56,10 @@ export default function Login() {
     setError("");
     try {
       const user = await login(formData.username, formData.password);
-      if (user?.role === "seller") {
+      if (user?.role === "seller" && redirectTo === '/') {
         router.push("/seller/dashboard");
       } else {
-        router.push("/");
+        router.push(redirectTo);
       }
     } catch (err: any) {
       setError(err.message || "Login failed");
@@ -200,7 +202,7 @@ export default function Login() {
               <div className="grid grid-cols-2 gap-3">
                 <SocialLoginButton
                   provider="google"
-                  onClick={() => loginWithGoogle()}
+                  onClick={() => loginWithGoogle(redirectTo !== '/' ? redirectTo : undefined)}
                   disabled={loading}
                 />
                 <SocialLoginButton

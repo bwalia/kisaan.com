@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/Button";
 import CartItem from "@/components/cart/CartItem";
@@ -8,10 +10,38 @@ import EmptyCart from "@/components/cart/EmptyCart";
 import CartSkeleton from "@/components/cart/CartSkeleton";
 
 export default function Cart() {
-  const { cart, total, loading, clearCart } = useCart();
+  const { user, loading: authLoading } = useAuth();
+  const { cart, total, loading: cartLoading, clearCart } = useCart();
   const [isClearing, setIsClearing] = useState(false);
+  const router = useRouter();
 
-  if (loading) {
+  useEffect(() => {
+    // Only redirect if auth is not loading and user is not authenticated
+    if (!authLoading && !user) {
+      router.push('/login?redirect=/cart');
+    }
+  }, [user, authLoading, router]);
+
+  // Show loading while auth is loading
+  if (authLoading) {
+    return <CartSkeleton />;
+  }
+
+  // Show login message if not authenticated after loading
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Please Login</h2>
+          <p className="text-gray-600 mb-4">You need to login to view your cart</p>
+          <Button onClick={() => router.push('/login')}>Login</Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while cart is loading
+  if (cartLoading) {
     return <CartSkeleton />;
   }
 
@@ -89,6 +119,21 @@ export default function Cart() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <OrderSummary />
+            
+            {/* Checkout Button */}
+            <div className="mt-6">
+              <Button
+                onClick={() => router.push('/checkout')}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
+                disabled={cartItems.length === 0}
+              >
+                Proceed to Checkout
+              </Button>
+              
+              <p className="text-xs text-gray-500 text-center mt-2">
+                🔒 Secure checkout powered by Stripe
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useAuth } from './AuthContext';
 import api from '@/lib/api';
 
 interface CartItem {
@@ -25,37 +26,30 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const [cart, setCart] = useState<Record<string, CartItem>>({});
   const [total, setTotal] = useState(0);
   const [itemCount, setItemCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const refreshCart = async () => {
+    if (!user) {
+      setCart({});
+      setTotal(0);
+      setItemCount(0);
+      return;
+    }
+
     try {
       setLoading(true);
+      const response = await api.getCart();
       
-      // Use localStorage for cart with safe parsing
-      let cartData: Record<string, CartItem> = {};
-      try {
-        const cartString = localStorage.getItem('cart');
-        if (cartString) {
-          const parsed = JSON.parse(cartString);
-          cartData = typeof parsed === 'object' && parsed !== null ? parsed : {};
-        }
-      } catch (parseError) {
-        console.error('Failed to parse cart data:', parseError);
-        localStorage.removeItem('cart'); // Clear corrupted data
-      }
+      const cartData = response?.cart || {};
+      const totalAmount = response?.total || 0;
       
-      let totalAmount = 0;
       let count = 0;
-      
       Object.values(cartData).forEach((item: any) => {
-        if (item && typeof item === 'object' && 
-            typeof item.price === 'number' && 
-            typeof item.quantity === 'number' && 
-            item.price > 0 && item.quantity > 0) {
-          totalAmount += item.price * item.quantity;
+        if (item && typeof item === 'object' && typeof item.quantity === 'number') {
           count += item.quantity;
         }
       });
@@ -74,75 +68,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const addToCart = async (productUuid: string, quantity: number = 1, variantUuid?: string) => {
+    if (!user) {
+      throw new Error('Please login to add items to cart');
+    }
+
     if (!productUuid || quantity <= 0) {
       throw new Error('Invalid product or quantity');
     }
     
     try {
       setLoading(true);
-      
-      // Get product details
-      const product = await api.getProduct(productUuid);
-      if (!product || !product.name) {
-        throw new Error('Product not found or invalid');
-      }
-      
-      // Get current cart from localStorage safely
-      let currentCart: Record<string, CartItem> = {};
-      try {
-        const cartString = localStorage.getItem('cart');
-        if (cartString) {
-          const parsed = JSON.parse(cartString);
-          currentCart = typeof parsed === 'object' && parsed !== null ? parsed : {};
-        }
-      } catch {
-        currentCart = {};
-      }
-      
-      // Create cart key
-      const cartKey = variantUuid ? `${productUuid}_${variantUuid}` : productUuid;
-      
-      // Get variant details if needed
-      let itemPrice = typeof product.price === 'number' ? product.price : 0;
-      let variantTitle: string | undefined = undefined;
-      
-      if (variantUuid) {
-        try {
-          const variants = await api.getVariants(productUuid);
-          if (Array.isArray(variants)) {
-            const variant = variants.find((v: any) => v?.uuid === variantUuid);
-            if (variant) {
-              itemPrice = typeof variant.price === 'number' ? variant.price : itemPrice;
-              variantTitle = variant.title || undefined;
-            }
-          }
-        } catch (variantError) {
-          console.error('Failed to load variant details:', variantError);
-        }
-      }
-      
-      // Add/update item
-      if (currentCart[cartKey] && typeof currentCart[cartKey] === 'object') {
-        currentCart[cartKey].quantity = (currentCart[cartKey].quantity || 0) + quantity;
-      } else {
-        currentCart[cartKey] = {
-          product_uuid: productUuid,
-          variant_uuid: variantUuid || undefined,
-          name: product.name,
-          variant_title: variantTitle,
-          price: itemPrice,
-          quantity: quantity
-        };
-      }
-      
-      // Save to localStorage safely
-      try {
-        localStorage.setItem('cart', JSON.stringify(currentCart));
-      } catch (storageError) {
-        console.error('Failed to save cart to localStorage:', storageError);
-        throw new Error('Failed to save cart');
-      }
-      
+      await api.addToCart({
+        product_uuid: productUuid,
+        quantity: quantity,
+        variant_uuid: variantUuid
+      });
       await refreshCart();
     } catch (error) {
       console.error('Failed to add to cart:', error);
@@ -153,37 +93,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromCart = async (productUuid: string) => {
+    if (!user) {
+      throw new Error('Please login to modify cart');
+    }
+
     if (!productUuid) {
       throw new Error('Invalid product UUID');
     }
     
     try {
       setLoading(true);
-      
-      let currentCart: Record<string, CartItem> = {};
-      try {
-        const cartString = localStorage.getItem('cart');
-        if (cartString) {
-          const parsed = JSON.parse(cartString);
-          currentCart = typeof parsed === 'object' && parsed !== null ? parsed : {};
-        }
-      } catch {
-        currentCart = {};
-      }
-      
-      // Remove all variants of this product
-      Object.keys(currentCart).forEach(key => {
-        if (key === productUuid || key.startsWith(`${productUuid}_`)) {
-          delete currentCart[key];
-        }
-      });
-      
-      try {
-        localStorage.setItem('cart', JSON.stringify(currentCart));
-      } catch (storageError) {
-        console.error('Failed to save cart after removal:', storageError);
-      }
-      
+      await api.removeFromCart(productUuid);
       await refreshCart();
     } catch (error) {
       console.error('Failed to remove from cart:', error);
@@ -194,13 +114,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const clearCart = async () => {
+    if (!user) {
+      throw new Error('Please login to clear cart');
+    }
+
     try {
       setLoading(true);
-      try {
-        localStorage.removeItem('cart');
-      } catch (storageError) {
-        console.error('Failed to clear cart from localStorage:', storageError);
-      }
+      await api.clearCart();
       setCart({});
       setTotal(0);
       setItemCount(0);
@@ -213,8 +133,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    refreshCart();
-  }, []);
+    if (user) {
+      refreshCart();
+    } else {
+      setCart({});
+      setTotal(0);
+      setItemCount(0);
+    }
+  }, [user]);
 
   return (
     <CartContext.Provider value={{

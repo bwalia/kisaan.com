@@ -1,8 +1,8 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import api from '@/lib/api';
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import api from "@/lib/api";
 
 interface CartItem {
   product_uuid: string;
@@ -15,20 +15,21 @@ export default function Checkout() {
   const [cart, setCart] = useState<Record<string, CartItem>>({});
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
   const [formData, setFormData] = useState({
-    customer_email: '',
-    customer_first_name: '',
-    customer_last_name: '',
-    customer_phone: '',
+    customer_email: "",
+    customer_first_name: "",
+    customer_last_name: "",
+    customer_phone: "",
     billing_address: {
-      name: '',
-      address1: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: 'US'
+      name: "",
+      address1: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "US",
     },
-    customer_notes: ''
+    customer_notes: "",
   });
 
   const { user } = useAuth();
@@ -36,7 +37,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/login');
+      router.push("/login");
       return;
     }
     loadCart();
@@ -48,64 +49,83 @@ export default function Checkout() {
       const cartData = response?.cart || {};
       setCart(cartData);
       setTotal(response?.total || 0);
-      
+
       if (Object.keys(cartData).length === 0) {
-        router.push('/cart');
+        router.push("/cart");
       }
     } catch (error) {
-      console.error('Failed to load cart:', error);
+      console.error("Failed to load cart:", error);
       setCart({});
       setTotal(0);
-      router.push('/cart');
+      router.push("/cart");
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    // Validate form
+    if (
+      !formData.customer_first_name ||
+      !formData.customer_last_name ||
+      !formData.customer_email ||
+      !formData.billing_address.name ||
+      !formData.billing_address.address1 ||
+      !formData.billing_address.city ||
+      !formData.billing_address.zip
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
     setLoading(true);
+    setPaymentError("");
 
     try {
-      const checkoutData = {
-        ...formData,
-        tax_amount: total * 0.1,
-        shipping_amount: 0
-      };
+      // Create Stripe Checkout Session
+      const response = await api.createCheckoutSession({
+        customer_email: formData.customer_email,
+        customer_first_name: formData.customer_first_name,
+        customer_last_name: formData.customer_last_name,
+        customer_phone: formData.customer_phone,
+        billing_address: formData.billing_address,
+        success_url: `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${window.location.origin}/checkout`
+      });
 
-      const response = await api.checkout(checkoutData);
-      
-      // Show success message and redirect
-      alert(`Order placed successfully! Order numbers: ${response.orders.map((o: any) => o.order_number).join(', ')}`);
-      router.push('/');
+      // Redirect to Stripe Checkout
+      window.location.href = response.url;
     } catch (error: any) {
-      alert('Checkout failed: ' + error.message);
-    } finally {
+      setPaymentError("Failed to create checkout session: " + error.message);
       setLoading(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    
-    if (name.startsWith('billing_')) {
-      const field = name.replace('billing_', '');
-      setFormData(prev => ({
+
+    if (name.startsWith("billing_")) {
+      const field = name.replace("billing_", "");
+      setFormData((prev) => ({
         ...prev,
         billing_address: {
           ...prev.billing_address,
-          [field]: value
-        }
+          [field]: value,
+        },
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
 
   const cartItems = cart ? Object.values(cart) : [];
-  const taxAmount = total * 0.1;
-  const finalTotal = total + taxAmount;
+  const subtotal = total || 0;
+  const taxAmount = subtotal * 0.1;
+  const finalTotal = subtotal + taxAmount;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -113,9 +133,11 @@ export default function Checkout() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-semibold mb-4">Customer Information</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Customer Information
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -144,7 +166,7 @@ export default function Checkout() {
                   />
                 </div>
               </div>
-              
+
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email
@@ -158,7 +180,7 @@ export default function Checkout() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              
+
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Phone
@@ -189,7 +211,7 @@ export default function Checkout() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Address
@@ -203,7 +225,7 @@ export default function Checkout() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -249,29 +271,54 @@ export default function Checkout() {
               />
             </div>
 
+            {paymentError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                {paymentError}
+              </div>
+            )}
+
+
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400"
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center"
             >
-              {loading ? 'Processing...' : `Place Order - $${finalTotal.toFixed(2)}`}
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Creating Secure Checkout...
+                </>
+              ) : (
+                "Proceed to Secure Payment"
+              )}
             </button>
-          </form>
+
+            <div className="text-xs text-gray-500 text-center mt-2">
+              <p>🔒 You'll be redirected to Stripe's secure checkout</p>
+              <p>Powered by Stripe - Your payment information is safe</p>
+            </div>
+          </div>
         </div>
 
         <div>
           <div className="border rounded-lg p-6 sticky top-4">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            
+
             <div className="space-y-3 mb-4">
               {cartItems.map((item) => (
-                <div key={item.product_uuid} className="flex justify-between text-sm">
-                  <span>{item.name} × {item.quantity}</span>
+                <div
+                  key={item.product_uuid}
+                  className="flex justify-between text-sm"
+                >
+                  <span>
+                    {item.name} × {item.quantity}
+                  </span>
                   <span>${(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
-            
+
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between">
                 <span>Subtotal:</span>
