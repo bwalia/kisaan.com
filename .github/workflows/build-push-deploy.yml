@@ -31,7 +31,7 @@ on:
 env:
     IMAGE_REGISTRY: bwalia
     TARGET_STACK: nextjs
-    IMAGE_NAME: kisaan.com
+    IMAGE_NAME: kisaan-nextjs
     TARGET_IMAGE_TAG: latest
     TARGET_ENV: ${{ github.event.inputs.TARGET_ENV || 'test' }}
     DEPLOYMENT_TYPE: ${{ github.event.inputs.DEPLOYMENT_TYPE || 'build-and-deploy' }}
