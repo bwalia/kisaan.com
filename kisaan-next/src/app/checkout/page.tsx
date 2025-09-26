@@ -1,22 +1,24 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/lib/api";
-
-interface CartItem {
-  product_uuid: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import CheckoutHeader from "@/components/checkout/CheckoutHeader";
+import CustomerInfoForm from "@/components/checkout/CustomerInfoForm";
+import BillingAddressForm from "@/components/checkout/BillingAddressForm";
+import CheckoutOrderSummary from "@/components/checkout/CheckoutOrderSummary";
+import PaymentSection from "@/components/checkout/PaymentSection";
+import type { CartItem, CheckoutFormData, CheckoutErrors } from '@/types/checkout';
+import { getDefaultCountry } from '@/lib/countries';
 
 export default function Checkout() {
   const [cart, setCart] = useState<Record<string, CartItem>>({});
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [paymentError, setPaymentError] = useState("");
-  const [formData, setFormData] = useState({
+  const [errors, setErrors] = useState<CheckoutErrors>({});
+  const [formData, setFormData] = useState<CheckoutFormData>({
     customer_email: "",
     customer_first_name: "",
     customer_last_name: "",
@@ -27,21 +29,27 @@ export default function Checkout() {
       city: "",
       state: "",
       zip: "",
-      country: "US",
+      country: getDefaultCountry(),
     },
     customer_notes: "",
   });
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const currentStep = 1;
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
+    // Only redirect if auth is not loading and user is not authenticated
+    if (!authLoading && !user) {
+      router.push("/login?redirect=/checkout");
       return;
     }
-    loadCart();
-  }, [user, router]);
+
+    // Only load cart if user is authenticated and auth is not loading
+    if (!authLoading && user) {
+      loadCart();
+    }
+  }, [user, authLoading, router]);
 
   const loadCart = async () => {
     try {
@@ -61,18 +69,70 @@ export default function Checkout() {
     }
   };
 
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // Customer info validation
+    if (!formData.customer_first_name.trim()) {
+      newErrors.customer_first_name = "First name is required";
+    }
+    if (!formData.customer_last_name.trim()) {
+      newErrors.customer_last_name = "Last name is required";
+    }
+    if (!formData.customer_email.trim()) {
+      newErrors.customer_email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.customer_email)) {
+      newErrors.customer_email = "Please enter a valid email address";
+    }
+
+    // Billing address validation
+    if (!formData.billing_address.name.trim()) {
+      newErrors.billing_name = "Full name is required";
+    }
+    if (!formData.billing_address.address1.trim()) {
+      newErrors.billing_address1 = "Street address is required";
+    }
+    if (!formData.billing_address.city.trim()) {
+      newErrors.billing_city = "City is required";
+    }
+    if (!formData.billing_address.state) {
+      newErrors.billing_state = "State is required";
+    }
+    if (!formData.billing_address.zip.trim()) {
+      newErrors.billing_zip = "Postal code is required";
+    } else if (formData.billing_address.zip.trim().length < 3) {
+      newErrors.billing_zip = "Please enter a valid postal code (minimum 3 characters)";
+    }
+
+    setErrors(newErrors);
+
+    // Auto-scroll to first error if validation fails
+    if (Object.keys(newErrors).length > 0) {
+      setTimeout(() => {
+        const firstErrorKey = Object.keys(newErrors)[0];
+        let targetName = firstErrorKey;
+
+        // Map error keys to actual form field names
+        if (firstErrorKey.startsWith('billing_')) {
+          targetName = firstErrorKey.replace('billing_', '');
+        }
+
+        const errorElement = document.querySelector(`[name="${targetName}"]`) as HTMLElement;
+        if (errorElement) {
+          errorElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+          errorElement.focus();
+        }
+      }, 100);
+    }
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async () => {
-    // Validate form
-    if (
-      !formData.customer_first_name ||
-      !formData.customer_last_name ||
-      !formData.customer_email ||
-      !formData.billing_address.name ||
-      !formData.billing_address.address1 ||
-      !formData.billing_address.city ||
-      !formData.billing_address.zip
-    ) {
-      alert("Please fill in all required fields");
+    if (!validateForm()) {
       return;
     }
 
@@ -80,18 +140,17 @@ export default function Checkout() {
     setPaymentError("");
 
     try {
-      // Create Stripe Checkout Session
       const response = await api.createCheckoutSession({
         customer_email: formData.customer_email,
         customer_first_name: formData.customer_first_name,
         customer_last_name: formData.customer_last_name,
         customer_phone: formData.customer_phone,
         billing_address: formData.billing_address,
+        customer_notes: formData.customer_notes,
         success_url: `${window.location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${window.location.origin}/checkout`
+        cancel_url: `${window.location.origin}/checkout`,
       });
 
-      // Redirect to Stripe Checkout
       window.location.href = response.url;
     } catch (error: any) {
       setPaymentError("Failed to create checkout session: " + error.message);
@@ -99,240 +158,119 @@ export default function Checkout() {
     }
   };
 
+  const handleCustomerInfoChange = (data: Partial<typeof formData>) => {
+    setFormData((prev) => ({ ...prev, ...data }));
+    // Clear related errors
+    Object.keys(data).forEach((key) => {
+      if (errors[key]) {
+        setErrors((prev) => ({ ...prev, [key]: "" }));
+      }
+    });
+  };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  const handleBillingAddressChange = (
+    data: Partial<typeof formData.billing_address>
   ) => {
-    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      billing_address: { ...prev.billing_address, ...data },
+    }));
+    // Clear related errors
+    Object.keys(data).forEach((key) => {
+      const errorKey = `billing_${key}`;
+      if (errors[errorKey]) {
+        setErrors((prev) => ({ ...prev, [errorKey]: "" }));
+      }
+    });
+  };
 
-    if (name.startsWith("billing_")) {
-      const field = name.replace("billing_", "");
-      setFormData((prev) => ({
-        ...prev,
-        billing_address: {
-          ...prev.billing_address,
-          [field]: value,
-        },
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+  const handleOrderNotesChange = (notes: string) => {
+    setFormData((prev) => ({ ...prev, customer_notes: notes }));
   };
 
   const cartItems = cart ? Object.values(cart) : [];
   const subtotal = total || 0;
   const taxAmount = subtotal * 0.1;
-  const finalTotal = subtotal + taxAmount;
+  const shipping = subtotal >= 50 ? 0 : 9.99;
+  const finalTotal = subtotal + taxAmount + shipping;
+  const customerFullName =
+    `${formData.customer_first_name} ${formData.customer_last_name}`.trim();
+  const isFormValid =
+    Object.keys(errors).length === 0 &&
+    !!formData.customer_first_name &&
+    !!formData.customer_last_name &&
+    !!formData.customer_email &&
+    !!formData.billing_address.name &&
+    !!formData.billing_address.address1 &&
+    !!formData.billing_address.city &&
+    !!formData.billing_address.state &&
+    !!formData.billing_address.zip;
+
+  // Show loading state while auth is loading or cart is empty
+  if (authLoading || (!user && !authLoading) || cartItems.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fe004d] mx-auto mb-4"></div>
+          <p className="text-gray-600">
+            {authLoading ? "Authenticating..." : "Loading checkout..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Checkout</h1>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <CheckoutHeader currentStep={currentStep} totalSteps={3} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div>
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-4">
-                Customer Information
-              </h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    name="customer_first_name"
-                    required
-                    value={formData.customer_first_name}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    name="customer_last_name"
-                    required
-                    value={formData.customer_last_name}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-              </div>
+      {/* Main Content */}
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          {/* Forms */}
+          <div className="xl:col-span-2 space-y-6">
+            {/* Customer Information */}
+            <CustomerInfoForm
+              data={{
+                customer_email: formData.customer_email,
+                customer_first_name: formData.customer_first_name,
+                customer_last_name: formData.customer_last_name,
+                customer_phone: formData.customer_phone,
+              }}
+              onChange={handleCustomerInfoChange}
+              errors={errors}
+            />
 
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="customer_email"
-                  required
-                  value={formData.customer_email}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
+            {/* Billing Address */}
+            <BillingAddressForm
+              data={formData.billing_address}
+              onChange={handleBillingAddressChange}
+              errors={errors}
+              customerName={customerFullName}
+            />
 
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  name="customer_phone"
-                  value={formData.customer_phone}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Billing Address</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    name="billing_name"
-                    required
-                    value={formData.billing_address.name}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    name="billing_address1"
-                    required
-                    value={formData.billing_address.address1}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      name="billing_city"
-                      required
-                      value={formData.billing_address.city}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      ZIP Code
-                    </label>
-                    <input
-                      type="text"
-                      name="billing_zip"
-                      required
-                      value={formData.billing_address.zip}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Order Notes (Optional)
-              </label>
-              <textarea
-                name="customer_notes"
-                rows={3}
-                value={formData.customer_notes}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Any special instructions..."
-              />
-            </div>
-
-            {paymentError && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-                {paymentError}
-              </div>
-            )}
-
-
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center"
-            >
-              {loading ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Creating Secure Checkout...
-                </>
-              ) : (
-                "Proceed to Secure Payment"
-              )}
-            </button>
-
-            <div className="text-xs text-gray-500 text-center mt-2">
-              <p>🔒 You'll be redirected to Stripe's secure checkout</p>
-              <p>Powered by Stripe - Your payment information is safe</p>
-            </div>
+            {/* Payment Section */}
+            <PaymentSection
+              orderNotes={formData.customer_notes}
+              onOrderNotesChange={handleOrderNotesChange}
+              onSubmit={handleSubmit}
+              isLoading={loading}
+              error={paymentError}
+              isFormValid={isFormValid}
+            />
           </div>
-        </div>
 
-        <div>
-          <div className="border rounded-lg p-6 sticky top-4">
-            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-
-            <div className="space-y-3 mb-4">
-              {cartItems.map((item) => (
-                <div
-                  key={item.product_uuid}
-                  className="flex justify-between text-sm"
-                >
-                  <span>
-                    {item.name} × {item.quantity}
-                  </span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="border-t pt-4 space-y-2">
-              <div className="flex justify-between">
-                <span>Subtotal:</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax (10%):</span>
-                <span>${taxAmount.toFixed(2)}</span>
-              </div>
-              <div className="border-t pt-2 flex justify-between font-semibold text-lg">
-                <span>Total:</span>
-                <span>${finalTotal.toFixed(2)}</span>
-              </div>
-            </div>
+          {/* Order Summary */}
+          <div className="xl:col-span-1">
+            <CheckoutOrderSummary
+              cartItems={cartItems}
+              subtotal={subtotal}
+              tax={taxAmount}
+              shipping={shipping}
+              total={finalTotal}
+              onEditCart={() => router.push("/cart")}
+            />
           </div>
         </div>
       </div>

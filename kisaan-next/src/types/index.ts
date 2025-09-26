@@ -111,3 +111,6 @@ export interface ProductCardProps {
   onAddToCart?: () => void;
   showVariants?: boolean;
 }
+
+// Re-export home page types for convenience
+export * from './home';
