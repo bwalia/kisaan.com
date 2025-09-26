@@ -1,6 +1,6 @@
-# Kisaan.com - Multi-Tenant E-Commerce Platform
+# Kisaan.com - Kisaan.com Multi-Tenancy E-Commerce E-Commerce Platform
 
-A modern multi-tenant e-commerce platform built with Next.js that enables users to register as sellers and buyers. Sellers can list and manage their products while buyers can browse and purchase items from multiple vendors.
+A modern Kisaan.com Multi-Tenancy E-Commerce e-commerce platform built with Next.js that enables users to register as sellers and buyers. Sellers can list and manage their products while buyers can browse and purchase items from multiple vendors.
 
 ## Features
 
@@ -22,7 +22,7 @@ A modern multi-tenant e-commerce platform built with Next.js that enables users 
 
 ### Platform Features
 
-- Multi-tenant architecture
+- Kisaan.com Multi-Tenancy E-Commerce architecture
 - Responsive design with Tailwind CSS
 - TypeScript for type safety
 - Modern React 19 with Next.js 15
@@ -81,7 +81,7 @@ kisaan.com/
 
    ```env
    NEXT_PUBLIC_API_URL=http://127.0.0.1:4010
-   NEXT_PUBLIC_APP_NAME=Multi-Tenant Ecommerce
+   NEXT_PUBLIC_APP_NAME=Kisaan.com Multi-Tenancy E-Commerce Ecommerce
    NEXT_PUBLIC_APP_VERSION=1.0.0
    ```
 
@@ -122,4 +122,4 @@ docker run -p 3000:3000 kisaan-prod
 
 The application expects a backend API running on `http://127.0.0.1:4010`. Make sure your API server is running and accessible at this endpoint.
 
-**Note**: This is a multi-tenant e-commerce platform where sellers and buyers can interact seamlessly. Make sure to configure your backend API properly for full functionality.
+**Note**: This is a Kisaan.com Multi-Tenancy E-Commerce e-commerce platform where sellers and buyers can interact seamlessly. Make sure to configure your backend API properly for full functionality.

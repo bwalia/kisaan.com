@@ -6,9 +6,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "MarketPlace - Multi-Tenant Ecommerce Platform",
+  title: "MarketPlace - Kisaan.com Multi-Tenancy E-Commerce Ecommerce Platform",
   description:
-    "Connect with sellers worldwide. Buy and sell products on our trusted multi-tenant marketplace.",
+    "Connect with sellers worldwide. Buy and sell products on our trusted Kisaan.com Multi-Tenancy E-Commerce marketplace.",
 };
 
 export default function RootLayout({
