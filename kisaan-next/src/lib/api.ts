@@ -200,6 +200,28 @@ class ApiClient {
     }, true);
   }
 
+  // Stripe Payments
+  async createPaymentIntent(data: any) {
+    return this.request('/api/v2/payments/create-intent', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }, true);
+  }
+
+  async createCheckoutSession(data: any) {
+    return this.request('/api/v2/payments/create-checkout-session', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }, true);
+  }
+
+  async confirmPayment(data: any) {
+    return this.request('/api/v2/payments/confirm', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }, true);
+  }
+
   // Stores (public access for GET)
   async getStores(params?: any) {
     const query = params ? `?${new URLSearchParams(params)}` : '';

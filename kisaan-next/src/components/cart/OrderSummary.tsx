@@ -14,8 +14,8 @@ export default function OrderSummary({ className }: OrderSummaryProps) {
   const router = useRouter();
 
   const subtotal = typeof total === "number" ? total : 0;
-  const tax = subtotal * 0.085; // 8.5% tax
-  const shipping = subtotal > 50 ? 0 : 5.99;
+  const tax = subtotal * 0.1; // 10% tax (matching backend)
+  const shipping = 0; // No shipping for digital products
   const totalAmount = subtotal + tax + shipping;
 
   const handleCheckout = () => {
@@ -39,24 +39,9 @@ export default function OrderSummary({ className }: OrderSummaryProps) {
           </div>
 
           <div className="flex justify-between text-gray-600">
-            <span>Tax (8.5%):</span>
+            <span>Tax (10%):</span>
             <span>{formatPrice(tax)}</span>
           </div>
-
-          <div className="flex justify-between text-gray-600">
-            <span>Shipping:</span>
-            <span
-              className={shipping === 0 ? "text-green-600 font-medium" : ""}
-            >
-              {shipping === 0 ? "FREE" : formatPrice(shipping)}
-            </span>
-          </div>
-
-          {subtotal > 0 && subtotal <= 50 && (
-            <p className="text-sm text-gray-500 bg-blue-50 p-2 rounded">
-              Add {formatPrice(50 - subtotal)} more for free shipping!
-            </p>
-          )}
 
           <div className="border-t pt-3 flex justify-between text-lg font-bold text-gray-900">
             <span>Total:</span>
