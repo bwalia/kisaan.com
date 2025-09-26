@@ -1,0 +1,149 @@
+name: Build, Push and Deploy Kisaan.com
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      TARGET_ENV:
+        type: choice
+        description: 'Please choose the Target environment'
+        default: 'test'
+        required: true
+        options:
+            - int
+            - test
+            - acc
+            - prod
+
+      DEPLOYMENT_TYPE:
+        type: choice
+        description: 'Please select the build only, deploy only or build and deploy'
+        default: 'build-and-deploy'
+        required: true
+        options:
+            - build
+            - deploy
+            - build-and-deploy
+
+env:
+    IMAGE_REGISTRY: bwalia
+    TARGET_STACK: nextjs
+    IMAGE_NAME: kisaan.com
+    TARGET_IMAGE_TAG: latest
+    TARGET_ENV: ${{ github.event.inputs.TARGET_ENV || 'test' }}
+    DEPLOYMENT_TYPE: ${{ github.event.inputs.DEPLOYMENT_TYPE || 'build-and-deploy' }}
+    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      uses: actions/checkout@v3
+    - name: Build OPSAPI UI Docker image based on the TARGET PLATFORM Image and push to Docker Hub
+      if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        echo "OPSAPI UI Docker image builder!"
+        echo "Build, tag, and push image to the given Docker Registry."
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWD }}
+        docker build -f kisaan-next/Dockerfile.${{ env.TARGET_ENV }} --build-arg TAG=latest -t ${{ env.TARGET_ENV }}-${{ env.TARGET_STACK }} . --no-cache
+        docker tag ${{ env.TARGET_ENV }}-${{ env.TARGET_STACK }} ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_IMAGE_TAG }}
+        docker push ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_IMAGE_TAG }}
+      shell: bash        
+
+    # - name: Run Docker container
+    #   run: |
+    #         docker run -d -p 80:80 bwalia/Kisaan.com:latest openresty -g "daemon off;"
+
+    # - name: Verify OpenResty is running
+    #   run: |
+    #         sleep 10 # Give some time for the server to start
+    #         curl -I http://localhost:80
+
+    - name: Slack Notification for OPSAPI UI release 
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL: general
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'OPSAPI UI deployed to https://${{ env.TARGET_ENV }}-ui.opsapi.io/ (${{ env.TARGET_ENV }}) env :rocket:'
+        SLACK_TITLE: OPSAPI UI deployment status
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}         
+        
+  deploy:
+    name: Deploy Helm Chart
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Decode and Export Kubeconfig
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      env:
+        KUBECONFIG_BASE64: ${{ secrets.KUBE_CONFIG_DATA_K3S }}
+      run: |
+        echo "$KUBECONFIG_BASE64" | base64 -d > kubeconfig
+        export KUBECONFIG=$(pwd)/kubeconfig
+        echo "Kubeconfig decoded and exported successfully."
+      shell: bash
+    - name: Kubeseal encrypt the env secrets file
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+          export KUBECONFIG=$(pwd)/kubeconfig
+          if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_OPSAPI_UI_ENV_CREDS_DEV }} "dev"
+          elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_OPSAPI_UI_ENV_CREDS_TEST }} "test"
+          elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_OPSAPI_UI_ENV_CREDS_ACC }} "acc"
+          elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_OPSAPI_UI_ENV_CREDS_PROD }} "prod"
+          else
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_OPSAPI_UI_ENV_CREDS_INT }} "int"
+          fi
+      shell: bash      
+    - name: Check and Install kubectl
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        if ! command -v kubectl &> /dev/null; then
+          echo "kubectl not found. Installing kubectl..."
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+        else
+          echo "kubectl is already installed."
+        fi
+      shell: bash
+  
+    - name: Check and Install Helm
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        if ! command -v helm &> /dev/null; then
+          echo "Helm not found. Installing Helm..."
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        else
+          echo "Helm is already installed."
+        fi
+      shell: bash
+
+    - name: Deploy Helm Chart
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        export KUBECONFIG=$(pwd)/kubeconfig
+        echo "Deploying Helm Chart for OPSAPI UI in the ${{ env.TARGET_ENV }} environment."
+        echo "Using values file: ./devops/helm-chart/values-${{ env.TARGET_ENV }}.yaml"
+        echo "Helm Chart path: ./devops/helm-chart"
+        echo "Target Namespace: ${{ env.TARGET_ENV }}"
+        echo "Image Repository: bwalia/Kisaan.com"
+        echo "Image Tag: latest"
+        echo "Creating namespace if it does not exist."
+        helm delete Kisaan.com-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }}
+        helm upgrade --install Kisaan.com-${{ env.TARGET_ENV }} -f ./devops/helm-chart/values-${{ env.TARGET_ENV }}.yaml ./devops/helm-chart \
+          --set image.repository=bwalia/Kisaan.com \
+          --set image.tag=latest \
+          --namespace ${{ env.TARGET_ENV }} --create-namespace
