@@ -1,17 +1,18 @@
+name: Deploy Kisaan.com Code Igniter 4 Docker Image to AWS EKS
+
 # 2021 19 Dec 23:41 Build and Deploy Kisaan.com Code Igniter 4 Docker Image
 on:
   push:
-    branches: [ main ]
+    branches: [ dummy-branch ]
   pull_request:
-    branches: [ main ]
+    branches: [ dummy-branch ]
   workflow_dispatch:
   
-name: Main image
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 #ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     environment: 
@@ -51,7 +52,7 @@ jobs:
 
     - name: Build, tag, and push image to Amazon ECR
       run: |
-        docker build -f kisaan.com-devops/docker/kisaan.com-website/Dockerfile -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/tenthmatrix/kisaan.com:${{ env.SHA }} .
+        docker build -f kisaan-devops/docker/kisaan.com-website/Dockerfile -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/tenthmatrix/kisaan.com:${{ env.SHA }} .
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/tenthmatrix/kisaan.com:${{ env.SHA }}
 
     - name: helm deploy
@@ -60,4 +61,4 @@ jobs:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
         #command: helm delete tizohub
-        command: helm upgrade -i kisaan ./kisaan.com-devops/kisaanComChart --set=image.tag=${{ env.SHA }} --set DEFAULT_DOMAIN="${{ secrets.DEFAULT_DOMAIN }}" --set DB_HOSTNAME="${{ secrets.DB_HOSTNAME }}" --set DB_NAME="${{ secrets.DB_NAME }}" --set DB_USERNAME="${{ secrets.DB_USERNAME }}" --set DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+        command: helm upgrade -i kisaan ./kisaan-devops/kisaanComChart --set=image.tag=${{ env.SHA }} --set DEFAULT_DOMAIN="${{ secrets.DEFAULT_DOMAIN }}" --set DB_HOSTNAME="${{ secrets.DB_HOSTNAME }}" --set DB_NAME="${{ secrets.DB_NAME }}" --set DB_USERNAME="${{ secrets.DB_USERNAME }}" --set DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
