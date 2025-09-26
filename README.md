@@ -43,7 +43,7 @@ A modern multi-tenant e-commerce platform built with Next.js that enables users 
 kisaan.com/
 ├── kisaan-next/          # Next.js application (main codebase)
 ├── kisaan.com/           # Legacy PHP frontend
-├── kisaan.com-devops/    # DevOps configurations
+├── kisaan-devops/    # DevOps configurations
 └── README.md
 ```
 
