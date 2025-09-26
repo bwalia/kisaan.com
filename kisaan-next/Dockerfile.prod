@@ -1,24 +1,34 @@
 # Development Dockerfile
-FROM node:22-alpine
+FROM node:22-alpine AS production
 
-ENV TAG=latest
 ENV NODE_ENV=production
-# Install dependencies for development
+ENV TAG=latest
+
+# Install dependencies for production
 RUN apk add --no-cache libc6-compat
 
+# Add a work directory
 WORKDIR /app
 
-# Copy package files
-# COPY opsapi-ecommerce/opsapi-ecommerce/package*.json ./
+# Cache and Install dependencies
+COPY package.json .
+#COPY yarn.lock .
 
-# Install all dependencies (including dev dependencies)
-RUN npm ci
+RUN apk add curl
 
-# Copy source code
-# COPY opsapi-ecommerce/opsapi-ecommerce/Dockerfile/. ./
+RUN npm i
+
+# Copy app files
+COPY . .
+
+RUN npm run build
+
+#   RUN npm install vite -g
+#   This works here but not in dockerfile RUN vite build --mode staging so replacing with npm build
+#   RUN npm run build
 
 # Expose port
 EXPOSE 3000
 
-# Start development server
-CMD ["npm", "run", "start"]
+# Start the app
+CMD [ "npm", "run", "start" ]
