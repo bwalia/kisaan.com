@@ -1,0 +1,107 @@
+# Default values for kisaan-dot-com.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: bwalia/kisaan-nextjs
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+safeEnvFile: AgBiaybMVSdbU6HoR73RFRqAEOOqZFz+d36InuSmmUovF+6mFiztJzyHnzYrCPsHH54xxvBu5dDKVyyWPKjx65ebjlC998qMxNCszvfnYFYlcEOJjdB2OFIKD20Wxb2w9ICJCVlVghKqQM/MeBLhnbglLziiwih2YFQKaXJtdjj4SRcvlz6k0WHy83PX4f6umk5SZGxTJ6NcEqgmBEb/20vWb46qodOIiajqJeXFbw07gNvndWi1rdPR0m6jHz7L+VnpcGVC0rtrDKXfI0oN7Zb4Tb4R576wkm9SVgm8FH0uoXfEHs7QzmVsUjbvIRMCUXLscV6QIrP1XwZT2YovJFG9Y56Xi0YUW+rvn6srsNWUycopGIpGNRknkXn5/RXCXDiWehVf41+YHDTzNkMlumGPpisPbspsJRJvrOOEcA3NFbnkL1MSPmsLIywe3Outxg+PHtrc0/0QlmfDwKlyMjPfjRN39PB2N/EjIcgqKdvuhiWzKaegNQvDriGz04Rnr5WwF0H3DVJvHCYOzA0jUUyzkTIwMqNv7gd/q8lv07k8CO0rjsYQbyXBq5TX7tXSKlURVKaBTdkQt/55KuugAwdwjJjUBCdknWZx5RWMscyTHMXCtr3hcOJsHpNAl/qi/Qzy5Q6vGfav6hhhBKHFuXes0n1PbN1TIw5Iz9JquKfuSU/vQKKOYaq3DBjIEF4tk3Z27xwWHOVA4l4RY/DVBmpfk6JDZE1F8wGXxlpwnPfun5wxIQ3SM0lbjhM7CfTfLsiMrKCNG18KdXI5AVnmM8t+Rkv5Y7x0Ij+AlONzrCEe9RnGSXxeQOWfBtoIjkcDMFASPbRUeBoZfsp02xDS1Kf2GyocCgVqwrcePTH1aIRfOQiegTFOyfOScUfUkSsaPCQQhhBoLqSYwBdBBFeJ8MBtgJNaTAzF19y+j53++6Y7KEoHdJXAf3YmpMAu23/J4uQ3RxUlICqKsiPrFc3tRgidkg0wwYOMNd2JBmRc9B2N0rhzcTny2rjr+VUxV+QVrRkHPrnx+EfbRKWbqSMmYE5rcNjJUhpVPjspt/ATg2sAYdKRIjMEckiNKLOwA4x/RQ==
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+  namespace: "acc"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: acc.kisaan.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: acc-www.kisaan.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

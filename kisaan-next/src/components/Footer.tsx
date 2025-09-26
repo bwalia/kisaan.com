@@ -14,7 +14,7 @@ export default function Footer() {
               <span className="text-lg font-bold">Kisaan</span>
             </Link>
             <p className="text-gray-400 text-sm mb-4 max-w-sm">
-              Your trusted multi-tenant marketplace connecting buyers and
+              Your trusted Kisaan.com Multi-Tenancy E-Commerce marketplace connecting buyers and
               sellers worldwide.
             </p>
             <div className="flex space-x-3">

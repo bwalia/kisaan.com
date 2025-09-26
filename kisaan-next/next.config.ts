@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    domains: ["localhost", "test-s3-cli.workstation.co.uk"],
+    domains: ["localhost", "test-s3-cli.kisaan.com"],
     remotePatterns: [
       {
         protocol: "https",

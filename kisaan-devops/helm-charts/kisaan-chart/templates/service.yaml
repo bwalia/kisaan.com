@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kisaan-dot-com.fullname" . }}
+  labels:
+    {{- include "kisaan-dot-com.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "kisaan-dot-com.selectorLabels" . | nindent 4 }}
