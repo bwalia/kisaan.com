@@ -226,6 +226,8 @@ with open('$HELM_VALUES_OUTPUT_PATH', 'r') as f:
 content = content.replace('helmfilesecretsplaceholder', '$SAFE_SEALEDSECRET_ENCRYPTED')
 content = content.replace('CICD_NAMESPACE_PLACEHOLDER', '$CICD_NAMESPACE')
 content = content.replace('CICD_ENV_FILE_PLACEHOLDER_BASE64', '$SAFE_SEALEDSECRET_ENCRYPTED')
+content = content.replace('CICD_ENV_REF_PLACEHOLDER.kisaan.com', 'kisaan.com')
+content = content.replace('CICD_ENV_REF_PLACEHOLDER-www.kisaan.com', 'www.kisaan.com')
 content = content.replace('CICD_ENV_REF_PLACEHOLDER', '$ENV_REF')
 # Write back to file
 with open('$HELM_VALUES_OUTPUT_PATH', 'w') as f:
