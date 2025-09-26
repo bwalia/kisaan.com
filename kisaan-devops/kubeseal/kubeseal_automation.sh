@@ -197,8 +197,8 @@ echo ""
 echo $SAFE_SEALEDSECRET_ENCRYPTED
 # cat sealed_secret_kisaan_prod.txt
 
-HELM_VALUES_INPUT_PATH=kisaan-devops/helm-charts/values-env-template.yaml
-HELM_VALUES_OUTPUT_PATH=kisaan-devops/helm-charts/values-${ENV_REF}.yaml
+HELM_VALUES_INPUT_PATH=kisaan-devops/helm-charts/kisaan-chart/values-env-template.yaml
+HELM_VALUES_OUTPUT_PATH=kisaan-devops/helm-charts/kisaan-chart/values-${ENV_REF}.yaml
 
 if [ ! -f "$HELM_VALUES_INPUT_PATH" ]; then
     echo "Error: Helm values template file '$HELM_VALUES_INPUT_PATH' not found!"
