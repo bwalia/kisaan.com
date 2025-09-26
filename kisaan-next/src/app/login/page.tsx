@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -37,7 +37,7 @@ function SocialLoginButton({ provider, onClick, disabled }: SocialLoginButtonPro
   );
 }
 
-export default function Login() {
+function LoginContent() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -228,5 +228,17 @@ export default function Login() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fe004d]"></div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

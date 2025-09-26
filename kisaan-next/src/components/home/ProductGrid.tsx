@@ -83,8 +83,6 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           <ProductCard
             key={product.uuid}
             product={product}
-            onAddToCart={handleAddToCart}
-            showVariants={true}
           />
         ))}
 

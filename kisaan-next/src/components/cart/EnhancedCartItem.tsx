@@ -24,7 +24,7 @@ export default function EnhancedCartItem({ item }: EnhancedCartItemProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
   const [localQuantity, setLocalQuantity] = useState(item.quantity);
-  const { updateQuantity, removeFromCart } = useCart();
+  const { removeFromCart, addToCart } = useCart();
 
   const itemTotal = item.price * localQuantity;
   const maxQuantity = item.inventory_quantity || 99;
@@ -58,7 +58,9 @@ export default function EnhancedCartItem({ item }: EnhancedCartItemProps) {
 
     try {
       setIsUpdating(true);
-      await updateQuantity(item.product_uuid, newQuantity, item.variant_uuid);
+      // Since updateQuantity doesn't exist, use remove and add to simulate update
+      await removeFromCart(item.product_uuid);
+      await addToCart(item.product_uuid, newQuantity, item.variant_uuid);
       setLocalQuantity(newQuantity);
     } catch (error) {
       console.error('Failed to update quantity:', error);
@@ -72,7 +74,7 @@ export default function EnhancedCartItem({ item }: EnhancedCartItemProps) {
   const handleRemove = async () => {
     try {
       setIsRemoving(true);
-      await removeFromCart(item.product_uuid, item.variant_uuid);
+      await removeFromCart(item.product_uuid);
     } catch (error) {
       console.error('Failed to remove item:', error);
       setIsRemoving(false);

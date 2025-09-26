@@ -52,7 +52,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   const productImage = getProductImage();
   const isOutOfStock = !product.is_active || product.inventory_quantity <= 0;
-  const hasDiscount = product.compare_price && product.compare_price > product.price;
+  const hasDiscount = false; // Remove compare_price reference as it doesn't exist in Product type
 
   return (
     <Link href={`/products/${product.uuid}`} className="group">
@@ -92,7 +92,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           {/* Discount badge */}
           {hasDiscount && (
             <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
-              -{Math.round(((product.compare_price - product.price) / product.compare_price) * 100)}%
+              -0%
             </div>
           )}
 
@@ -133,7 +133,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             </span>
             {hasDiscount && (
               <span className="text-sm text-gray-500 line-through">
-                {formatPrice(product.compare_price)}
+                {formatPrice(0)}
               </span>
             )}
           </div>

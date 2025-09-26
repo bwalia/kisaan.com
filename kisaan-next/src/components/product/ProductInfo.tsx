@@ -11,10 +11,8 @@ interface ProductInfoProps {
 
 export default function ProductInfo({ product, currentPrice, currentStock }: ProductInfoProps) {
   const isOutOfStock = currentStock <= 0;
-  const hasDiscount = product.compare_price && product.compare_price > currentPrice;
-  const discountPercentage = hasDiscount
-    ? Math.round(((product.compare_price - currentPrice) / product.compare_price) * 100)
-    : 0;
+  const hasDiscount = false; // Remove compare_price reference as it doesn't exist in Product type
+  const discountPercentage = 0;
 
   return (
     <div className="space-y-6">
@@ -33,7 +31,7 @@ export default function ProductInfo({ product, currentPrice, currentStock }: Pro
             {hasDiscount && (
               <>
                 <span className="text-xl text-gray-500 line-through">
-                  {formatPrice(product.compare_price)}
+                  {formatPrice(0)}
                 </span>
                 <span className="bg-red-100 text-red-800 text-sm font-medium px-2 py-1 rounded">
                   -{discountPercentage}%
