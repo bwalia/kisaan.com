@@ -39,7 +39,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && npm run prebuild"]
+                command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/"]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
