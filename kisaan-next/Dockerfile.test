@@ -21,6 +21,8 @@ RUN npm i
 # Copy app files
 COPY . .
 
+RUN npm run build -- --mode=production
+
 #   RUN npm install vite -g
 #   This works here but not in dockerfile RUN vite build --mode staging so replacing with npm build
 #   RUN npm run build
