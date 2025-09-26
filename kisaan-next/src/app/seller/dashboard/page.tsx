@@ -129,7 +129,7 @@ export default function SellerDashboard() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
               <div className="flex-1">
                 <h1 className="page-title">Seller Dashboard</h1>
-                <p className="page-subtitle">Welcome back, {user?.name || user?.first_name}! 👋</p>
+                <p className="page-subtitle">Welcome back, {user?.name}! 👋</p>
                 <div className="flex items-center gap-4 mt-3">
                   <div className="flex items-center text-sm text-gray-500">
                     <svg className="icon icon-sm mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

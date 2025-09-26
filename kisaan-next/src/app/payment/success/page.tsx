@@ -1,11 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import api from "@/lib/api";
 
-export default function PaymentSuccess() {
+function PaymentSuccessContent() {
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<any>(null);
   const [error, setError] = useState("");
@@ -132,5 +132,21 @@ export default function PaymentSuccess() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccess() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-md mx-auto text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <h1 className="text-2xl font-bold mb-2">Processing Your Payment</h1>
+          <p className="text-gray-600">Please wait while we confirm your order...</p>
+        </div>
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }

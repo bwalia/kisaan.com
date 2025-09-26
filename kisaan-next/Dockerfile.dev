@@ -11,7 +11,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Cache and Install dependencies
-COPY package.json .
+COPY kisaan-next/package.json .
 #COPY yarn.lock .
 
 RUN apk add curl
@@ -19,7 +19,7 @@ RUN apk add curl
 RUN npm i
 
 # Copy app files
-COPY . .
+COPY kisaan-next/ .
 
 #   RUN npm install vite -g
 #   This works here but not in dockerfile RUN vite build --mode staging so replacing with npm build

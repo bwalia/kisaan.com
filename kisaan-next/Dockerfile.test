@@ -11,15 +11,25 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Cache and Install dependencies
-COPY package.json .
-#COPY yarn.lock .
+COPY kisaan-next/package.json .
+#COPY kisaan-next/yarn.lock .
 
 RUN apk add curl
 
-RUN npm i
+# Copy app files first
+COPY kisaan-next/ .
 
-# Copy app files
-COPY . .
+# Use yarn instead of npm to avoid integrity issues
+RUN yarn install
+
+# Install TypeScript as required by next.config.ts
+RUN yarn add --dev --exact typescript
+
+# Install TailwindCSS and PostCSS dependencies
+RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss
+
+# Install missing dependencies
+RUN yarn add country-state-city
 
 RUN npm run build
 
