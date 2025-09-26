@@ -143,8 +143,8 @@ jobs:
         echo "Image Repository: bwalia/kisaan-nextjs"
         echo "Image Tag: latest"
         echo "Creating namespace if it does not exist."
-        helm delete Kisaan.com-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }}
-        helm upgrade --install Kisaan.com-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
+        helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }}
+        helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
           --set image.repository=bwalia/kisaan-nextjs \
           --set image.tag=latest \
           --namespace ${{ env.TARGET_ENV }} --create-namespace
