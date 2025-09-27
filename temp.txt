@@ -1,3 +1,0 @@
-NEXT_PUBLIC_API_URL=https://test-api.kisaan.com
-NEXT_PUBLIC_APP_NAME='Kisaan.com Multi-Tenancy E-Commerce Ecommerce TEST Platform'
-NEXT_PUBLIC_APP_VERSION=1.0.0
