@@ -31,15 +31,15 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-        - name: build-yarn-env
+        - name: init-wait-for-env-file
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ['sh', '-c', "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && cat /app/.env && yarn build && echo 'build-yarn-env: Building .env file'"]
+          command: ['sh', '-c', "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && cat /app/.env && echo 'init-wait-for-env-file: Confirmed .env file'"]
           volumeMounts:
             - name: kisaan-vol-{{ .Values.service.namespace }}
               mountPath: /tmp/secrets
-        - name: ready-yarn-env
+        - name: init-prep-env-file
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ['sh', '-c', "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && echo 'ready-yarn-env: Ready .env file'"]
+          command: ['sh', '-c', "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && ls -la && echo 'init-prep-env-file: Copied .env file'"]
           volumeMounts:
             - name: kisaan-vol-{{ .Values.service.namespace }}
               mountPath: /tmp/secrets
@@ -99,3 +99,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
