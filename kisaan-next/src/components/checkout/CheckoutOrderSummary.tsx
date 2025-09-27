@@ -65,7 +65,7 @@ export default function CheckoutOrderSummary({
           {onEditCart && (
             <Link
               href="/cart"
-              className="text-sm text-[#fe004d] hover:text-[#e6003d] font-medium"
+              className="text-sm text-[#22c55e] hover:text-[#16a34a] font-medium"
             >
               Edit cart
             </Link>
@@ -167,7 +167,7 @@ export default function CheckoutOrderSummary({
         <div className="border-t border-gray-200 pt-3">
           <div className="flex justify-between">
             <span className="text-lg font-semibold text-gray-900">Total:</span>
-            <span className="text-lg font-bold text-[#fe004d]">{formatPrice(total)}</span>
+            <span className="text-lg font-bold text-[#22c55e]">{formatPrice(total)}</span>
           </div>
         </div>
       </div>

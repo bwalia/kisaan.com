@@ -109,7 +109,7 @@ export default function BillingAddressForm({
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-[#fe004d] text-white rounded-full flex items-center justify-center text-sm font-semibold">
+        <div className="w-8 h-8 bg-[#22c55e] text-white rounded-full flex items-center justify-center text-sm font-semibold">
           2
         </div>
         <div>
@@ -127,7 +127,7 @@ export default function BillingAddressForm({
               id="sameAsCustomer"
               checked={sameAsCustomer}
               onChange={(e) => handleSameAsCustomer(e.target.checked)}
-              className="w-4 h-4 text-[#fe004d] border-gray-300 rounded focus:ring-[#fe004d]"
+              className="w-4 h-4 text-[#22c55e] border-gray-300 rounded focus:ring-[#22c55e]"
             />
             <label htmlFor="sameAsCustomer" className="text-sm text-gray-700">
               Same as contact name ({customerName})
@@ -152,7 +152,7 @@ export default function BillingAddressForm({
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                 getFieldError('name')
                   ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:ring-[#fe004d] focus:border-[#fe004d]'
+                  : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
               } ${isFieldValid('name', data.name) === true ? 'pr-12' : ''}`}
               placeholder="Full name on billing address"
             />
@@ -184,7 +184,7 @@ export default function BillingAddressForm({
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                 getFieldError('address1')
                   ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:ring-[#fe004d] focus:border-[#fe004d]'
+                  : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
               } ${isFieldValid('address1', data.address1) === true ? 'pr-12' : ''}`}
               placeholder="Enter your street address"
             />
@@ -212,7 +212,7 @@ export default function BillingAddressForm({
             className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
               getFieldError('country')
                 ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                : 'border-gray-300 focus:ring-[#fe004d] focus:border-[#fe004d]'
+                : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
             }`}
           >
             <option value="">Select Country</option>
@@ -244,7 +244,7 @@ export default function BillingAddressForm({
             <button
               type="button"
               onClick={() => setShowAllCountries(true)}
-              className="mt-2 text-sm text-[#fe004d] hover:text-[#e6003d] font-medium"
+              className="mt-2 text-sm text-[#22c55e] hover:text-[#16a34a] font-medium"
             >
               + Show all countries
             </button>
@@ -273,7 +273,7 @@ export default function BillingAddressForm({
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                   getFieldError('city')
                     ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-[#fe004d] focus:border-[#fe004d]'
+                    : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
                 } ${isFieldValid('city', data.city) === true ? 'pr-12' : ''}`}
                 placeholder="Enter city"
               />
@@ -302,7 +302,7 @@ export default function BillingAddressForm({
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                   getFieldError('state')
                     ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-[#fe004d] focus:border-[#fe004d]'
+                    : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
                 }`}
               >
                 <option value="">Select {data.country === 'CA' ? 'Province' : 'State'}</option>
@@ -326,7 +326,7 @@ export default function BillingAddressForm({
                 name="state"
                 value={data.state}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fe004d] focus:border-[#fe004d]"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22c55e] focus:border-[#22c55e]"
                 placeholder="State or Province"
               />
             </div>
@@ -348,7 +348,7 @@ export default function BillingAddressForm({
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                   getFieldError('zip')
                     ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-[#fe004d] focus:border-[#fe004d]'
+                    : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
                 } ${isFieldValid('zip', data.zip) === true ? 'pr-12' : ''}`}
                 placeholder={getPostalCodePlaceholder(data.country)}
               />
