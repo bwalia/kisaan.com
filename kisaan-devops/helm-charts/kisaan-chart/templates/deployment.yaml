@@ -36,44 +36,18 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ['sh', '-c', 'cd /app && echo "yarn start"']
+          # command: ['sh', '-c', 'echo "The kisaan.com is running!"']
+          lifecycle:
+          #   preStart:
+          #     exec:
+          #       command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && echo 'preStart: Starting kisaan.com'"]
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && echo 'postStart: Starting kisaan.com'"]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          env:
-            - name: NODE_ENV
-              value: "production"
-            - name: API_URL
-              valueFrom:
-                secretKeyRef:
-                  name: "kisaan-secret-{{ .Values.service.namespace }}"
-                  key: api_url
-            - name: STRIPE_PUBLISHABLE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "kisaan-secret-{{ .Values.service.namespace }}"
-                  key: stripe_publishable_key
-            - name: STRIPE_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: "kisaan-secret-{{ .Values.service.namespace }}"
-                  key: stripe_secret_key
-            - name: APP_URL
-              valueFrom:
-                secretKeyRef:
-                  name: "kisaan-secret-{{ .Values.service.namespace }}"
-                  key: app_url
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: "kisaan-secret-{{ .Values.service.namespace }}"
-                  key: jwt_secret
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: "kisaan-secret-{{ .Values.service.namespace }}"
-                  key: database_url
           # livenessProbe:
           #   httpGet:
           #     path: /
@@ -86,16 +60,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: kisaan-vol-{{ .Values.service.namespace }}
-              mountPath: /app/.next/cache
-              subPath: cache
-      # initContainers:
-      #   - name: cache-init
-      #     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-      #     command: ['sh', '-c', "mkdir -p /app/.next/cache && chown -R nobody:root /app/.next/cache"]
-      #     volumeMounts:
-      #       - name: kisaan-vol-{{ .Values.service.namespace }}
-      #         mountPath: /app/.next/cache
-      #         subPath: cache
+              mountPath: /tmp/secrets
           # {{- with .Values.volumeMounts }}
           #   {{- toYaml . | nindent 12 }}
           # {{- end }}
@@ -104,7 +69,11 @@ spec:
       # {{- end }}
       volumes:
         - name: kisaan-vol-{{ .Values.service.namespace }}
-          emptyDir: {}
+          secret:
+            secretName: "kisaan-secret-{{ .Values.service.namespace }}"
+            items:
+            - key: env_file
+              path: .env
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
