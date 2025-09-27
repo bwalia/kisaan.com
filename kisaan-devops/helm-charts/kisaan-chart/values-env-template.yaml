@@ -10,7 +10,13 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: hh-west-1-docker-registry
+  # - name: "myRegistryKey"
+  # - name: "anotherRegistryKey"
+  # - name: "regcred"   # Example to use regcred as imagePullSecret (must be created in the target namespace first)
+
+
 nameOverride: ""
 fullnameOverride: ""
 
