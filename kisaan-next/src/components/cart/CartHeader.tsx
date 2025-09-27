@@ -33,7 +33,7 @@ export default function CartHeader({ itemCount, onClearCart }: CartHeaderProps) 
           <div>
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-              <div className="bg-[#22c55e] text-white text-sm font-medium px-2 py-1 rounded-full">
+              <div className="bg-[#16a34a] text-white text-sm font-medium px-2 py-1 rounded-full">
                 {itemCount}
               </div>
             </div>

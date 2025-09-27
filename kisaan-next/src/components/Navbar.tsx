@@ -15,7 +15,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-14">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-[#22c55e] rounded-md flex items-center justify-center">
+            <div className="w-6 h-6 bg-[#16a34a] rounded-md flex items-center justify-center">
               <span className="text-white font-bold text-sm">K</span>
             </div>
             <span className="text-lg font-bold text-gray-900">Kisaan</span>
@@ -25,14 +25,14 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-6">
             <Link
               href="/"
-              className="text-gray-600 hover:text-[#22c55e] text-sm font-medium transition-colors"
+              className="text-gray-600 hover:text-[#16a34a] text-sm font-medium transition-colors"
             >
               Home
             </Link>
 
             <Link
               href="/cart"
-              className="relative text-gray-600 hover:text-[#22c55e] text-sm font-medium transition-colors"
+              className="relative text-gray-600 hover:text-[#16a34a] text-sm font-medium transition-colors"
             >
               <div className="flex items-center space-x-1">
                 <svg
@@ -51,7 +51,7 @@ export default function Navbar() {
                 <span>Cart</span>
               </div>
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#22c55e] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs font-medium">
+                <span className="absolute -top-1 -right-1 bg-[#16a34a] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs font-medium">
                   {itemCount}
                 </span>
               )}
@@ -79,7 +79,7 @@ export default function Navbar() {
               <div className="flex items-center space-x-3">
                 <Link
                   href="/login"
-                  className="text-gray-600 hover:text-[#22c55e] text-sm font-medium"
+                  className="text-gray-600 hover:text-[#16a34a] text-sm font-medium"
                 >
                   Login
                 </Link>
@@ -120,17 +120,17 @@ export default function Navbar() {
             <div className="flex flex-col space-y-2">
               <Link
                 href="/"
-                className="text-gray-600 hover:text-[#22c55e] text-sm font-medium py-1"
+                className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
               >
                 Home
               </Link>
               <Link
                 href="/cart"
-                className="text-gray-600 hover:text-[#22c55e] text-sm font-medium flex items-center py-1"
+                className="text-gray-600 hover:text-[#16a34a] text-sm font-medium flex items-center py-1"
               >
                 Cart{" "}
                 {itemCount > 0 && (
-                  <span className="ml-2 bg-[#22c55e] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                  <span className="ml-2 bg-[#16a34a] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
                     {itemCount}
                   </span>
                 )}
@@ -140,7 +140,7 @@ export default function Navbar() {
                   {user.role === "seller" && (
                     <Link
                       href="/seller/stores"
-                      className="text-gray-600 hover:text-[#22c55e] text-sm font-medium py-1"
+                      className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                     >
                       Dashboard
                     </Link>
@@ -156,7 +156,7 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/login"
-                    className="text-gray-600 hover:text-[#22c55e] text-sm font-medium py-1"
+                    className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                   >
                     Login
                   </Link>

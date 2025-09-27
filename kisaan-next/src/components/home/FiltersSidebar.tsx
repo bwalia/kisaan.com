@@ -76,7 +76,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ range, currentRange, onChange
             onChange={(e) => setLocalMin(Number(e.target.value))}
             min={range.min}
             max={range.max}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#22c55e] focus:border-[#22c55e]"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a]"
           />
         </div>
         <div>
@@ -89,7 +89,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ range, currentRange, onChange
             onChange={(e) => setLocalMax(Number(e.target.value))}
             min={range.min}
             max={range.max}
-            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#22c55e] focus:border-[#22c55e]"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a]"
           />
         </div>
       </div>
@@ -97,7 +97,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ range, currentRange, onChange
       <div className="flex items-center gap-2">
         <button
           onClick={handleApply}
-          className="bg-[#22c55e] text-white px-4 py-2 text-sm rounded-lg font-medium hover:bg-[#16a34a] transition-colors flex-1"
+          className="bg-[#16a34a] text-white px-4 py-2 text-sm rounded-lg font-medium hover:bg-[#16a34a] transition-colors flex-1"
         >
           Apply
         </button>
