@@ -88,14 +88,14 @@ spec:
             - name: kisaan-vol-{{ .Values.service.namespace }}
               mountPath: /app/.next/cache
               subPath: cache
-      initContainers:
-        - name: cache-init
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ['sh', '-c', "mkdir -p /app/.next/cache && chown -R nobody:root /app/.next/cache"]
-          volumeMounts:
-            - name: kisaan-vol-{{ .Values.service.namespace }}
-              mountPath: /app/.next/cache
-              subPath: cache
+      # initContainers:
+      #   - name: cache-init
+      #     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+      #     command: ['sh', '-c', "mkdir -p /app/.next/cache && chown -R nobody:root /app/.next/cache"]
+      #     volumeMounts:
+      #       - name: kisaan-vol-{{ .Values.service.namespace }}
+      #         mountPath: /app/.next/cache
+      #         subPath: cache
           # {{- with .Values.volumeMounts }}
           #   {{- toYaml . | nindent 12 }}
           # {{- end }}
