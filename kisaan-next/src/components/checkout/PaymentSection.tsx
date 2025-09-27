@@ -47,7 +47,7 @@ export default function PaymentSection({
             value={orderNotes}
             onChange={(e) => onOrderNotesChange(e.target.value)}
             rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fe004d] focus:border-[#fe004d] resize-none"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22c55e] focus:border-[#22c55e] resize-none"
             placeholder="Any special delivery instructions, gift message, or other notes for your order..."
           />
           <p className="mt-2 text-xs text-gray-500">
@@ -76,15 +76,15 @@ export default function PaymentSection({
             id="agreeTerms"
             checked={agreedToTerms}
             onChange={(e) => setAgreedToTerms(e.target.checked)}
-            className="w-4 h-4 text-[#fe004d] border-gray-300 rounded focus:ring-[#fe004d] mt-0.5"
+            className="w-4 h-4 text-[#22c55e] border-gray-300 rounded focus:ring-[#22c55e] mt-0.5"
           />
           <label htmlFor="agreeTerms" className="text-sm text-gray-700">
             I agree to the{' '}
-            <a href="/terms" target="_blank" className="text-[#fe004d] hover:text-[#e6003d] underline">
+            <a href="/terms" target="_blank" className="text-[#22c55e] hover:text-[#16a34a] underline">
               Terms and Conditions
             </a>{' '}
             and{' '}
-            <a href="/privacy" target="_blank" className="text-[#fe004d] hover:text-[#e6003d] underline">
+            <a href="/privacy" target="_blank" className="text-[#22c55e] hover:text-[#16a34a] underline">
               Privacy Policy
             </a>
           </label>
@@ -111,7 +111,7 @@ export default function PaymentSection({
         <button
           onClick={handleSubmit}
           disabled={isLoading || !agreedToTerms || !isFormValid}
-          className="w-full bg-[#fe004d] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#e6003d] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
+          className="w-full bg-[#22c55e] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#16a34a] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
         >
           {isLoading ? (
             <>

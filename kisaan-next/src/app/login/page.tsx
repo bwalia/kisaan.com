@@ -18,7 +18,7 @@ function SocialLoginButton({ provider, onClick, disabled }: SocialLoginButtonPro
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full inline-flex justify-center items-center px-4 py-3 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#fe004d] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      className="w-full inline-flex justify-center items-center px-4 py-3 border border-gray-300 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#22c55e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       {isGoogle ? (
         <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -80,7 +80,7 @@ function LoginContent() {
       <div className="max-w-md w-full">
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex items-center space-x-3">
-            <div className="w-14 h-14 bg-[#fe004d] rounded-xl flex items-center justify-center">
+            <div className="w-14 h-14 bg-[#22c55e] rounded-xl flex items-center justify-center">
               <span className="text-white font-bold text-2xl">K</span>
             </div>
             <span className="text-3xl font-bold text-gray-900">Kisaan</span>
@@ -217,7 +217,7 @@ function LoginContent() {
                   Don't have an account?{" "}
                   <Link
                     href="/register"
-                    className="font-medium text-[#fe004d] hover:text-[#e6003d]"
+                    className="font-medium text-[#22c55e] hover:text-[#16a34a]"
                   >
                     Create account
                   </Link>
@@ -235,7 +235,7 @@ export default function Login() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fe004d]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22c55e]"></div>
       </div>
     }>
       <LoginContent />

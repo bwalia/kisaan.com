@@ -833,7 +833,7 @@ function ProductsContent() {
                   </p>
 
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-xl font-bold text-[#fe004d]">
+                    <span className="text-xl font-bold text-[#22c55e]">
                       ${parseFloat(product.price).toFixed(2)}
                     </span>
                     <span className="text-sm text-gray-500">
@@ -892,7 +892,7 @@ export default function SellerProducts() {
       fallback={
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#fe004d] mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#22c55e] mx-auto mb-4"></div>
             <p className="text-gray-600 text-sm">Loading...</p>
           </div>
         </div>

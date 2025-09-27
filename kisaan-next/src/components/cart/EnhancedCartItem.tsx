@@ -85,7 +85,7 @@ export default function EnhancedCartItem({ item }: EnhancedCartItemProps) {
     return (
       <div className="bg-white rounded-lg border border-gray-200 p-6 opacity-50">
         <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#fe004d]"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#22c55e]"></div>
           <span className="ml-2 text-gray-600">Removing...</span>
         </div>
       </div>
@@ -126,7 +126,7 @@ export default function EnhancedCartItem({ item }: EnhancedCartItemProps) {
           <div className="flex justify-between items-start">
             <div className="flex-1 min-w-0">
               <Link href={`/products/${item.product_uuid}`}>
-                <h3 className="font-semibold text-lg text-gray-900 hover:text-[#fe004d] transition-colors line-clamp-2">
+                <h3 className="font-semibold text-lg text-gray-900 hover:text-[#22c55e] transition-colors line-clamp-2">
                   {item.name}
                 </h3>
               </Link>
@@ -138,7 +138,7 @@ export default function EnhancedCartItem({ item }: EnhancedCartItemProps) {
               )}
 
               <div className="flex items-center gap-4 mt-3">
-                <div className="text-lg font-bold text-[#fe004d]">
+                <div className="text-lg font-bold text-[#22c55e]">
                   {formatPrice(item.price)}
                 </div>
 
@@ -212,7 +212,7 @@ export default function EnhancedCartItem({ item }: EnhancedCartItemProps) {
 
               {isUpdating && (
                 <div className="flex items-center text-sm text-gray-600">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#fe004d] mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#22c55e] mr-2"></div>
                   Updating...
                 </div>
               )}

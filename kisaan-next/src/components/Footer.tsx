@@ -8,7 +8,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-flex items-center space-x-2 mb-3">
-              <div className="w-6 h-6 bg-[#fe004d] rounded-md flex items-center justify-center">
+              <div className="w-6 h-6 bg-[#22c55e] rounded-md flex items-center justify-center">
                 <span className="text-white font-bold text-sm">K</span>
               </div>
               <span className="text-lg font-bold">Kisaan</span>

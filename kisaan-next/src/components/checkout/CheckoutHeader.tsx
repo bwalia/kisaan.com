@@ -15,13 +15,13 @@ export default function CheckoutHeader({ currentStep, totalSteps }: CheckoutHead
       <div className="container mx-auto px-6 py-6">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm mb-6">
-          <Link href="/" className="text-gray-500 hover:text-[#fe004d] transition-colors">
+          <Link href="/" className="text-gray-500 hover:text-[#22c55e] transition-colors">
             Home
           </Link>
           <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <Link href="/cart" className="text-gray-500 hover:text-[#fe004d] transition-colors">
+          <Link href="/cart" className="text-gray-500 hover:text-[#22c55e] transition-colors">
             Cart
           </Link>
           <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@ export default function CheckoutHeader({ currentStep, totalSteps }: CheckoutHead
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm ${
                     step.number <= currentStep
-                      ? 'bg-[#fe004d] text-white'
+                      ? 'bg-[#22c55e] text-white'
                       : step.number === currentStep + 1
                       ? 'bg-gray-200 text-gray-600 border-2 border-gray-300'
                       : 'bg-gray-100 text-gray-400'
@@ -94,7 +94,7 @@ export default function CheckoutHeader({ currentStep, totalSteps }: CheckoutHead
                 <div className="flex-1 mx-4">
                   <div
                     className={`h-1 rounded-full ${
-                      step.number < currentStep ? 'bg-[#fe004d]' : 'bg-gray-200'
+                      step.number < currentStep ? 'bg-[#22c55e]' : 'bg-gray-200'
                     }`}
                   ></div>
                 </div>

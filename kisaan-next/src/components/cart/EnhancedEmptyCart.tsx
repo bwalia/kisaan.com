@@ -70,7 +70,7 @@ export default function EnhancedEmptyCart() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/"
-                className="bg-[#fe004d] text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-[#e6003d] transition-colors inline-flex items-center justify-center gap-2"
+                className="bg-[#22c55e] text-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-[#16a34a] transition-colors inline-flex items-center justify-center gap-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -100,10 +100,10 @@ export default function EnhancedEmptyCart() {
                 <Link
                   key={index}
                   href={category.href}
-                  className="bg-white rounded-lg border border-gray-200 p-6 text-center hover:shadow-md hover:border-[#fe004d] transition-all group"
+                  className="bg-white rounded-lg border border-gray-200 p-6 text-center hover:shadow-md hover:border-[#22c55e] transition-all group"
                 >
                   <div className="text-3xl mb-3">{category.icon}</div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-[#fe004d] transition-colors">
+                  <h3 className="font-semibold text-gray-900 group-hover:text-[#22c55e] transition-colors">
                     {category.name}
                   </h3>
                 </Link>
@@ -119,7 +119,7 @@ export default function EnhancedEmptyCart() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {benefits.map((benefit, index) => (
                 <div key={index} className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-4 bg-[#fe004d] text-white rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 mx-auto mb-4 bg-[#22c55e] text-white rounded-lg flex items-center justify-center">
                     {benefit.icon}
                   </div>
                   <h3 className="font-semibold text-gray-900 mb-2">
@@ -134,7 +134,7 @@ export default function EnhancedEmptyCart() {
           </div>
 
           {/* Newsletter Signup */}
-          <div className="bg-gradient-to-r from-[#fe004d] to-[#e6003d] rounded-lg p-8 mt-12 text-center text-white">
+          <div className="bg-gradient-to-r from-[#22c55e] to-[#16a34a] rounded-lg p-8 mt-12 text-center text-white">
             <h2 className="text-2xl font-bold mb-4">
               Get notified about new products
             </h2>
@@ -147,7 +147,7 @@ export default function EnhancedEmptyCart() {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
               />
-              <button className="bg-white text-[#fe004d] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <button className="bg-white text-[#22c55e] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                 Subscribe
               </button>
             </div>

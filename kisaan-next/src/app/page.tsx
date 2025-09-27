@@ -117,7 +117,7 @@ export default function Home() {
                     <select
                       value={filters.sortBy}
                       onChange={(e) => changeSort(e.target.value as any)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#fe004d] focus:border-[#fe004d]"
+                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#22c55e] focus:border-[#22c55e]"
                     >
                       {SORT_OPTIONS.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -130,7 +130,7 @@ export default function Home() {
                   {/* Mobile Filter Button */}
                   <button
                     onClick={() => setFiltersOpen(true)}
-                    className="lg:hidden bg-[#fe004d] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#e6003d] transition-colors inline-flex items-center gap-2"
+                    className="lg:hidden bg-[#22c55e] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16a34a] transition-colors inline-flex items-center gap-2"
                   >
                     <svg
                       className="icon icon-sm"
@@ -161,11 +161,11 @@ export default function Home() {
                   <span className="text-sm text-gray-600">Active filters:</span>
 
                   {filters.query && (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-[#fe004d] text-sm rounded-full">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-pink-100 text-[#22c55e] text-sm rounded-full">
                       Search: "{filters.query}"
                       <button
                         onClick={() => search("")}
-                        className="hover:text-[#e6003d]"
+                        className="hover:text-[#16a34a]"
                       >
                         <svg
                           className="w-3 h-3"
@@ -276,7 +276,7 @@ export default function Home() {
           </p>
           <Link
             href="/register"
-            className="bg-[#fe004d] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#e6003d] transition-colors shadow-lg hover:shadow-xl inline-block"
+            className="bg-[#22c55e] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#16a34a] transition-colors shadow-lg hover:shadow-xl inline-block"
           >
             Get Started for Free
           </Link>

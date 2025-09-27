@@ -119,7 +119,7 @@ export default function ProductDetails() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fe004d] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22c55e] mx-auto mb-4"></div>
           <p className="text-gray-600">Loading product...</p>
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function ProductDetails() {
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Product not found</h1>
           <Link
             href="/"
-            className="bg-[#fe004d] text-white px-6 py-3 rounded-lg hover:bg-[#e6003d] transition-colors"
+            className="bg-[#22c55e] text-white px-6 py-3 rounded-lg hover:bg-[#16a34a] transition-colors"
           >
             Back to Home
           </Link>
@@ -174,7 +174,7 @@ export default function ProductDetails() {
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-6 py-4">
           <nav className="flex items-center space-x-2 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-[#fe004d] transition-colors">
+            <Link href="/" className="text-gray-500 hover:text-[#22c55e] transition-colors">
               Home
             </Link>
             <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

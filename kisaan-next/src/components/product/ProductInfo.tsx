@@ -25,7 +25,7 @@ export default function ProductInfo({ product, currentPrice, currentStock }: Pro
         {/* Price Section */}
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-[#fe004d]">
+            <span className="text-3xl font-bold text-[#22c55e]">
               {formatPrice(currentPrice)}
             </span>
             {hasDiscount && (

@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #fe004d;
-  --primary-dark: #d1003a;
-  --primary-light: #ff1a5c;
-  --primary-50: #fef2f4;
-  --primary-100: #fde6ea;
-  --primary-500: #fe004d;
-  --primary-600: #e6003d;
-  --primary-700: #cc0036;
+  --primary: #22c55e;
+  --primary-dark: #16a34a;
+  --primary-light: #4ade80;
+  --primary-50: #f0fdf4;
+  --primary-100: #dcfce7;
+  --primary-200: #bbf7d0;
+  --primary-500: #22c55e;
+  --primary-600: #16a34a;
+  --primary-700: #15803d;
   --secondary: #6366f1;
   --accent: #f59e0b;
   --success: #10b981;
@@ -49,7 +50,7 @@
   --muted-foreground: #64748b;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --ring: #fe004d;
+  --ring: #22c55e;
   --input: #e2e8f0;
 }
 
@@ -100,7 +101,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(254, 0, 77, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
 
 /* Enhanced Button System */
