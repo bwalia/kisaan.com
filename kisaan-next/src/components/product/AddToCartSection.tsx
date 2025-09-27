@@ -46,7 +46,7 @@ export default function AddToCartSection({
           <select
             value={selectedVariant}
             onChange={(e) => onVariantChange(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22c55e] focus:border-[#22c55e] text-sm"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a] text-sm"
           >
             <option value="">Choose an option</option>
             {variants
@@ -77,7 +77,7 @@ export default function AddToCartSection({
         <button
           onClick={onAddToCart}
           disabled={isLoading || isOutOfStock}
-          className="w-full bg-[#22c55e] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#16a34a] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
+          className="w-full bg-[#16a34a] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#16a34a] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
         >
           {isLoading ? (
             <>

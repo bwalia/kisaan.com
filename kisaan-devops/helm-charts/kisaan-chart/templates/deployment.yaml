@@ -37,9 +37,12 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           lifecycle:
-            postStart:
+            preStart:
               exec:
-                command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && yarn build"]
+                command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && yarn build && yarn start"]
+            # postStart:
+            #   exec:
+            #     command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && yarn build && yarn start"]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

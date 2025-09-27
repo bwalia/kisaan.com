@@ -28,7 +28,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               onClick={() => onCategorySelect('')}
               className={`flex-shrink-0 px-4 py-2 rounded-full border transition-all duration-200 ${
                 selectedCategory === ''
-                  ? 'bg-[#22c55e] text-white border-[#22c55e]'
+                  ? 'bg-[#16a34a] text-white border-[#16a34a]'
                   : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
               }`}
             >
@@ -43,7 +43,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               onClick={() => handleCategoryClick(category.uuid)}
               className={`flex-shrink-0 px-4 py-2 rounded-full border transition-all duration-200 ${
                 selectedCategory === category.uuid
-                  ? 'bg-[#22c55e] text-white border-[#22c55e]'
+                  ? 'bg-[#16a34a] text-white border-[#16a34a]'
                   : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
               }`}
             >

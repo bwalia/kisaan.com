@@ -58,7 +58,7 @@ export default function Cart() {
           <div className="space-y-3">
             <button
               onClick={() => router.push("/login?redirect=/cart")}
-              className="w-full bg-[#22c55e] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#16a34a] transition-colors"
+              className="w-full bg-[#16a34a] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#16a34a] transition-colors"
             >
               Login to Continue
             </button>
@@ -122,7 +122,7 @@ export default function Cart() {
         <nav className="flex items-center space-x-2 text-sm mb-8">
           <Link
             href="/"
-            className="text-gray-500 hover:text-[#22c55e] transition-colors"
+            className="text-gray-500 hover:text-[#16a34a] transition-colors"
           >
             Home
           </Link>
@@ -149,7 +149,7 @@ export default function Cart() {
             <div className="space-y-4">
               {isClearing ? (
                 <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22c55e] mx-auto mb-4"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#16a34a] mx-auto mb-4"></div>
                   <p className="text-gray-600">Clearing your cart...</p>
                 </div>
               ) : (

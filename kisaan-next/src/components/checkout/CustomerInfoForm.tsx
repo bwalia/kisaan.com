@@ -49,7 +49,7 @@ export default function CustomerInfoForm({ data, onChange, errors }: CustomerInf
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 bg-[#22c55e] text-white rounded-full flex items-center justify-center text-sm font-semibold">
+        <div className="w-8 h-8 bg-[#16a34a] text-white rounded-full flex items-center justify-center text-sm font-semibold">
           1
         </div>
         <div>
@@ -77,7 +77,7 @@ export default function CustomerInfoForm({ data, onChange, errors }: CustomerInf
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                   getFieldError('customer_first_name')
                     ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
+                    : 'border-gray-300 focus:ring-[#16a34a] focus:border-[#16a34a]'
                 } ${isFieldValid('customer_first_name', data.customer_first_name) === true ? 'pr-12' : ''}`}
                 placeholder="Enter your first name"
               />
@@ -108,7 +108,7 @@ export default function CustomerInfoForm({ data, onChange, errors }: CustomerInf
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                   getFieldError('customer_last_name')
                     ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                    : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
+                    : 'border-gray-300 focus:ring-[#16a34a] focus:border-[#16a34a]'
                 } ${isFieldValid('customer_last_name', data.customer_last_name) === true ? 'pr-12' : ''}`}
                 placeholder="Enter your last name"
               />
@@ -141,7 +141,7 @@ export default function CustomerInfoForm({ data, onChange, errors }: CustomerInf
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                 getFieldError('customer_email')
                   ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
+                  : 'border-gray-300 focus:ring-[#16a34a] focus:border-[#16a34a]'
               } ${isFieldValid('customer_email', data.customer_email) === true ? 'pr-12' : ''}`}
               placeholder="Enter your email address"
             />
@@ -175,7 +175,7 @@ export default function CustomerInfoForm({ data, onChange, errors }: CustomerInf
               className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
                 getFieldError('customer_phone')
                   ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:ring-[#22c55e] focus:border-[#22c55e]'
+                  : 'border-gray-300 focus:ring-[#16a34a] focus:border-[#16a34a]'
               } ${isFieldValid('customer_phone', data.customer_phone) === true ? 'pr-12' : ''}`}
               placeholder="Enter your phone number"
             />

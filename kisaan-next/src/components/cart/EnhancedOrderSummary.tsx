@@ -91,7 +91,7 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
               value={promoCode}
               onChange={(e) => setPromoCode(e.target.value)}
               placeholder="Enter code"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#22c55e] focus:border-[#22c55e] text-sm"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a] text-sm"
               disabled={isApplyingPromo}
             />
             <button
@@ -164,7 +164,7 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
         <div className="border-t border-gray-200 pt-4">
           <div className="flex justify-between text-xl font-bold text-gray-900">
             <span>Total:</span>
-            <span className="text-[#22c55e]">{formatPrice(totalAmount)}</span>
+            <span className="text-[#16a34a]">{formatPrice(totalAmount)}</span>
           </div>
         </div>
       </div>
@@ -174,7 +174,7 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
         <button
           onClick={handleCheckout}
           disabled={itemCount === 0}
-          className="w-full bg-[#22c55e] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#16a34a] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          className="w-full bg-[#16a34a] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#16a34a] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />

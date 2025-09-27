@@ -98,7 +98,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder={placeholder}
-            className="w-full pl-12 pr-20 py-4 text-lg border-2 border-gray-200 rounded-full focus:border-[#22c55e] focus:outline-none focus:ring-0 transition-colors duration-200"
+            className="w-full pl-12 pr-20 py-4 text-lg border-2 border-gray-200 rounded-full focus:border-[#16a34a] focus:outline-none focus:ring-0 transition-colors duration-200"
             disabled={loading}
           />
 
@@ -130,7 +130,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="absolute inset-y-0 right-2 flex items-center justify-center w-12 h-[calc(100%-16px)] my-2 bg-[#22c55e] text-white rounded-full hover:bg-[#16a34a] transition-colors duration-200 disabled:opacity-50"
+            className="absolute inset-y-0 right-2 flex items-center justify-center w-12 h-[calc(100%-16px)] my-2 bg-[#16a34a] text-white rounded-full hover:bg-[#16a34a] transition-colors duration-200 disabled:opacity-50"
           >
             {loading ? (
               <div className="loading-spinner"></div>

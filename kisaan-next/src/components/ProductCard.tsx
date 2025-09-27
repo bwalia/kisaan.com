@@ -101,7 +101,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             <button
               onClick={handleQuickAdd}
               disabled={isLoading}
-              className="absolute bottom-2 right-2 bg-[#22c55e] text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-[#16a34a] transform translate-y-2 group-hover:translate-y-0 disabled:opacity-50"
+              className="absolute bottom-2 right-2 bg-[#16a34a] text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-[#16a34a] transform translate-y-2 group-hover:translate-y-0 disabled:opacity-50"
               title="Quick Add to Cart"
             >
               {isLoading ? (
@@ -122,13 +122,13 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
         {/* Product Info */}
         <div className="p-4 flex-1 flex flex-col">
-          <h3 className="font-medium text-gray-900 line-clamp-2 text-sm mb-2 group-hover:text-[#22c55e] transition-colors">
+          <h3 className="font-medium text-gray-900 line-clamp-2 text-sm mb-2 group-hover:text-[#16a34a] transition-colors">
             {product.name}
           </h3>
 
           {/* Price */}
           <div className="flex items-center gap-2 mt-auto">
-            <span className="text-lg font-bold text-[#22c55e]">
+            <span className="text-lg font-bold text-[#16a34a]">
               {formatPrice(product.price)}
             </span>
             {hasDiscount && (

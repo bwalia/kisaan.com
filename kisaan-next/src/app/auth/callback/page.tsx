@@ -54,7 +54,7 @@ function AuthCallbackContent() {
           <div className="card-body text-center">
             {status === 'loading' && (
               <>
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22c55e] mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#16a34a] mx-auto mb-4"></div>
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">
                   Completing Sign In...
                 </h2>
@@ -109,7 +109,7 @@ export default function AuthCallback() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#22c55e]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#16a34a]"></div>
       </div>
     }>
       <AuthCallbackContent />

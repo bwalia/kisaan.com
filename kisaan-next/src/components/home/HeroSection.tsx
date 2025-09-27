@@ -17,7 +17,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
   };
 
   return (
-    <div className="relative bg-gradient-to-br from-[#22c55e] to-[#16a34a] text-white overflow-hidden">
+    <div className="relative bg-gradient-to-br from-[#16a34a] to-[#16a34a] text-white overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-72 h-72 bg-white opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -68,13 +68,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/register"
-              className="bg-white text-[#22c55e] px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="bg-white text-[#16a34a] px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             >
               Start Selling Today
             </Link>
             <button
               onClick={scrollToProducts}
-              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-[#22c55e] transition-all duration-200"
+              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-[#16a34a] transition-all duration-200"
             >
               Browse Products
             </button>

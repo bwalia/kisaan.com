@@ -40,5 +40,4 @@ RUN yarn run build
 # Expose port
 EXPOSE 3000
 
-# Start the app
-CMD [ "yarn", "start" ]
+# Start the app in the production mode in deployment itself for kubernetes and do not run CMD [ "yarn", "start" ]
