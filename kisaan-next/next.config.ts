@@ -1,6 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Public runtime environment variables (exposed to browser)
+  publicRuntimeConfig: {
+    API_URL: process.env.API_URL,
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+    APP_URL: process.env.APP_URL,
+  },
+
+  // Server runtime environment variables (server-side only)
+  serverRuntimeConfig: {
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    JWT_SECRET: process.env.JWT_SECRET,
+    DATABASE_URL: process.env.DATABASE_URL,
+  },
   // Enable standalone output for Docker builds
   output: "standalone",
 
