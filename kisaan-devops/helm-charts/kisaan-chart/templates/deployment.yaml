@@ -36,7 +36,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ['sh', '-c', 'cd /app && yarn start']
+          command: ['sh', '-c', 'cd /app && echo "yarn start"']
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -91,7 +91,7 @@ spec:
       initContainers:
         - name: cache-init
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ['sh', '-c', "mkdir -p /app/.next/cache && chown -R node:node /app/.next/cache"]
+          command: ['sh', '-c', "mkdir -p /app/.next/cache && chown -R nobody:root /app/.next/cache"]
           volumeMounts:
             - name: kisaan-vol-{{ .Values.service.namespace }}
               mountPath: /app/.next/cache
