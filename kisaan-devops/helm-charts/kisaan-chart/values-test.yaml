@@ -3,19 +3,15 @@
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
-
 image:
   repository: bwalia/kisaan-nextjs
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
-safeEnvFile: AgBppxMqCchobiQwKjfdYuEyv46ZrxyZgAijTaA7llKh1pVME0Y2XQpjF1ACtTk63Y9rGLxa6judlmzy4afThSPKagf0oM+i3XtMhU0BYn4Ddo0/vyd9ejUXNO/XO09pvaYf9N8m+O2fzbd94qSaOcP8di2FJPo7g8WiltXQvhLjlWX23/O//2puyK7AWcIndTRIA6pTRs5m2dkNo6Xl1t7aW6bDpamFj0+FCDwUWN0T/w2D+CRxV3hxbfzfjgCZAPBOtGomHP445gE92UlDrVuXtmOJGH68yr68QfjOoufPTGJ1yeimdqtR172CwhnX2aH9iXYOgMfF91oB3sl5Vvlsjjf1h6D+tklBdGh4wBty1h2SqNQ6EHV6oFF+mSv5/gs/eRcBva3XEcGqdmjAbNM0ZdwLnp2Xw96vzFZxK06ZySSyoctH0MuXDJ+RaLnFeheEyw2soHHnWDgMqeUD+Px31sjJ/6+Cw8FbPXI1tQmsFIBO0TnhCB+BT8QbmDj6FFgLSKhxBOykoD4jZ5oUjWFIDQMcrIuSEKoiNULnZ3qrKONKdo8v70RX6W8tqfniqhcVLKK3Hhzbw1tV3Fp6BNvkMkZV1OJuCHJtzvXcsyr7VOkzBEInxcTb1owe3DB7/rhvVosO1QduAru0zv7JQJ41Le3TQ3PbjIWohq149bEMotSmQZ/bMB2VxyYKgY16+fEgEa2R3+Qk7XJvHloiS/8YMPt0GSg+nBXgyt4Zg4JK8xSHiAy1wXJNGzvF9H+nIGr0KMntf3EewlwAupfEYneqr6Or0wxcbnpAdqf7e7ZnttDPd5FB77x4/Wto6ooTOpGm/t+vrgF8NnZSMjgZqm+pickXc8xyvaiLP4F/2IGaK0TOBQKYq49RPizfUCqbCxBygyJVdeU=
-
+safeEnvFile: AgAPtFgA42bxt3k2qA5Ka1jrQDz3DWBM0UBWPkHasE9DvmX6hh1toebkANlHzXw80A1eFqN6oDhaPyIFmbq/pucnJ++gahTatp/nRscQcl5+C7FMHQGdnGWXFIAjm+EUl0nOd/9YZc+28thWO73LOfW6O+gjM0TFcABSiRaRf268x4pCVlhy61HzW361wo6PQs9BODHNTJG67F24Rxc6siogjm/xZkm06CtF3nnd2gQKaxLPTwOKQv660XQZQGq3FczEK1EP8+GyogrrnwntCLImnFzHOp/uLibeblig/tI7bIXNYelBbMjENbLLibERw6j8VDJn9Pa4MQCZTEv0d+ImwWswBZbyZwW53G2ztJEGAQzw9c5jWFpkikoYs89nt7ya6DfERJ76mz29RFJCVQ8Nfo1TIi3eqgFvmXp0S2uiuCPz2OSQakdY0lP1aViYaRoZjQ+BH5hCBzKH5WXMt6fiDTb3Gg5xE3rJRM3dCcJV/YxsOmu7xlP3gidV7ZkqF28kHp5QkXR5jkkwk2eLOuaG2v007oE5oErCWbnwaQL8XIYr++M9gZDimUGG05haAycJvj0Lrv7P/nQgVRI9PYPgJ90R39B2CiS4gTsq1jwL05zncMgaVE+LiycxaNzueyQe2ler+Wja0Z/EzQPVlIQH1C5HQwPPUyKrP6yvaGkKYycvhyq6n9pBP4er5oW24PrBRexjIe6Z+qmm0zAtYWCZrIKK+EyMPxQeWomgyFWs/kJu3hflxo9ZpRjlF1AqPd/TtQ5wSM1SITTdaFCWTHbm/6B2Fsf22HCZL9fb7bEVr6tP34fwgeITrIr4Fxo57fWh3E8BrafVLhHKKKaDf8VNkgQiBaZWlsoIftKFFUgkB1N8NTztEYkaRaGLuApRPzrY35DN45DwOHa7p3XaoEoZ
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -26,33 +22,30 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
-
 podAnnotations: {}
 podLabels: {}
-
 podSecurityContext: {}
-  # fsGroup: 2000
+# fsGroup: 2000
 
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
 
 service:
   type: ClusterIP
   port: 3000
   targetPort: 3000
   namespace: "test"
-
 ingress:
   enabled: true
   className: "nginx"
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
   hosts:
     - host: test.kisaan.com
       paths:
@@ -62,31 +55,28 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-
 # Additional volumes on the output Deployment definition.
 volumes: []
 # - name: foo
@@ -101,7 +91,5 @@ volumeMounts: []
 #   readOnly: true
 
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}
