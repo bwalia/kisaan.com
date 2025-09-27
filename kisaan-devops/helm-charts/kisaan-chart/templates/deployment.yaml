@@ -36,10 +36,19 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ['sh', '-c', 'echo "The kisaan.com is running!"']
+          initContainers:
+            - name: init-container-kisaan-com
+              image: busybox
+              imagePullPolicy: IfNotPresent
+              command: ['sh', '-c', 'cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && yarn build']
+              volumeMounts:
+                - name: kisaan-vol-{{ .Values.service.namespace }}
+                  mountPath: /tmp/secrets
           lifecycle:
-            preStart:
-              exec:
-                command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && yarn build && yarn start"]
+          #   preStop:
+          #     exec:
+          #       command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && echo 'preStart: Starting kisaan.com'"]
             # postStart:
             #   exec:
             #     command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && yarn build && yarn start"]
@@ -47,14 +56,14 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
