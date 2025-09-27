@@ -241,10 +241,12 @@ EOF
 if [ "$ENV_REF" == "prod" ]; then
     echo "Production environment detected, setting replicaCount to 3"
     yq e '.replicaCount = 3' -i $HELM_VALUES_OUTPUT_PATH
+    yq e '.autoscaling.minReplicas = 3' -i $HELM_VALUES_OUTPUT_PATH
     yq e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
 elif [ "$ENV_REF" == "acc" ]; then
     echo "Testing environment detected, setting replicaCount to 2"
     yq e '.replicaCount = 2' -i $HELM_VALUES_OUTPUT_PATH
+    yq e '.autoscaling.minReplicas = 2' -i $HELM_VALUES_OUTPUT_PATH
     yq e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
 else
     echo "Non-production environment detected, setting replicaCount to 1"
