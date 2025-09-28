@@ -29,7 +29,7 @@ on:
             - build-and-deploy
 
 env:
-    IMAGE_REGISTRY: bwalia
+    IMAGE_REGISTRY: docker.workstation.co.uk
     TARGET_STACK: nextjs
     IMAGE_NAME: kisaan-nextjs
     TARGET_IMAGE_TAG: latest
