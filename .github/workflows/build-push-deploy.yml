@@ -50,6 +50,7 @@ jobs:
         echo "kisaan.com Docker image builder!"
         echo "Build, tag, and push image to the given Docker Registry."
         echo ${{ secrets.NEXUS_PASSWD }} | docker login -u ${{ secrets.NEXUS_USER }} --password-stdin ${{ secrets.DOCKER_REGISTRY }}
+          # docker build -f kisaan-next/Dockerfile.test -t kisaan-test:latest .
         docker build -f kisaan-next/Dockerfile.${{ env.TARGET_ENV }} --build-arg TAG=latest -t ${{ env.TARGET_ENV }}-${{ env.TARGET_STACK }} . --no-cache
         docker tag ${{ env.TARGET_ENV }}-${{ env.TARGET_STACK }} ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_IMAGE_TAG }}
         docker push ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_IMAGE_TAG }}
