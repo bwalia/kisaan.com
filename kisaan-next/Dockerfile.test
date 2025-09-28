@@ -31,7 +31,10 @@ RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss
 # Install missing dependencies
 RUN yarn add country-state-city
 
+RUN yarn cache clean
+
 RUN yarn run build
+
 
 #   RUN npm install vite -g
 #   This works here but not in dockerfile RUN vite build --mode staging so replacing with npm build
