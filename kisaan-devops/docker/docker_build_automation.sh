@@ -35,7 +35,7 @@ DOCKER_IMAGE_TAG=${7:-"latest"}
 echo "NEXUS_USER: $NEXUS_USER"
 echo "DOCKER_REGISTRY: $DOCKER_REGISTRY"
 echo "DOCKER_IMAGE_NAME: $DOCKER_IMAGE_NAME"
-echo "$ENV_FILE_CONTENT_BASE64" | base64 -d > .env
+echo "$ENV_FILE_CONTENT_BASE64" | base64 -d > kisaan-next/.env
 
 echo "Environment reference: $ENV_REF"
 
