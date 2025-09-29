@@ -165,7 +165,7 @@ jobs:
         helm list -n ${{ env.TARGET_ENV }} | grep -q "kisaan-${{ env.TARGET_ENV }}" && helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }} || echo "Release kisaan-${{ env.TARGET_ENV }} not found in namespace ${{ env.TARGET_ENV }}, skipping deletion"
         helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
           --set image.repository=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }} \
-          --set image.tag=${{ env.IMAGE_TAG_OVERRIDE }} \
+          --set image.tag=${{ env.TARGET_ENV }} \
           --namespace ${{ env.TARGET_ENV }} --create-namespace
         else
         helm list -n ${{ env.TARGET_ENV }} | grep -q "kisaan-${{ env.TARGET_ENV }}" && helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }} || echo "Release kisaan-${{ env.TARGET_ENV }} not found in namespace ${{ env.TARGET_ENV }}, skipping deletion"
