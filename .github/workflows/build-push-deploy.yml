@@ -161,15 +161,19 @@ jobs:
         echo "Target Namespace: ${{ env.TARGET_ENV }}"
         echo "Image Repository: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}"
         echo "Image Tag: ${{ env.TARGET_IMAGE_TAG }}"
+        if [ "${{ env.IMAGE_TAG_OVERRIDE }}" == "private-latest" ]; then
         helm list -n ${{ env.TARGET_ENV }} | grep -q "kisaan-${{ env.TARGET_ENV }}" && helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }} || echo "Release kisaan-${{ env.TARGET_ENV }} not found in namespace ${{ env.TARGET_ENV }}, skipping deletion"
         helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
           --set image.repository=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }} \
-        if [ "${{ env.IMAGE_TAG_OVERRIDE }}" == "private-latest" ]; then
           --set image.tag=${{ env.IMAGE_TAG_OVERRIDE }} \
-        else
-          --set image.tag=${{ env.TARGET_ENV }} \
-        fi
           --namespace ${{ env.TARGET_ENV }} --create-namespace
+        else
+        helm list -n ${{ env.TARGET_ENV }} | grep -q "kisaan-${{ env.TARGET_ENV }}" && helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }} || echo "Release kisaan-${{ env.TARGET_ENV }} not found in namespace ${{ env.TARGET_ENV }}, skipping deletion"
+        helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
+          --set image.repository=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }} \
+          --set image.tag=${{ env.TARGET_IMAGE_TAG }} \
+          --namespace ${{ env.TARGET_ENV }} --create-namespace
+        fi
 
     - name: Slack Notification for kisaan.com release 
       uses: rtCamp/action-slack-notify@v2
