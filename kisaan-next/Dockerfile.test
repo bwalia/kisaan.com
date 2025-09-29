@@ -1,29 +1,24 @@
-# Development Dockerfile
-FROM node:22-alpine AS production
+# Development Stage
+FROM node:22-alpine AS development
 
-ENV NODE_ENV=production
-ENV TAG=latest
-
-# Install dependencies for production
-RUN apk add --no-cache libc6-compat
-
-# Add a work directory
 WORKDIR /app
 
-# Cache and Install dependencies
 COPY kisaan-next/package.json .
-#COPY kisaan-next/yarn.lock .
 
-RUN apk add curl
-
-# Copy app files first
 COPY kisaan-next/ .
 
-# Use yarn instead of npm to avoid integrity issues
-RUN yarn install
+EXPOSE 3000
 
-# Install TypeScript as required by next.config.ts
-RUN yarn add --dev --exact typescript
+CMD ["npm", "run", "dev"]
+
+# Builder Stage
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+
+COPY kisaan-next/ ./
 
 # Install TailwindCSS and PostCSS dependencies
 RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss
@@ -31,17 +26,23 @@ RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss
 # Install missing dependencies
 RUN yarn add country-state-city
 
-RUN yarn cache clean
+RUN yarn install
 
-RUN yarn run build
+RUN npm run build
 
+# Production Stage 
 
-#   RUN npm install vite -g
-#   This works here but not in dockerfile RUN vite build --mode staging so replacing with npm build
-#   RUN npm run build
+FROM node:22-alpine AS production
 
-# Expose port
+WORKDIR /app
+
+# Copy the built artifacts from the builder stage
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Set the environment variables (if needed)
+ENV NODE_ENV=production
+
 EXPOSE 3000
 
-# Start the app
-CMD [ "yarn", "start" ]
+CMD ["node", "server.js"]
