@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import api from "@/lib/api";
 import Modal from "@/components/ui/Modal";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import CategorySelector from "@/components/CategorySelector";
 
 function CategoriesContent() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -12,8 +13,6 @@ function CategoriesContent() {
   const [selectedStore, setSelectedStore] = useState("");
   const [selectedStoreName, setSelectedStoreName] = useState("");
   const [dataLoading, setDataLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
-  const [showForm, setShowForm] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdCategory, setCreatedCategory] = useState<Category | null>(null);
   const [showDelete, setShowDelete] = useState<{
@@ -31,8 +30,10 @@ function CategoriesContent() {
     [key: string]: any;
   };
 
+  // New state for category selector
+  const [showCategorySelector, setShowCategorySelector] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [formData, setFormData] = useState({
+  const [editFormData, setEditFormData] = useState({
     name: "",
     description: "",
     slug: "",
@@ -98,53 +99,57 @@ function CategoriesContent() {
     else setCategories([]);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Handle category creation from CategorySelector
+  const handleCategoryCreate = async (categoryData: {
+    name: string;
+    description: string;
+  }) => {
     if (!selectedStore) {
-      alert("Please select a store first");
-      return;
+      throw new Error("Please select a store first");
     }
-    if (creating) return;
 
-    setCreating(true);
     try {
-      const categoryData = { ...formData, store_id: selectedStore };
-      let result;
-      if (editingCategory) {
-        result = await api.updateCategory(editingCategory.uuid, categoryData);
-      } else {
-        result = await api.createCategory(categoryData);
-      }
+      const result = await api.createCategory({
+        ...categoryData,
+        store_id: selectedStore
+      });
 
-      setShowForm(false);
-      setEditingCategory(null);
-      setFormData({ name: "", description: "", slug: "", sort_order: "0" });
       loadCategories(selectedStore);
-
-      // Show success modal for new category creation
-      if (!editingCategory) {
-        setCreatedCategory(result);
-        setShowSuccessModal(true);
-      }
+      setCreatedCategory(result);
+      setShowSuccessModal(true);
+      setShowCategorySelector(false);
     } catch (error: any) {
-      alert(
-        `Failed to ${editingCategory ? "update" : "create"} category: ` +
-          (error.message || "Please try again")
-      );
-    } finally {
-      setCreating(false);
+      throw new Error(error.message || "Failed to create category");
+    }
+  };
+
+  // Handle edit form submission
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCategory || !selectedStore) return;
+
+    try {
+      await api.updateCategory(editingCategory.uuid, {
+        ...editFormData,
+        store_id: selectedStore
+      });
+
+      setEditingCategory(null);
+      setEditFormData({ name: "", description: "", slug: "", sort_order: "0" });
+      loadCategories(selectedStore);
+    } catch (error: any) {
+      alert("Failed to update category: " + (error.message || "Please try again"));
     }
   };
 
   const handleEdit = (category: any) => {
     setEditingCategory(category);
-    setFormData({
+    setEditFormData({
       name: category.name,
       description: category.description || "",
       slug: category.slug || "",
       sort_order: category.sort_order?.toString() || "0",
     });
-    setShowForm(true);
   };
 
   const requestDelete = (category: any) => {
@@ -163,11 +168,11 @@ function CategoriesContent() {
     }
   };
 
-  const handleChange = (
+  const handleEditChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => {
+    setEditFormData((prev) => {
       const newData = { ...prev, [name]: value };
 
       // Auto-generate slug from name if name is being changed
@@ -242,7 +247,7 @@ function CategoriesContent() {
               </div>
               <div className="flex gap-3">
                 <button
-                  onClick={() => setShowForm(true)}
+                  onClick={() => setShowCategorySelector(true)}
                   disabled={!selectedStore}
                   className={`btn-primary btn-md inline-flex items-center gap-2 ${
                     !selectedStore ? "opacity-50 cursor-not-allowed" : ""
@@ -258,10 +263,10 @@ function CategoriesContent() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
-                  Add Category
+                  Search or Add Category
                 </button>
               </div>
             </div>
@@ -323,8 +328,106 @@ function CategoriesContent() {
           </div>
         </div>
 
-        {/* Category Form Modal */}
-        {showForm && (
+        {/* Category Selector Modal */}
+        {showCategorySelector && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <div className="modal-header">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg
+                        className="icon icon-md text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Smart Category Management
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        Search existing categories or create a new one
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowCategorySelector(false)}
+                    className="btn-ghost btn-icon text-gray-400 hover:text-gray-600"
+                  >
+                    <svg
+                      className="icon icon-md"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div className="modal-body">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Category Selection
+                  </label>
+                  <CategorySelector
+                    storeId={selectedStore}
+                    onCategorySelect={(category) => {
+                      // If user selects existing category, we don't need to do anything special
+                      console.log("Selected category:", category);
+                    }}
+                    onCategoryCreate={handleCategoryCreate}
+                    placeholder="Type to search existing categories or create new..."
+                  />
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4">
+                  <div className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <div className="text-sm text-blue-700">
+                      <p className="font-medium mb-1">Professional Category Management</p>
+                      <ul className="space-y-1 text-blue-600">
+                        <li>• Search existing categories to avoid duplicates</li>
+                        <li>• Create new categories if they don't exist</li>
+                        <li>• Categories are automatically validated</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Category Modal */}
+        {editingCategory && (
           <div className="modal-overlay">
             <div className="modal">
               <div className="modal-header">
@@ -347,18 +450,15 @@ function CategoriesContent() {
                     </div>
                     <div>
                       <h2 className="text-lg font-semibold text-gray-900">
-                        {editingCategory ? "Edit Category" : "Add New Category"}
+                        Edit Category
                       </h2>
                       <p className="text-sm text-gray-500">
-                        {editingCategory
-                          ? "Update category details"
-                          : "Create a new product category"}
+                        Update category details
                       </p>
                     </div>
                   </div>
                   <button
-                    onClick={() => !creating && setShowForm(false)}
-                    disabled={creating}
+                    onClick={() => setEditingCategory(null)}
                     className="btn-ghost btn-icon text-gray-400 hover:text-gray-600"
                   >
                     <svg
@@ -378,7 +478,7 @@ function CategoriesContent() {
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="modal-body space-y-5">
+              <form onSubmit={handleEditSubmit} className="modal-body space-y-5">
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -388,9 +488,8 @@ function CategoriesContent() {
                       type="text"
                       name="name"
                       required
-                      disabled={creating}
-                      value={formData.name}
-                      onChange={handleChange}
+                      value={editFormData.name}
+                      onChange={handleEditChange}
                       className="input"
                       placeholder="e.g., Electronics, Clothing, Books"
                     />
@@ -406,9 +505,8 @@ function CategoriesContent() {
                     <textarea
                       name="description"
                       rows={3}
-                      disabled={creating}
-                      value={formData.description}
-                      onChange={handleChange}
+                      value={editFormData.description}
+                      onChange={handleEditChange}
                       className="input resize-none"
                       placeholder="Describe what products belong in this category..."
                     />
@@ -427,9 +525,8 @@ function CategoriesContent() {
                           type="text"
                           name="slug"
                           required
-                          disabled={creating}
-                          value={formData.slug}
-                          onChange={handleChange}
+                          value={editFormData.slug}
+                          onChange={handleEditChange}
                           className="input rounded-l-none font-mono"
                           placeholder="electronics"
                           pattern="[a-z0-9-]+"
@@ -447,9 +544,8 @@ function CategoriesContent() {
                         type="number"
                         name="sort_order"
                         min="0"
-                        disabled={creating}
-                        value={formData.sort_order}
-                        onChange={handleChange}
+                        value={editFormData.sort_order}
+                        onChange={handleEditChange}
                         className="input"
                         placeholder="0"
                       />
@@ -463,42 +559,29 @@ function CategoriesContent() {
                 <div className="modal-footer">
                   <button
                     type="button"
-                    onClick={() => setShowForm(false)}
-                    disabled={creating}
+                    onClick={() => setEditingCategory(null)}
                     className="btn-outline btn-md"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    disabled={creating}
                     className="btn-primary btn-md inline-flex items-center gap-2"
                   >
-                    {creating ? (
-                      <>
-                        <div className="loading-spinner"></div>
-                        {editingCategory ? "Updating..." : "Creating..."}
-                      </>
-                    ) : (
-                      <>
-                        <svg
-                          className="icon icon-sm"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                          />
-                        </svg>
-                        {editingCategory
-                          ? "Update Category"
-                          : "Create Category"}
-                      </>
-                    )}
+                    <svg
+                      className="icon icon-sm"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    Update Category
                   </button>
                 </div>
               </form>
@@ -702,7 +785,7 @@ function CategoriesContent() {
 
             <div className="space-y-4">
               <button
-                onClick={() => setShowForm(true)}
+                onClick={() => setShowCategorySelector(true)}
                 className="btn-primary btn-lg inline-flex items-center gap-2"
               >
                 <svg
