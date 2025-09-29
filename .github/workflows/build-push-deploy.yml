@@ -167,7 +167,7 @@ jobs:
         if [ "${{ env.IMAGE_TAG_OVERRIDE }}" == "private-latest" ]; then
           --set image.tag=${{ env.IMAGE_TAG_OVERRIDE }} \
         else
-          --set image.tag=${{ env.TARGET_IMAGE_TAG }} \
+          --set image.tag=${{ env.TARGET_ENV }} \
         fi
           --namespace ${{ env.TARGET_ENV }} --create-namespace
 
