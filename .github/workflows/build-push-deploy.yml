@@ -42,10 +42,10 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Checkout code
-      if: ${{ env.DEPLOYMENT_TYPE == 'build-on-public-runner' || env.DEPLOYMENT_TYPE == 'build-and-deploy-on-public-runner' }}
+      if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       uses: actions/checkout@v3
     - name: Build kisaan.com Docker image based on the ubuntu latest remote runner and push to Public Docker Registry
-      if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      if: ${{ env.DEPLOYMENT_TYPE == 'build-on-public-runner' || env.DEPLOYMENT_TYPE == 'build-and-deploy-on-public-runner' }}
       run: |
         echo "kisaan.com Docker image builder!"
         echo "Build, tag, and push image to the given Docker Registry."
