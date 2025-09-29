@@ -42,9 +42,9 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Checkout code
-      if: ${{ env.DEPLOYMENT_TYPE == 'build-on-remote-server' || env.DEPLOYMENT_TYPE == 'build-and-deploy-on-remote-server' }}
+      if: ${{ env.DEPLOYMENT_TYPE == 'build-on-public-runner' || env.DEPLOYMENT_TYPE == 'build-and-deploy-on-public-runner' }}
       uses: actions/checkout@v3
-    - name: Build kisaan.com Docker image based on the TARGET PLATFORM Image and push to Docker Hub
+    - name: Build kisaan.com Docker image based on the ubuntu latest remote runner and push to Public Docker Registry
       if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       run: |
         echo "kisaan.com Docker image builder!"
@@ -57,7 +57,7 @@ jobs:
         docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_IMAGE_TAG }}
       shell: bash        
 
-    - name: Build kisaan.com Docker image based on the TARGET PLATFORM Image and push to Docker Hub
+    - name: Build kisaan.com Docker image based on the self hosted runner and push to Private Docker Registry
       if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       run: |
         echo "kisaan.com Docker image builder!"
