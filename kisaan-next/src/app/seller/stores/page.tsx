@@ -11,6 +11,10 @@ interface Store {
   description?: string;
   slug: string;
   status: string;
+  tax_rate?: number;
+  shipping_enabled?: boolean;
+  shipping_flat_rate?: number;
+  free_shipping_threshold?: number;
   created_at?: string;
 }
 
@@ -25,6 +29,10 @@ export default function SellerStores() {
     name: "",
     description: "",
     slug: "",
+    tax_rate: 10, // Default 10%
+    shipping_enabled: false,
+    shipping_flat_rate: 9.99,
+    free_shipping_threshold: 50,
   });
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
@@ -64,7 +72,15 @@ export default function SellerStores() {
     try {
       const newStore = await api.createStore(formData);
       setShowForm(false);
-      setFormData({ name: "", description: "", slug: "" });
+      setFormData({
+        name: "",
+        description: "",
+        slug: "",
+        tax_rate: 10,
+        shipping_enabled: false,
+        shipping_flat_rate: 9.99,
+        free_shipping_threshold: 50,
+      });
       await loadStores();
 
       // Show success modal
@@ -111,11 +127,22 @@ export default function SellerStores() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+
     setFormData((prev) => {
-      const newData = { ...prev, [name]: value };
+      const newData = { ...prev };
+
+      // Handle different input types
+      if (type === "checkbox") {
+        (newData as any)[name] = checked;
+      } else if (type === "number") {
+        (newData as any)[name] = parseFloat(value) || 0;
+      } else {
+        (newData as any)[name] = value;
+      }
 
       // Auto-generate slug from name if name is being changed
       if (name === "name") {
@@ -311,6 +338,124 @@ export default function SellerStores() {
                     <p className="text-xs text-gray-500 mt-1">
                       Only lowercase letters, numbers, and dashes allowed
                     </p>
+                  </div>
+
+                  {/* Tax Settings Section */}
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                      Tax Configuration
+                    </h3>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Tax Rate (%) <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          name="tax_rate"
+                          required
+                          min="0"
+                          max="100"
+                          step="0.01"
+                          disabled={creating}
+                          value={formData.tax_rate}
+                          onChange={handleChange}
+                          className="input pr-8"
+                          placeholder="10.00"
+                        />
+                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">%</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Enter the tax rate for your store (e.g., 10 for 10%)
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Shipping Settings Section */}
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                      Shipping Configuration
+                    </h3>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="shipping_enabled"
+                          name="shipping_enabled"
+                          disabled={creating}
+                          checked={formData.shipping_enabled}
+                          onChange={handleChange}
+                          className="w-4 h-4 text-[#16a34a] border-gray-300 rounded focus:ring-[#16a34a]"
+                        />
+                        <label htmlFor="shipping_enabled" className="ml-2 text-sm text-gray-700">
+                          I can deliver products to customers
+                        </label>
+                      </div>
+
+                      {formData.shipping_enabled && (
+                        <div className="ml-6 space-y-4 border-l-2 border-gray-200 pl-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Shipping Rate ($) <span className="text-red-500">*</span>
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                              <input
+                                type="number"
+                                name="shipping_flat_rate"
+                                required={formData.shipping_enabled}
+                                min="0"
+                                step="0.01"
+                                disabled={creating}
+                                value={formData.shipping_flat_rate}
+                                onChange={handleChange}
+                                className="input pl-8"
+                                placeholder="9.99"
+                              />
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Flat rate shipping cost for all orders
+                            </p>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Free Shipping Threshold ($)
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                              <input
+                                type="number"
+                                name="free_shipping_threshold"
+                                min="0"
+                                step="0.01"
+                                disabled={creating}
+                                value={formData.free_shipping_threshold}
+                                onChange={handleChange}
+                                className="input pl-8"
+                                placeholder="50.00"
+                              />
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Orders above this amount get free shipping (optional)
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {!formData.shipping_enabled && (
+                        <div className="ml-6 text-xs text-gray-500 italic border-l-2 border-gray-200 pl-4">
+                          📦 No shipping setup needed - perfect for digital products or local pickup!
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
