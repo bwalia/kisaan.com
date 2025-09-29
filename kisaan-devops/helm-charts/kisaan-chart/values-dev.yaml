@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: bwalia/kisaan-nextjs
+  repository: nexus-service.nexus.svc.cluster.local:8082/kisaan-nextjs
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"

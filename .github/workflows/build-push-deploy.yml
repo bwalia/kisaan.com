@@ -29,7 +29,7 @@ on:
             - build-and-deploy
 
 env:
-    IMAGE_REGISTRY: docker.workstation.co.uk
+    IMAGE_REGISTRY: localhost:30082
     TARGET_STACK: nextjs
     IMAGE_NAME: kisaan-nextjs
     TARGET_IMAGE_TAG: latest
@@ -39,7 +39,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - name: Checkout code
       if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
@@ -51,6 +51,7 @@ jobs:
         echo "Build, tag, and push image to the given Docker Registry."
         echo ${{ secrets.NEXUS_PASSWD }} | docker login -u ${{ secrets.NEXUS_USER }} --password-stdin ${{ secrets.DOCKER_REGISTRY }}
           # docker build -f kisaan-next/Dockerfile.test -t kisaan-test:latest .
+          # sudo docker login -u admin -p 'docker-registry-passwd' docker.workstation.co.uk
         docker build -f kisaan-next/Dockerfile.${{ env.TARGET_ENV }} --build-arg TAG=latest -t ${{ env.TARGET_ENV }}-${{ env.TARGET_STACK }} . --no-cache
         docker tag ${{ env.TARGET_ENV }}-${{ env.TARGET_STACK }} ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_IMAGE_TAG }}
         docker push ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TARGET_IMAGE_TAG }}
