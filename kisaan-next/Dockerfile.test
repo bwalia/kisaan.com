@@ -33,15 +33,22 @@ FROM node:22-alpine
 ENV NODE_ENV=production
 ENV TAG=latest
 
+RUN addgroup -g 1002 nodejs
 RUN addgroup -g 1001 -S nextjs
 RUN adduser -S nextjs -u 1001
+
+#RUN     apk add doas;	 \
+ #       adduser nodejs -G wheel; \
+  #      echo 'nodejs:nodejs' | chpasswd; \
+   #     echo 'permit :wheel as root' > /etc/doas.d/doas.conf
+#USER nodejs 
 
 WORKDIR /app
 
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./
+#   COPY --from=builder --chown=nextjs:nodejs /app/next.config.* ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
 # Set the environment variables (if needed)
