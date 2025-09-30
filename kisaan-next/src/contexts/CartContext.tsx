@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import api from '@/lib/api';
+import toast from 'react-hot-toast';
 
 interface CartItem {
   product_uuid: string;
@@ -69,13 +70,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = async (productUuid: string, quantity: number = 1, variantUuid?: string) => {
     if (!user) {
+      toast.error('Please login to add items to cart', {
+        id: 'login-required'
+      });
       throw new Error('Please login to add items to cart');
     }
 
     if (!productUuid || quantity <= 0) {
+      toast.error('Invalid product or quantity');
       throw new Error('Invalid product or quantity');
     }
-    
+
     try {
       setLoading(true);
       await api.addToCart({
@@ -84,8 +89,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         variant_uuid: variantUuid
       });
       await refreshCart();
-    } catch (error) {
+      toast.success('Item added to cart!');
+    } catch (error: any) {
       console.error('Failed to add to cart:', error);
+      const errorMessage = error?.message || 'Failed to add item to cart';
+      toast.error(errorMessage);
       throw error;
     } finally {
       setLoading(false);
@@ -94,19 +102,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const removeFromCart = async (productUuid: string) => {
     if (!user) {
+      toast.error('Please login to modify cart');
       throw new Error('Please login to modify cart');
     }
 
     if (!productUuid) {
+      toast.error('Invalid product UUID');
       throw new Error('Invalid product UUID');
     }
-    
+
     try {
       setLoading(true);
       await api.removeFromCart(productUuid);
       await refreshCart();
-    } catch (error) {
+      toast.success('Item removed from cart');
+    } catch (error: any) {
       console.error('Failed to remove from cart:', error);
+      const errorMessage = error?.message || 'Failed to remove item from cart';
+      toast.error(errorMessage);
       throw error;
     } finally {
       setLoading(false);
@@ -115,6 +128,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = async () => {
     if (!user) {
+      toast.error('Please login to clear cart');
       throw new Error('Please login to clear cart');
     }
 
@@ -124,8 +138,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setCart({});
       setTotal(0);
       setItemCount(0);
-    } catch (error) {
+      toast.success('Cart cleared');
+    } catch (error: any) {
       console.error('Failed to clear cart:', error);
+      const errorMessage = error?.message || 'Failed to clear cart';
+      toast.error(errorMessage);
       throw error;
     } finally {
       setLoading(false);
