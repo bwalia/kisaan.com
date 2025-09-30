@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "MarketPlace - Kisaan.com Multi-Tenancy E-Commerce Ecommerce Platform",
@@ -28,6 +29,30 @@ export default function RootLayout({
               </main>
               <Footer />
             </div>
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: '#363636',
+                  color: '#fff',
+                },
+                success: {
+                  duration: 3000,
+                  iconTheme: {
+                    primary: '#16a34a',
+                    secondary: '#fff',
+                  },
+                },
+                error: {
+                  duration: 5000,
+                  iconTheme: {
+                    primary: '#dc2626',
+                    secondary: '#fff',
+                  },
+                },
+              }}
+            />
           </CartProvider>
         </AuthProvider>
       </body>

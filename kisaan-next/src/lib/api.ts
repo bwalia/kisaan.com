@@ -387,7 +387,7 @@ class ApiClient {
   }
 
   async getVariants(productId: string) {
-    return this.request(`/api/v2/products/${productId}/variants`, {
+    return this.publicRequest(`/api/v2/products/${productId}/variants`, {
       method: "GET",
     });
   }
