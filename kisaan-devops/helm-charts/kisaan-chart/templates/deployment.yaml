@@ -41,9 +41,9 @@ spec:
           #   preStart:
           #     exec:
           #       command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && echo 'preStart: Starting kisaan.com'"]
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && echo 'postStart: Starting kisaan.com'"]
+            # postStart:
+            #   exec:
+            #     command: ["/bin/sh", "-c", "cp /tmp/secrets/.env /app/.env && chmod 644 /app/.env && cd /app/ && echo 'postStart: Starting kisaan.com'"]
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
