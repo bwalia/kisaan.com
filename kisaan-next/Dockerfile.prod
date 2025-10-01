@@ -1,44 +1,61 @@
-# Development Dockerfile
-FROM node:22-alpine AS production
+# Development Stage
+FROM node:22-alpine AS deps
+
+WORKDIR /app
+
+COPY kisaan-next/. ./
+
+# Install TailwindCSS and PostCSS dependencies
+RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss country-state-city
+
+RUN yarn install --frozen-lockfile
+
+# Builder Stage
+FROM node:22-alpine AS builder
 
 ENV NODE_ENV=production
 ENV TAG=latest
 
-# Install dependencies for production
-RUN apk add --no-cache libc6-compat
-
-# Add a work directory
 WORKDIR /app
 
-# Cache and Install dependencies
-COPY kisaan-next/package.json .
-#COPY kisaan-next/yarn.lock .
+COPY --from=deps /app/node_modules ./node_modules
 
-RUN apk add curl
-
-# Copy app files first
 COPY kisaan-next/ .
 
-# Use yarn instead of npm to avoid integrity issues
-RUN yarn install
+RUN npm run build
 
-# Install TypeScript as required by next.config.ts
-RUN yarn add --dev --exact typescript
+RUN rm -rf node_modules
+RUN yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
 
-# Install TailwindCSS and PostCSS dependencies
-RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss
+# Production Stage
+FROM node:22-alpine 
 
-# Install missing dependencies
-RUN yarn add country-state-city
+ENV NODE_ENV=production
+ENV TAG=latest
 
-RUN yarn run build
+RUN addgroup -g 1002 nodejs
+RUN addgroup -g 1001 -S nextjs
+RUN adduser -S nextjs -u 1001
 
-#   RUN npm install vite -g
-#   This works here but not in dockerfile RUN vite build --mode staging so replacing with npm build
-#   RUN npm run build
+#RUN     apk add doas;	 \
+ #       adduser nodejs -G wheel; \
+  #      echo 'nodejs:nodejs' | chpasswd; \
+   #     echo 'permit :wheel as root' > /etc/doas.d/doas.conf
+#USER nodejs 
 
-# Expose port
+WORKDIR /app
+
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+#   COPY --from=builder --chown=nextjs:nodejs /app/next.config.* ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+
+# Set the environment variables (if needed)
+
+USER nextjs
+
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Start the app
-CMD [ "yarn", "start" ]
+CMD ["yarn", "start"]
