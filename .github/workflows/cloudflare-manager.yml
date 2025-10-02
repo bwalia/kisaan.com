@@ -1,0 +1,45 @@
+name: Cloudflare Manager
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      ACTION:
+        type: choice
+        description: 'Please choose the action to perform'
+        default: 'purge-cache'
+        required: true
+        options:
+            - purge-cache
+            - create-worker
+            - update-worker
+            - deploy-worker
+            - get-worker
+            - delete-worker
+            - list-workers
+
+env:
+    CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+    # WORKER_NAME: ${{ secrets.CLOUDFLARE_WORKER_NAME }}
+    # SCRIPT_PATH: kisaan-next/cloudflare/worker.js
+    ACTION: ${{ github.event.inputs.ACTION || 'purge-cache' }}  
+jobs:
+  manage-cloudflare:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo code
+      uses: actions/checkout@v2
+    - name: Manage Cloudflare
+      run: |
+        if [ "${{ env.ACTION }}" == "purge-cache" ]; then
+            curl https://api.cloudflare.com/client/v4/zones/${{ env.ZONE_ID }}/purge_cache \
+                -H 'Content-Type: application/json' \
+                -H "X-Auth-Email: ${{ env.CLOUDFLARE_EMAIL }}" \
+                -H "X-Auth-Key: ${{ env.CLOUDFLARE_API_TOKEN }}" \
+                -d '{"purge_everything": true}'
+        fi
