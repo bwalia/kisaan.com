@@ -39,6 +39,19 @@ on:
             - stable
             - canary
             - prod
+      ACTION:
+        type: choice
+        description: 'Please choose the action to perform'
+        default: 'purge-cache'
+        required: true
+        options:
+            - purge-cache
+            - create-worker
+            - update-worker
+            - deploy-worker
+            - get-worker
+            - delete-worker
+            - list-workers
 
 env:
     DOCKER_REGISTRY: localhost:30082
@@ -49,6 +62,13 @@ env:
     DEPLOYMENT_TYPE: ${{ github.event.inputs.DEPLOYMENT_TYPE || 'build-and-deploy' }}
     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     IMAGE_TAG_OVERRIDE: ${{ github.event.inputs.IMAGE_TAG_OVERRIDE || 'private-latest' }}
+
+    CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+    # WORKER_NAME: secrets.CLOUDFLARE_WORKER_NAME
+    # SCRIPT_PATH: kisaan-next/cloudflare/worker.js
+    ACTION: ${{ github.event.inputs.ACTION || 'purge-cache' }}      
 jobs:
   build:
     runs-on: self-hosted
@@ -174,8 +194,20 @@ jobs:
           --set image.tag=${{ env.TARGET_IMAGE_TAG }} \
           --namespace ${{ env.TARGET_ENV }} --create-namespace
         fi
+    - name: Purge Cloudflare Cache for kisaan.com
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        if [ "${{ env.ACTION }}" == "purge-cache" ]; then
+            curl https://api.cloudflare.com/client/v4/zones/${{ env.ZONE_ID }}/purge_cache \
+                -H 'Content-Type: application/json' \
+                -H "X-Auth-Email: ${{ env.CLOUDFLARE_EMAIL }}" \
+                -H "X-Auth-Key: ${{ env.CLOUDFLARE_API_TOKEN }}" \
+                -d '{"purge_everything": true}'
+        fi
 
-    - name: Slack Notification for kisaan.com release 
+
+    - name: Fire Slack Notification for kisaan.com release to ${{ env.TARGET_ENV }} environment
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_CHANNEL: general
