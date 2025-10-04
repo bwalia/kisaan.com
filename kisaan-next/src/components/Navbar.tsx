@@ -2,12 +2,32 @@
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "@/lib/api";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { itemCount } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [primaryStoreSlug, setPrimaryStoreSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.role === "seller") {
+      loadPrimaryStore();
+    }
+  }, [user]);
+
+  const loadPrimaryStore = async () => {
+    try {
+      const response = await api.getMyStores();
+      const stores = response.data || [];
+      if (stores.length > 0) {
+        setPrimaryStoreSlug(stores[0].slug);
+      }
+    } catch (error) {
+      console.error("Failed to load store:", error);
+    }
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
@@ -61,12 +81,20 @@ export default function Navbar() {
               <div className="flex items-center space-x-3">
                 <span className="text-xs text-gray-500">Hi, {user.name}</span>
                 {user.role === "seller" && (
-                  <Link
-                    href="/seller/stores"
-                    className="btn-secondary text-xs px-3 py-1.5"
-                  >
-                    Dashboard
-                  </Link>
+                  <div className="flex items-center space-x-2">
+                    <Link
+                      href={primaryStoreSlug ? `/seller/${primaryStoreSlug}` : "/seller/stores"}
+                      className="btn-secondary text-xs px-3 py-1.5"
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      href="/seller/orders"
+                      className="btn-outline text-xs px-3 py-1.5"
+                    >
+                      Orders
+                    </Link>
+                  </div>
                 )}
                 <button
                   onClick={logout}
@@ -139,7 +167,7 @@ export default function Navbar() {
                 <>
                   {user.role === "seller" && (
                     <Link
-                      href="/seller/stores"
+                      href={primaryStoreSlug ? `/seller/${primaryStoreSlug}` : "/seller/stores"}
                       className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                     >
                       Dashboard

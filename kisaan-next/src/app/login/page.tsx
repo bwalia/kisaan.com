@@ -57,7 +57,7 @@ function LoginContent() {
     try {
       const user = await login(formData.username, formData.password);
       if (user?.role === "seller" && redirectTo === '/') {
-        router.push("/seller/dashboard");
+        router.push("/seller/stores");
       } else {
         router.push(redirectTo);
       }

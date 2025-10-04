@@ -59,7 +59,15 @@ export default function CategorySelector({
           search: searchTerm.trim(),
           limit: 10,
         });
-        setCategories(response?.data || []);
+
+        // Ensure we always set an array
+        const categoriesData = Array.isArray(response?.data)
+          ? response.data
+          : Array.isArray(response)
+          ? response
+          : [];
+
+        setCategories(categoriesData);
       } catch (error) {
         console.error("Failed to search categories:", error);
         setCategories([]);
@@ -147,7 +155,9 @@ export default function CategorySelector({
     inputRef.current?.focus();
   };
 
-  const exactMatch = categories.find(
+  // Safely check for exact match - ensure categories is an array
+  const categoriesArray = Array.isArray(categories) ? categories : [];
+  const exactMatch = categoriesArray.find(
     (cat) => cat.name.toLowerCase() === searchTerm.toLowerCase()
   );
   const showCreateOption = searchTerm.trim() && !exactMatch && !loading;
@@ -250,12 +260,12 @@ export default function CategorySelector({
           ) : (
             <>
               {/* Existing Categories */}
-              {categories.length > 0 && (
+              {categoriesArray.length > 0 && (
                 <div className="border-b border-gray-100">
                   <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                     Existing Categories
                   </div>
-                  {categories.map((category) => (
+                  {categoriesArray.map((category) => (
                     <button
                       key={category.uuid}
                       onClick={() => handleCategorySelect(category)}
@@ -290,7 +300,7 @@ export default function CategorySelector({
               {/* Create New Option */}
               {showCreateOption && (
                 <div>
-                  {categories.length > 0 && (
+                  {categoriesArray.length > 0 && (
                     <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-t border-gray-100">
                       Create New
                     </div>
@@ -327,7 +337,7 @@ export default function CategorySelector({
               )}
 
               {/* No Results */}
-              {!loading && categories.length === 0 && !showCreateOption && (
+              {!loading && categoriesArray.length === 0 && !showCreateOption && (
                 <div className="p-3 text-center text-gray-500">
                   <svg
                     className="w-8 h-8 mx-auto mb-2 text-gray-400"
