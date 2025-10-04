@@ -436,6 +436,28 @@ class ApiClient {
       method: "DELETE",
     });
   }
+
+  // Orders
+  async getStoreOrders(storeId: string, params?: any) {
+    const query = params ? `?${new URLSearchParams(params)}` : "";
+    return this.request(`/api/v2/stores/${storeId}/orders${query}`);
+  }
+
+  async getOrderDetails(orderId: string) {
+    return this.request(`/api/v2/orders/${orderId}`);
+  }
+
+  async updateOrderStatus(orderId: string, statusData: {
+    status?: string;
+    financial_status?: string;
+    fulfillment_status?: string;
+    internal_notes?: string;
+  }) {
+    return this.request(`/api/v2/orders/${orderId}/status`, {
+      method: "PUT",
+      body: JSON.stringify(statusData)
+    }, true);
+  }
 }
 
 export const api = new ApiClient(API_BASE_URL!);
