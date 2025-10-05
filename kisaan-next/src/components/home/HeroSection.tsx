@@ -18,15 +18,24 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
 
   return (
     <div className="relative bg-gradient-to-br from-[#16a34a] via-[#15803d] to-[#14532d] text-white overflow-hidden">
+      {/* Background image - Farmer in field */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/hero-farmer-banner.jpg')",
+          backgroundPosition: 'center center',
+        }}
+      >
+        {/* Gradient overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#16a34a]/85 via-[#15803d]/80 to-[#14532d]/85"></div>
+      </div>
+      
       {/* Background decorations */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-emerald-300 opacity-10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
         <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl animate-pulse"></div>
         <div className="absolute top-1/4 right-1/3 w-32 h-32 bg-emerald-200 opacity-15 rounded-full blur-xl"></div>
-        
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIwLjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
       </div>
 
       <div className="relative container mx-auto px-6 py-20 lg:py-28">
@@ -66,7 +75,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
           <div className="mb-12">
             <p className="text-sm text-emerald-100 mb-4 font-medium">🔥 Trending Now:</p>
             <div className="flex flex-wrap justify-center gap-3">
-              {['Electronics', 'Fashion', 'Home & Garden', 'Books', 'Sports & Fitness'].map((term) => (
+              {['Healthy foods', 'Organic foods', 'Home & Garden', 'Books', 'Sports & Fitness'].map((term) => (
                 <button
                   key={term}
                   onClick={() => onSearch(term)}

@@ -34,6 +34,8 @@ A modern Kisaan.com Multi-Tenancy E-Commerce e-commerce platform built with Next
 - UK GDPR compliant privacy policy
 - Cookie consent management (PECR compliant)
 - Dedicated feature pages (Security, Pricing, Returns, Support)
+- Custom-generated banner images with farmer theme
+- Procedurally generated page backgrounds
 
 ## Tech Stack
 
@@ -56,6 +58,7 @@ kisaan.com/
 │   │   │   ├── pricing/              # Best Prices page
 │   │   │   ├── returns/              # Easy Returns page
 │   │   │   ├── support/              # 24/7 Support page
+│   │   │   ├── seller-guide/         # Seller Guide page
 │   │   │   ├── privacy/              # Privacy Policy (UK GDPR)
 │   │   │   ├── cookies/              # Cookie Policy (UK PECR)
 │   │   │   ├── cart/                 # Shopping cart
@@ -75,6 +78,9 @@ kisaan.com/
 - **`/pricing`** - Best Prices: Price guarantee, discounts, bulk pricing, loyalty rewards
 - **`/returns`** - Easy Returns: 30-day return policy, free return shipping, exchange process
 - **`/support`** - 24/7 Support: Live chat, email support, phone support, knowledge base
+
+### Seller Resources
+- **`/seller-guide`** - Seller Guide: Complete guide for starting and managing your store, product listings, order management, and best practices
 
 ### Legal & Compliance Pages
 - **`/privacy`** - Privacy Policy: UK GDPR compliant, data protection rights, ICO information
@@ -150,6 +156,35 @@ docker run -p 3000:3000 kisaan-dev
 docker build -f Dockerfile -t kisaan-prod .
 docker run -p 3000:3000 kisaan-prod
 ```
+
+## Banner Images
+
+The platform features custom-generated banner images created with Python PIL/Pillow:
+
+### Generate Banners
+
+```bash
+# Main hero banner (farmer in fields)
+cd kisaan-next/scripts
+python3 generate-banner.py
+
+# Feature page banners (security, pricing, returns, support)
+python3 generate-feature-banners.py
+```
+
+### Requirements
+
+```bash
+pip3 install Pillow --user
+```
+
+### Generated Images
+
+- **Hero Banner**: `hero-farmer-banner.jpg` (1920x800px) - Farmer at sunset
+- **Feature Banners**: Abstract geometric patterns for each feature page
+- **Textures**: Light background textures for content sections
+
+See `kisaan-next/public/BANNERS.md` for complete documentation.
 
 ## API Configuration
 
