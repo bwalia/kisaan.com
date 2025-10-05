@@ -58,6 +58,7 @@ kisaan.com/
 │   │   │   ├── pricing/              # Best Prices page
 │   │   │   ├── returns/              # Easy Returns page
 │   │   │   ├── support/              # 24/7 Support page
+│   │   │   ├── seller-guide/         # Seller Guide page
 │   │   │   ├── privacy/              # Privacy Policy (UK GDPR)
 │   │   │   ├── cookies/              # Cookie Policy (UK PECR)
 │   │   │   ├── cart/                 # Shopping cart
@@ -77,6 +78,9 @@ kisaan.com/
 - **`/pricing`** - Best Prices: Price guarantee, discounts, bulk pricing, loyalty rewards
 - **`/returns`** - Easy Returns: 30-day return policy, free return shipping, exchange process
 - **`/support`** - 24/7 Support: Live chat, email support, phone support, knowledge base
+
+### Seller Resources
+- **`/seller-guide`** - Seller Guide: Complete guide for starting and managing your store, product listings, order management, and best practices
 
 ### Legal & Compliance Pages
 - **`/privacy`** - Privacy Policy: UK GDPR compliant, data protection rights, ICO information

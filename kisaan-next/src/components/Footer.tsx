@@ -123,7 +123,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/help/seller-guide"
+                  href="/seller-guide"
                   className="text-gray-400 hover:text-white text-sm transition-colors"
                 >
                   Seller Guide
@@ -131,7 +131,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/help/fees"
+                  href="/pricing"
                   className="text-gray-400 hover:text-white text-sm transition-colors"
                 >
                   Fees & Pricing
