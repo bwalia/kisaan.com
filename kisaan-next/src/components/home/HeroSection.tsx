@@ -75,7 +75,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
           <div className="mb-12">
             <p className="text-sm text-emerald-100 mb-4 font-medium">🔥 Trending Now:</p>
             <div className="flex flex-wrap justify-center gap-3">
-              {['Electronics', 'Fashion', 'Home & Garden', 'Books', 'Sports & Fitness'].map((term) => (
+              {['Healthy foods', 'Fashion', 'Home & Garden', 'Books', 'Sports & Fitness'].map((term) => (
                 <button
                   key={term}
                   onClick={() => onSearch(term)}

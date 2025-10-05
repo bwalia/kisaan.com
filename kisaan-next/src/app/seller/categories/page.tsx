@@ -491,7 +491,7 @@ function CategoriesContent() {
                       value={editFormData.name}
                       onChange={handleEditChange}
                       className="input"
-                      placeholder="e.g., Electronics, Clothing, Books"
+                      placeholder="e.g., Healthy foods, Clothing, Books"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       This will be visible to customers
@@ -528,7 +528,7 @@ function CategoriesContent() {
                           value={editFormData.slug}
                           onChange={handleEditChange}
                           className="input rounded-l-none font-mono"
-                          placeholder="electronics"
+                          placeholder="healthy-foods"
                           pattern="[a-z0-9-]+"
                         />
                       </div>
