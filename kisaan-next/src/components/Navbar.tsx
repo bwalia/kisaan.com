@@ -92,22 +92,16 @@ export default function Navbar() {
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-600 font-medium">Welcome, <span className="text-[#16a34a]">{user.name}</span></span>
                 {user.role === "seller" && (
-                  <Link
-                    href="/seller/stores"
-                    className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
-                  >
-                    Dashboard
-                  </Link>
                   <div className="flex items-center space-x-2">
                     <Link
                       href={primaryStoreSlug ? `/seller/${primaryStoreSlug}` : "/seller/stores"}
-                      className="btn-secondary text-xs px-3 py-1.5"
+                      className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
                     >
                       Dashboard
                     </Link>
                     <Link
                       href="/seller/orders"
-                      className="btn-outline text-xs px-3 py-1.5"
+                      className="text-gray-700 hover:text-[#16a34a] font-medium transition-colors duration-200"
                     >
                       Orders
                     </Link>
