@@ -105,7 +105,7 @@ export default function Home() {
                       }
                     </p>
                   )}
-                  <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
+                  <div className="text-sm text-gray-500 mt-2 flex items-center gap-2">
                     {loading ? (
                       <>
                         <div className="w-4 h-4 border-2 border-[#16a34a] border-t-transparent rounded-full animate-spin"></div>
@@ -119,7 +119,7 @@ export default function Home() {
                         <span className="font-medium text-gray-700">{products.length} products found</span>
                       </>
                     )}
-                  </p>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-4">

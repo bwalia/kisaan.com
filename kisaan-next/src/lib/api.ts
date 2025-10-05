@@ -46,11 +46,16 @@ class ApiClient {
 
   private async publicRequest(endpoint: string, options: RequestInit = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    const headers = {
+    const headers: any = {
       "Content-Type": "application/json",
       "X-Public-Browse": "true",
       ...options.headers,
     };
+
+    // Include Authorization header if token exists (for authenticated browsing)
+    if (this.token) {
+      headers["Authorization"] = `Bearer ${this.token}`;
+    }
 
     const response = await fetch(url, { ...options, headers });
 
