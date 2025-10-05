@@ -34,6 +34,8 @@ A modern Kisaan.com Multi-Tenancy E-Commerce e-commerce platform built with Next
 - UK GDPR compliant privacy policy
 - Cookie consent management (PECR compliant)
 - Dedicated feature pages (Security, Pricing, Returns, Support)
+- Custom-generated banner images with farmer theme
+- Procedurally generated page backgrounds
 
 ## Tech Stack
 
@@ -150,6 +152,35 @@ docker run -p 3000:3000 kisaan-dev
 docker build -f Dockerfile -t kisaan-prod .
 docker run -p 3000:3000 kisaan-prod
 ```
+
+## Banner Images
+
+The platform features custom-generated banner images created with Python PIL/Pillow:
+
+### Generate Banners
+
+```bash
+# Main hero banner (farmer in fields)
+cd kisaan-next/scripts
+python3 generate-banner.py
+
+# Feature page banners (security, pricing, returns, support)
+python3 generate-feature-banners.py
+```
+
+### Requirements
+
+```bash
+pip3 install Pillow --user
+```
+
+### Generated Images
+
+- **Hero Banner**: `hero-farmer-banner.jpg` (1920x800px) - Farmer at sunset
+- **Feature Banners**: Abstract geometric patterns for each feature page
+- **Textures**: Light background textures for content sections
+
+See `kisaan-next/public/BANNERS.md` for complete documentation.
 
 ## API Configuration
 
