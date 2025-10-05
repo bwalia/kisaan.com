@@ -27,6 +27,8 @@ on:
             - build
             - deploy
             - build-and-deploy
+            - build-on-public-runner
+            - build-and-deploy-on-public-runner
 
       IMAGE_TAG_OVERRIDE:
         type: choice
