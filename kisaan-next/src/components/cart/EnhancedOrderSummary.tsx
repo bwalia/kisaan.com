@@ -1,12 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/home-utils';
+import api from '@/lib/api';
 
 interface EnhancedOrderSummaryProps {
   className?: string;
+}
+
+interface CartTotals {
+  subtotal: number;
+  tax_amount: number;
+  shipping_amount: number;
+  total_amount: number;
+  requires_shipping: boolean;
+  store_totals?: {
+    [storeId: string]: {
+      subtotal: number;
+      tax_amount: number;
+      shipping_amount: number;
+      store_info?: {
+        name: string;
+        tax_rate: number;
+        shipping_flat_rate: number;
+        free_shipping_threshold: number;
+      };
+    };
+  };
 }
 
 export default function EnhancedOrderSummary({ className }: EnhancedOrderSummaryProps) {
@@ -14,14 +36,42 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [promoApplied, setPromoApplied] = useState(false);
   const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+  const [cartTotals, setCartTotals] = useState<CartTotals | null>(null);
+  const [loadingTotals, setLoadingTotals] = useState(true);
   const { total, cart } = useCart();
   const router = useRouter();
 
-  const subtotal = typeof total === 'number' ? total : 0;
-  const tax = subtotal * 0.1; // 10% tax
-  const shipping = subtotal >= 50 ? 0 : 9.99; // Free shipping over $50
+  // Load cart totals from backend
+  useEffect(() => {
+    loadCartTotals();
+  }, [cart]);
+
+  const loadCartTotals = async () => {
+    try {
+      setLoadingTotals(true);
+      const totals = await api.getCartTotals();
+      setCartTotals(totals);
+    } catch (error) {
+      console.error('Failed to load cart totals:', error);
+      // Fallback to basic calculation if API fails
+      setCartTotals({
+        subtotal: typeof total === 'number' ? total : 0,
+        tax_amount: 0,
+        shipping_amount: 0,
+        total_amount: typeof total === 'number' ? total : 0,
+        requires_shipping: false,
+      });
+    } finally {
+      setLoadingTotals(false);
+    }
+  };
+
+  // Get values from backend or fallback
+  const subtotal = cartTotals?.subtotal || 0;
+  const tax = cartTotals?.tax_amount || 0;
+  const shipping = cartTotals?.shipping_amount || 0;
   const discount = promoDiscount;
-  const totalAmount = Math.max(0, subtotal + tax + shipping - discount);
+  const totalAmount = Math.max(0, (cartTotals?.total_amount || 0) - discount);
 
   // Get cart item count
   const itemCount = cart && typeof cart === 'object'
@@ -43,10 +93,10 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
       'FREESHIP': shipping,
     };
 
-    const discount = promoCodes[promoCode.toUpperCase()];
+    const discountAmount = promoCodes[promoCode.toUpperCase()];
 
-    if (discount) {
-      setPromoDiscount(discount);
+    if (discountAmount) {
+      setPromoDiscount(discountAmount);
       setPromoApplied(true);
     } else {
       alert('Invalid promo code');
@@ -68,6 +118,29 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
   const handleContinueShopping = () => {
     router.push('/');
   };
+
+  // Calculate if close to free shipping for any store
+  const getFreeShippingProgress = () => {
+    if (!cartTotals?.store_totals) return null;
+
+    for (const storeId in cartTotals.store_totals) {
+      const storeData = cartTotals.store_totals[storeId];
+      const freeThreshold = storeData.store_info?.free_shipping_threshold || 0;
+
+      if (freeThreshold > 0 && storeData.subtotal < freeThreshold && storeData.subtotal > 0) {
+        const remaining = freeThreshold - storeData.subtotal;
+        return {
+          remaining,
+          threshold: freeThreshold,
+          storeName: storeData.store_info?.name || 'this store',
+        };
+      }
+    }
+
+    return null;
+  };
+
+  const freeShippingProgress = getFreeShippingProgress();
 
   return (
     <div className={`bg-white rounded-lg border border-gray-200 p-6 sticky top-8 ${className}`}>
@@ -130,51 +203,115 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
       </div>
 
       {/* Price Breakdown */}
-      <div className="space-y-4 mb-6">
-        <div className="flex justify-between text-gray-600">
-          <span>Subtotal:</span>
-          <span>{formatPrice(subtotal)}</span>
-        </div>
-
-        <div className="flex justify-between text-gray-600">
-          <span>Shipping:</span>
-          <span className={shipping === 0 ? 'text-green-600 font-medium' : ''}>
-            {shipping === 0 ? 'FREE' : formatPrice(shipping)}
-          </span>
-        </div>
-
-        {shipping > 0 && subtotal > 0 && subtotal < 50 && (
-          <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
-            Add {formatPrice(50 - subtotal)} more for free shipping!
+      {loadingTotals ? (
+        <div className="space-y-4 mb-6 animate-pulse">
+          <div className="flex justify-between">
+            <div className="h-4 bg-gray-200 rounded w-20"></div>
+            <div className="h-4 bg-gray-200 rounded w-16"></div>
           </div>
-        )}
-
-        <div className="flex justify-between text-gray-600">
-          <span>Tax (10%):</span>
-          <span>{formatPrice(tax)}</span>
-        </div>
-
-        {discount > 0 && (
-          <div className="flex justify-between text-green-600">
-            <span>Discount:</span>
-            <span>-{formatPrice(discount)}</span>
+          <div className="flex justify-between">
+            <div className="h-4 bg-gray-200 rounded w-20"></div>
+            <div className="h-4 bg-gray-200 rounded w-16"></div>
           </div>
-        )}
-
-        <div className="border-t border-gray-200 pt-4">
-          <div className="flex justify-between text-xl font-bold text-gray-900">
-            <span>Total:</span>
-            <span className="text-[#16a34a]">{formatPrice(totalAmount)}</span>
+          <div className="flex justify-between">
+            <div className="h-4 bg-gray-200 rounded w-20"></div>
+            <div className="h-4 bg-gray-200 rounded w-16"></div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="space-y-4 mb-6">
+          <div className="flex justify-between text-gray-600">
+            <span>Subtotal:</span>
+            <span>{formatPrice(subtotal)}</span>
+          </div>
+
+          <div className="flex justify-between text-gray-600">
+            <span className="flex items-center gap-1">
+              Shipping:
+              {cartTotals?.store_totals && Object.keys(cartTotals.store_totals).length > 1 && (
+                <span className="text-xs text-gray-500">(Multi-store)</span>
+              )}
+            </span>
+            <span className={shipping === 0 ? 'text-green-600 font-medium' : ''}>
+              {shipping === 0 ? 'FREE' : formatPrice(shipping)}
+            </span>
+          </div>
+
+          {/* Free shipping progress indicator */}
+          {freeShippingProgress && shipping > 0 && (
+            <div className="text-xs bg-orange-50 border border-orange-200 p-3 rounded-lg">
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-orange-800 font-medium mb-1">
+                    Almost there! Add {formatPrice(freeShippingProgress.remaining)} more to get FREE shipping from {freeShippingProgress.storeName}
+                  </p>
+                  <div className="w-full bg-orange-100 rounded-full h-2 mb-1">
+                    <div
+                      className="bg-orange-500 h-2 rounded-full transition-all"
+                      style={{
+                        width: `${Math.min(100, (subtotal / freeShippingProgress.threshold) * 100)}%`
+                      }}
+                    ></div>
+                  </div>
+                  <p className="text-orange-600 text-xs">
+                    {formatPrice(subtotal)} / {formatPrice(freeShippingProgress.threshold)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-between text-gray-600">
+            <span className="flex items-center gap-1">
+              Tax:
+              {tax > 0 && cartTotals?.store_totals && (
+                <span className="text-xs text-gray-500">
+                  (Store rates)
+                </span>
+              )}
+            </span>
+            <span>{formatPrice(tax)}</span>
+          </div>
+
+          {discount > 0 && (
+            <div className="flex justify-between text-green-600">
+              <span>Discount:</span>
+              <span>-{formatPrice(discount)}</span>
+            </div>
+          )}
+
+          <div className="border-t border-gray-200 pt-4">
+            <div className="flex justify-between text-xl font-bold text-gray-900">
+              <span>Total:</span>
+              <span className="text-[#16a34a]">{formatPrice(totalAmount)}</span>
+            </div>
+          </div>
+
+          {/* Multi-store info */}
+          {cartTotals?.store_totals && Object.keys(cartTotals.store_totals).length > 1 && (
+            <div className="text-xs bg-blue-50 border border-blue-200 p-3 rounded-lg">
+              <div className="flex items-start gap-2">
+                <svg className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-blue-800">
+                  Your cart contains items from <span className="font-semibold">{Object.keys(cartTotals.store_totals).length} different stores</span>. Shipping and tax are calculated per store.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="space-y-3">
         <button
           onClick={handleCheckout}
-          disabled={itemCount === 0}
-          className="w-full bg-[#16a34a] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#16a34a] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          disabled={itemCount === 0 || loadingTotals}
+          className="w-full bg-[#16a34a] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#15803d] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />

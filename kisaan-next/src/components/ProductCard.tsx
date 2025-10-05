@@ -24,7 +24,8 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     try {
       await addToCart(product.uuid, 1);
     } catch (error) {
-      console.error('Failed to add to cart:', error);
+      // Error handling is done in CartContext with toast notifications
+      // No need to do anything here as user will see the toast
     } finally {
       setIsLoading(false);
     }

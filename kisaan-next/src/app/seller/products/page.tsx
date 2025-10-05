@@ -5,8 +5,22 @@ import { useAuth } from "@/contexts/AuthContext";
 import api from "@/lib/api";
 import { Product } from "@/types";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import CategorySelector from "@/components/CategorySelector";
+import ImageUpload from "@/components/products/ImageUpload";
+import ProductBasicInfo from "@/components/products/ProductBasicInfo";
+import ProductPricing from "@/components/products/ProductPricing";
+import ProductInventory from "@/components/products/ProductInventory";
+import {
+  ProductFormData,
+  validateProductForm,
+  prepareProductForSubmission,
+  getInitialProductFormData,
+  productToFormData,
+  formatPrice,
+} from "@/utils/product-utils";
 
 function ProductsContent() {
+  // State management
   const [products, setProducts] = useState<any[]>([]);
   const [stores, setStores] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -22,31 +36,23 @@ function ProductsContent() {
     product: any | null;
   }>({ open: false, product: null });
 
+  // Form state
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    slug: "",
-    price: "",
-    compare_price: "",
-    sku: "",
-    category_id: "",
-    inventory_quantity: "0",
-    track_inventory: true,
-    images: [] as string[],
-  });
-  const [imageUrl, setImageUrl] = useState("");
+  const [formData, setFormData] = useState<ProductFormData>(getInitialProductFormData());
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [showCategorySelector, setShowCategorySelector] = useState(false);
 
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Effects
   useEffect(() => {
     if (!authLoading && !user) {
       router.push("/login");
       return;
     }
-
     if (user) {
       loadData();
     }
@@ -54,14 +60,18 @@ function ProductsContent() {
 
   useEffect(() => {
     const storeParam = searchParams.get("store");
-    if (storeParam && storeParam !== selectedStore)
+    if (storeParam && storeParam !== selectedStore) {
       setSelectedStore(storeParam);
+    }
   }, [searchParams]);
 
   useEffect(() => {
-    if (selectedStore && stores.length > 0) loadProductsForStore(selectedStore);
+    if (selectedStore && stores.length > 0) {
+      loadProductsForStore(selectedStore);
+    }
   }, [selectedStore, stores]);
 
+  // Data loading functions
   const loadData = async () => {
     try {
       const storesResponse = await api.getMyStores();
@@ -73,10 +83,11 @@ function ProductsContent() {
       setStores(storesData);
 
       const storeParam = searchParams.get("store");
-      if (storeParam && storesData.find((s: any) => s.uuid === storeParam))
+      if (storeParam && storesData.find((s: any) => s.uuid === storeParam)) {
         setSelectedStore(storeParam);
-      else if (storesData.length > 0 && !selectedStore)
+      } else if (storesData.length > 0 && !selectedStore) {
         setSelectedStore(storesData[0].uuid);
+      }
     } catch (error) {
       console.error("Failed to load data:", error);
       setStores([]);
@@ -93,18 +104,25 @@ function ProductsContent() {
         api.getStoreProducts(storeId),
         api.getCategories(storeId),
       ]);
+
       const productsData = Array.isArray(productsResponse?.data)
         ? productsResponse.data
         : Array.isArray(productsResponse)
         ? productsResponse
         : [];
+
+      const categoriesData = Array.isArray(categoriesResponse?.data)
+        ? categoriesResponse.data
+        : Array.isArray(categoriesResponse)
+        ? categoriesResponse
+        : [];
+
       setProducts(productsData);
-      let categoriesData: any[] = [];
-      if (Array.isArray(categoriesResponse?.data))
-        categoriesData = categoriesResponse.data;
-      else if (Array.isArray(categoriesResponse))
-        categoriesData = categoriesResponse;
       setCategories(categoriesData);
+
+      // Update selected store name
+      const store = stores.find((s) => s.uuid === storeId);
+      setSelectedStoreName(store?.name || "");
     } catch (error) {
       console.error("Failed to load products:", error);
       setProducts([]);
@@ -112,205 +130,169 @@ function ProductsContent() {
     }
   };
 
+  // Form handlers
+  const handleFormDataChange = (newData: Partial<ProductFormData>) => {
+    setFormData(prev => ({ ...prev, ...newData }));
+    // Clear validation errors for changed fields
+    const clearedErrors = { ...validationErrors };
+    Object.keys(newData).forEach(key => {
+      delete clearedErrors[key];
+    });
+    setValidationErrors(clearedErrors);
+  };
+
   const handleStoreChange = (storeId: string) => {
     setSelectedStore(storeId);
     const store = stores.find((s: any) => s.uuid === storeId);
     setSelectedStoreName(store?.name || "");
-    if (storeId) loadProductsForStore(storeId);
-    else {
+    if (storeId) {
+      loadProductsForStore(storeId);
+    } else {
       setProducts([]);
       setCategories([]);
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const target = e.target as
-      | HTMLInputElement
-      | HTMLTextAreaElement
-      | HTMLSelectElement;
-    const { name } = target as any;
-    const type = (target as HTMLInputElement).type;
-    const value =
-      type === "checkbox"
-        ? (target as HTMLInputElement).checked
-        : (target as any).value;
+  const handleCategoryCreate = async (categoryData: {
+    name: string;
+    description: string;
+  }) => {
+    if (!selectedStore) {
+      throw new Error("Please select a store first");
+    }
 
-    setFormData((prev) => {
-      const newData = { ...prev, [name]: value };
+    try {
+      const result = await api.createCategory({
+        ...categoryData,
+        store_id: selectedStore
+      });
 
-      // Auto-generate slug from name if name is being changed
-      if (name === "name") {
-        const autoSlug = value
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "");
-        newData.slug = autoSlug;
-      }
+      // Reload categories
+      const categoriesResponse = await api.getCategories(selectedStore);
+      const categoriesData = Array.isArray(categoriesResponse?.data)
+        ? categoriesResponse.data
+        : Array.isArray(categoriesResponse)
+        ? categoriesResponse
+        : [];
+      setCategories(categoriesData);
 
-      // Auto-format SKU to uppercase and valid characters only
-      if (name === "sku" && value) {
-        const formattedSKU = value
-          .toUpperCase()
-          .replace(/[^A-Z0-9-_]/g, "")
-          .substring(0, 50); // Limit length
-        newData.sku = formattedSKU;
-      }
-
-      return newData;
-    });
+      // Auto-select the new category
+      setSelectedCategory(result);
+      handleFormDataChange({ category_id: result.uuid });
+      setShowCategorySelector(false);
+    } catch (error: any) {
+      throw new Error(error.message || "Failed to create category");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!selectedStore) {
       alert("Please select a store first");
       return;
     }
-    if (!formData.name.trim()) {
-      alert("Product name is required");
-      return;
-    }
-    if (!formData.price || parseFloat(formData.price) <= 0) {
-      alert("Please enter a valid price");
-      return;
-    }
-    if (formData.compare_price && parseFloat(formData.compare_price) < parseFloat(formData.price)) {
-      alert("Compare price must be greater than or equal to the selling price");
-      return;
-    }
+
     if (creating) return;
+
+    // Validate form
+    const errors = validateProductForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      // Scroll to first error
+      const firstErrorElement = document.querySelector(`[name="${Object.keys(errors)[0]}"]`);
+      if (firstErrorElement) {
+        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
 
     setCreating(true);
     try {
-      const submitData = {
-        name: formData.name.trim(),
-        description: formData.description.trim(),
-        slug: formData.slug.trim(),
-        price: parseFloat(formData.price),
-        compare_price: formData.compare_price ? parseFloat(formData.compare_price) : null,
-        sku: formData.sku.trim(),
-        category_id: formData.category_id || null,
-        inventory_quantity: parseInt(formData.inventory_quantity) || 0,
-        track_inventory: formData.track_inventory,
-        images: JSON.stringify(formData.images.filter((img) => img.trim())),
-      };
-
+      const productData = prepareProductForSubmission(formData);
       let result;
+
       if (editingProduct) {
-        result = await api.updateProduct(editingProduct.uuid, submitData);
+        result = await api.updateProduct(editingProduct.uuid, productData);
       } else {
-        result = await api.createProduct(selectedStore, submitData);
+        result = await api.createProduct(selectedStore, productData);
       }
 
-      setShowForm(false);
-      setEditingProduct(null);
-      setFormData({
-        name: "",
-        description: "",
-        slug: "",
-        price: "",
-        compare_price: "",
-        sku: "",
-        category_id: "",
-        inventory_quantity: "0",
-        track_inventory: true,
-        images: [],
-      });
-      setImageUrl("");
-      await loadProductsForStore(selectedStore);
+      // Reset form and reload products
+      resetForm();
+      loadProductsForStore(selectedStore);
 
-      // Show success modal for new product creation
+      // Show success modal for new products
       if (!editingProduct) {
-        setCreatedProduct({ ...result, ...submitData });
+        setCreatedProduct(result);
         setShowSuccessModal(true);
       }
     } catch (error: any) {
-      console.error("Failed to save product:", error);
       alert(
         `Failed to ${editingProduct ? "update" : "create"} product: ` +
-          (error?.message || "Unknown error")
+          (error.message || "Please try again")
       );
     } finally {
       setCreating(false);
     }
   };
 
-  const requestDeleteProduct = (product: any) =>
-    setDeleteDialog({ open: true, product });
+  const handleEdit = (product: any) => {
+    setEditingProduct(product);
+    setFormData(productToFormData(product));
+    setValidationErrors({});
 
-  const confirmDeleteProduct = async () => {
-    const product = deleteDialog.product;
-    if (!product?.uuid) return setDeleteDialog({ open: false, product: null });
+    // Set selected category
+    const category = categories.find(cat => cat.uuid === product.category_id);
+    setSelectedCategory(category);
+
+    setShowForm(true);
+  };
+
+  const handleDelete = (product: any) => {
+    setDeleteDialog({ open: true, product });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteDialog.product) return;
+
     try {
-      await api.deleteProduct(product.uuid);
-      if (selectedStore) await loadProductsForStore(selectedStore);
+      await api.deleteProduct(deleteDialog.product.uuid);
+      loadProductsForStore(selectedStore);
     } catch (error: any) {
-      console.error("Failed to delete product:", error);
-      alert("Failed to delete product: " + (error?.message || "Unknown error"));
+      alert("Failed to delete product: " + (error.message || "Please try again"));
     } finally {
       setDeleteDialog({ open: false, product: null });
     }
   };
 
-  const handleEdit = (product: any) => {
-    if (!product) return;
-    let productImages: string[] = [];
-    try {
-      if (product.images && typeof product.images === "string") {
-        const parsed = JSON.parse(product.images);
-        productImages = Array.isArray(parsed)
-          ? parsed.filter((img) => typeof img === "string" && img.trim())
-          : [];
-      } else if (Array.isArray(product.images)) {
-        productImages = product.images.filter(
-          (img: string) => typeof img === "string" && img.trim()
-        );
-      }
-    } catch (error) {
-      console.error("Failed to parse product images:", error);
-      productImages = [];
-    }
-
-    setEditingProduct(product);
-    setFormData({
-      name: product.name || "",
-      description: product.description || "",
-      slug: product.slug || "",
-      price: (typeof product.price === "number" ? product.price : 0).toString(),
-      compare_price: (typeof product.compare_price === "number" ? product.compare_price : 0).toString() || "",
-      sku: product.sku || "",
-      category_id: product.category?.uuid || "",
-      inventory_quantity: (typeof product.inventory_quantity === "number"
-        ? product.inventory_quantity
-        : 0
-      ).toString(),
-      track_inventory: product.track_inventory !== false,
-      images: productImages,
-    });
-    setShowForm(true);
+  const resetForm = () => {
+    setFormData(getInitialProductFormData());
+    setValidationErrors({});
+    setSelectedCategory(null);
+    setEditingProduct(null);
+    setShowForm(false);
+    setShowCategorySelector(false);
   };
 
-  const handleViewVariants = () => {
+  const handleContinueToVariants = () => {
     setShowSuccessModal(false);
-    if (createdProduct) {
-      router.push(`/seller/products/${createdProduct.uuid}/variants`);
+    if (createdProduct && selectedStore) {
+      router.push(`/seller/products/${createdProduct.uuid}/variants?store=${selectedStore}`);
     }
   };
 
   const handleGoToDashboard = () => {
     setShowSuccessModal(false);
-    router.push('/seller/dashboard');
+    router.push("/seller/dashboard");
   };
 
+  // Loading state
   if (dataLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="loading-spinner text-primary mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#16a34a] mx-auto mb-4"></div>
           <p className="text-gray-600">Loading products...</p>
         </div>
       </div>
@@ -325,27 +307,29 @@ function ProductsContent() {
           <div className="page-header-content">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
               <div className="flex-1">
-                <h1 className="page-title">Store Products</h1>
+                <h1 className="page-title">Products</h1>
                 <p className="page-subtitle text-balance">
                   {selectedStoreName
-                    ? `Manage inventory and products for "${selectedStoreName}"`
-                    : "Add and manage products across your stores"}
+                    ? `Manage products for "${selectedStoreName}"`
+                    : "Create and manage your product catalog"}
                 </p>
                 <div className="flex items-center gap-4 mt-4">
                   <div className="flex items-center text-sm text-gray-500">
-                    <svg className="icon icon-sm mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    <svg
+                      className="icon icon-sm mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                      />
                     </svg>
-                    {products.length} {products.length === 1 ? 'product' : 'products'}
+                    {products.length} {products.length === 1 ? "product" : "products"}
                   </div>
-                  {selectedStore && categories.length > 0 && (
-                    <div className="flex items-center text-sm text-gray-500">
-                      <svg className="icon icon-sm mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                      </svg>
-                      {categories.length} {categories.length === 1 ? 'category' : 'categories'}
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="flex gap-3">
@@ -353,11 +337,21 @@ function ProductsContent() {
                   onClick={() => setShowForm(true)}
                   disabled={!selectedStore}
                   className={`btn-primary btn-md inline-flex items-center gap-2 ${
-                    !selectedStore ? 'opacity-50 cursor-not-allowed' : ''
+                    !selectedStore ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
-                  <svg className="icon icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  <svg
+                    className="icon icon-sm"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
                   </svg>
                   Add Product
                 </button>
@@ -368,7 +362,7 @@ function ProductsContent() {
       </div>
 
       <div className="container mx-auto px-6 py-8">
-        {/* Enhanced Store Selector */}
+        {/* Store Selector */}
         <div className="card mb-8">
           <div className="card-body">
             <div className="flex items-center justify-between mb-6">
@@ -393,70 +387,68 @@ function ProductsContent() {
                   ))}
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg className="icon icon-sm text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                  <svg
+                    className="icon icon-sm text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 9l4-4 4 4m0 6l-4 4-4-4"
+                    />
                   </svg>
                 </div>
               </div>
               {!selectedStore && (
                 <p className="text-xs text-gray-500 mt-1">
-                  Select a store to manage products and inventory
+                  You need to select a store before creating products
                 </p>
-              )}
-              {selectedStore && categories.length === 0 && (
-                <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <p className="text-xs text-yellow-700">
-                    No categories found. <button onClick={() => router.push(`/seller/categories?store=${selectedStore}`)} className="text-yellow-800 underline hover:text-yellow-900">Create categories</button> first to better organize your products.
-                  </p>
-                </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Confirm Delete Dialog */}
-        <ConfirmDialog
-          open={deleteDialog.open}
-          title="Delete Product"
-          message={`Are you sure you want to delete "${
-            deleteDialog.product?.name || ""
-          }"? This will also delete all variants.`}
-          onCancel={() => setDeleteDialog({ open: false, product: null })}
-          onConfirm={confirmDeleteProduct}
-          confirmText="Delete"
-        />
-
-        {/* Add Product Form Modal */}
+        {/* Product Form Modal */}
         {showForm && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl w-full max-w-2xl max-h-screen overflow-y-auto shadow-xl">
-              <div className="px-6 py-4 border-b border-gray-100">
+          <div className="modal-overlay">
+            <div className="modal max-w-6xl">
+              <div className="modal-header">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    {editingProduct ? "Edit Product" : "Add New Product"}
-                  </h2>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <svg
+                        className="icon icon-md text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        {editingProduct ? "Edit Product" : "Add New Product"}
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        {editingProduct ? "Update product details" : "Create a new product for your store"}
+                      </p>
+                    </div>
+                  </div>
                   <button
-                    onClick={() => {
-                      setShowForm(false);
-                      setEditingProduct(null);
-                      setFormData({
-                        name: "",
-                        description: "",
-                        slug: "",
-                        price: "",
-                        compare_price: "",
-                        sku: "",
-                        category_id: "",
-                        inventory_quantity: "0",
-                        track_inventory: true,
-                        images: [],
-                      });
-                      setImageUrl("");
-                    }}
-                    className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100"
+                    onClick={resetForm}
+                    disabled={creating}
+                    className="btn-ghost btn-icon text-gray-400 hover:text-gray-600"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="icon icon-md"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -472,285 +464,196 @@ function ProductsContent() {
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Product Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="input"
+              <form onSubmit={handleSubmit} className="modal-body">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Left Column */}
+                  <div className="space-y-8">
+                    {/* Basic Info */}
+                    <ProductBasicInfo
+                      formData={formData}
+                      onChange={handleFormDataChange}
+                      errors={validationErrors}
+                      disabled={creating}
+                    />
+
+                    {/* Pricing */}
+                    <ProductPricing
+                      formData={formData}
+                      onChange={handleFormDataChange}
+                      errors={validationErrors}
+                      disabled={creating}
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      SKU
-                    </label>
-                    <input
-                      type="text"
-                      name="sku"
-                      disabled={creating}
-                      value={formData.sku}
-                      onChange={handleChange}
-                      className="input font-mono"
-                      placeholder="TOMATO-FRESH-001"
-                      maxLength={50}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Auto-formatted to uppercase (A-Z, 0-9, -, _ only)</p>
+                  {/* Right Column */}
+                  <div className="space-y-8">
+                    {/* Images */}
+                    <div className="card">
+                      <div className="card-header">
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                            <svg
+                              className="w-4 h-4 text-indigo-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900">Product Images</h3>
+                            <p className="text-sm text-gray-500">Upload images or add image URLs</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        <ImageUpload
+                          images={formData.images}
+                          onImagesChange={(images) => handleFormDataChange({ images })}
+                          maxImages={5}
+                          disabled={creating}
+                        />
+                        {validationErrors.images && (
+                          <p className="mt-3 text-sm text-red-600">{validationErrors.images}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Category */}
+                    <div className="card">
+                      <div className="card-header">
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <svg
+                              className="w-4 h-4 text-purple-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                              />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900">Category</h3>
+                            <p className="text-sm text-gray-500">Choose or create a product category</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Product Category <span className="text-red-500">*</span>
+                          </label>
+                          {selectedCategory ? (
+                            <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-md">
+                              <div className="flex items-center text-sm text-green-700">
+                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                <span className="font-medium">{selectedCategory.name}</span>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCategory(null);
+                                  handleFormDataChange({ category_id: "" });
+                                }}
+                                className="text-green-600 hover:text-green-800"
+                                disabled={creating}
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setShowCategorySelector(true)}
+                              className="w-full p-3 border-2 border-dashed border-gray-300 rounded-md hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              disabled={creating}
+                            >
+                              <div className="text-center">
+                                <svg className="mx-auto h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                                <div className="mt-2 text-sm text-gray-600">
+                                  <span className="font-medium text-blue-600 hover:text-blue-500">
+                                    Click to select category
+                                  </span>
+                                </div>
+                                <p className="text-xs text-gray-500">Search existing or create new</p>
+                              </div>
+                            </button>
+                          )}
+                          {validationErrors.category_id && (
+                            <p className="mt-1 text-sm text-red-600">{validationErrors.category_id}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    name="description"
-                    rows={3}
+                {/* Full Width Section */}
+                <div className="mt-8">
+                  <ProductInventory
+                    formData={formData}
+                    onChange={handleFormDataChange}
+                    errors={validationErrors}
+                    categories={categories}
                     disabled={creating}
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="input resize-none"
-                    placeholder="Describe your product features, benefits, and specifications..."
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Product URL Slug <span className="text-red-500">*</span>
-                  </label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-200 bg-gray-50 text-gray-500 text-sm font-mono">
-                      /product/
-                    </span>
-                    <input
-                      type="text"
-                      name="slug"
-                      required
-                      disabled={creating}
-                      value={formData.slug}
-                      onChange={handleChange}
-                      className="input rounded-l-none font-mono"
-                      placeholder="tomato-fresh"
-                      pattern="[a-z0-9-]+"
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">SEO-friendly URL (auto-generated from name)</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Price ($) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      name="price"
-                      step="0.01"
-                      required
-                      disabled={creating}
-                      value={formData.price}
-                      onChange={handleChange}
-                      className="input"
-                      placeholder="29.99"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Selling price for customers</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Compare Price ($)
-                    </label>
-                    <input
-                      type="number"
-                      name="compare_price"
-                      step="0.01"
-                      disabled={creating}
-                      value={formData.compare_price}
-                      onChange={handleChange}
-                      className="input"
-                      placeholder="39.99"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Original price (optional, for showing savings)</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Category
-                    </label>
-                    <div className="flex space-x-2">
-                      <select
-                        name="category_id"
-                        value={formData.category_id}
-                        onChange={handleChange}
-                        className="input flex-1"
-                      >
-                        <option value="">No Category</option>
-                        {categories.map((category: any) => (
-                          <option key={category.uuid} value={category.uuid}>
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
-                      {categories.length === 0 && (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            router.push(
-                              `/seller/categories?store=${selectedStore}`
-                            )
-                          }
-                          className="btn-secondary btn-sm whitespace-nowrap"
-                        >
-                          Create Categories
-                        </button>
-                      )}
-                    </div>
-                    {categories.length === 0 && (
-                      <p className="text-xs text-gray-500 mt-1">
-                        Create categories first to organize your products better
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Inventory Quantity
-                    </label>
-                    <input
-                      type="number"
-                      name="inventory_quantity"
-                      min="0"
-                      value={formData.inventory_quantity}
-                      onChange={handleChange}
-                      className="input"
-                    />
-                  </div>
-
-                  <div className="flex items-center pt-6">
-                    <input
-                      type="checkbox"
-                      name="track_inventory"
-                      checked={formData.track_inventory}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    <label className="text-sm text-gray-700">
-                      Track inventory
-                    </label>
-                  </div>
-                </div>
-
-                {/* Product Images */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Product Images
-                  </label>
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <input
-                        type="url"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        placeholder="Enter image URL"
-                        className="input flex-1"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const url = imageUrl.trim();
-                          if (
-                            url &&
-                            (url.startsWith("http://") ||
-                              url.startsWith("https://"))
-                          ) {
-                            setFormData((prev) => ({
-                              ...prev,
-                              images: [...prev.images, url],
-                            }));
-                            setImageUrl("");
-                          } else if (url) {
-                            alert(
-                              "Please enter a valid image URL starting with http:// or https://"
-                            );
-                          }
-                        }}
-                        className="btn-secondary btn-sm"
-                      >
-                        Add
-                      </button>
-                    </div>
-                    {formData.images.length > 0 && (
-                      <div className="grid grid-cols-3 gap-2">
-                        {formData.images.map((img, index) => (
-                          <div key={index} className="relative">
-                            <img
-                              src={img}
-                              alt={`Product ${index + 1}`}
-                              className="w-full h-20 object-cover rounded border"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.src =
-                                  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMiAxNkM5Ljc5IDEzLjc5IDkuNzkgMTAuMjEgMTIgOEMxNC4yMSAxMC4yMSAxNC4yMSAxMy43OSAxMiAxNloiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+";
-                              }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  images: prev.images.filter(
-                                    (_, i) => i !== index
-                                  ),
-                                }));
-                              }}
-                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs hover:bg-red-600 flex items-center justify-center"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
+                <div className="modal-footer">
                   <button
                     type="button"
-                    onClick={() => {
-                      setShowForm(false);
-                      setEditingProduct(null);
-                      setFormData({
-                        name: "",
-                        description: "",
-                        slug: "",
-                        price: "",
-                        compare_price: "",
-                        sku: "",
-                        category_id: "",
-                        inventory_quantity: "0",
-                        track_inventory: true,
-                        images: [],
-                      });
-                      setImageUrl("");
-                    }}
-                    className="btn-outline btn-sm"
+                    onClick={resetForm}
+                    disabled={creating}
+                    className="btn-outline btn-md"
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn-primary btn-sm">
-                    {editingProduct ? "Update" : "Add"} Product
+                  <button
+                    type="submit"
+                    disabled={creating}
+                    className="btn-primary btn-md inline-flex items-center gap-2"
+                  >
+                    {creating ? (
+                      <>
+                        <div className="loading-spinner"></div>
+                        {editingProduct ? "Updating..." : "Creating..."}
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="icon icon-sm"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                          />
+                        </svg>
+                        {editingProduct ? "Update Product" : "Create Product"}
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
@@ -758,39 +661,222 @@ function ProductsContent() {
           </div>
         )}
 
+        {/* Category Selector Modal */}
+        {showCategorySelector && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <div className="modal-header">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <svg
+                        className="icon icon-md text-purple-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Select Product Category
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        Choose existing category or create a new one
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowCategorySelector(false)}
+                    className="btn-ghost btn-icon text-gray-400 hover:text-gray-600"
+                  >
+                    <svg
+                      className="icon icon-md"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div className="modal-body">
+                <CategorySelector
+                  storeId={selectedStore}
+                  onCategorySelect={(category) => {
+                    if (category) {
+                      setSelectedCategory(category);
+                      handleFormDataChange({ category_id: category.uuid });
+                      setShowCategorySelector(false);
+                    }
+                  }}
+                  onCategoryCreate={handleCategoryCreate}
+                  placeholder="Search categories for your product..."
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Success Modal */}
+        {showSuccessModal && createdProduct && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <div className="modal-body text-center py-8">
+                {/* Success Icon */}
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <svg
+                    className="icon icon-xl text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+
+                {/* Success Message */}
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                    🎉 Product Created Successfully!
+                  </h2>
+                  <p className="text-gray-600 mb-4 text-balance">
+                    <strong>"{createdProduct.name}"</strong> has been added to your store.
+                  </p>
+                  <div className="flex items-center justify-center text-sm text-gray-500 bg-gray-50 rounded-lg p-3 mx-auto max-w-sm">
+                    <span className="font-mono">
+                      SKU: {createdProduct.sku}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <button
+                    onClick={handleContinueToVariants}
+                    className="btn-primary btn-md inline-flex items-center gap-2"
+                  >
+                    <svg
+                      className="icon icon-sm"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
+                      />
+                    </svg>
+                    Add Variants
+                  </button>
+                  <button
+                    onClick={handleGoToDashboard}
+                    className="btn-outline btn-md inline-flex items-center gap-2"
+                  >
+                    <svg
+                      className="icon icon-sm"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2v0a2 2 0 002-2h6l2 2h6a2 2 0 012 2v1"
+                      />
+                    </svg>
+                    Back to Dashboard
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation */}
+        <ConfirmDialog
+          open={deleteDialog.open}
+          title="Delete Product"
+          message={`Are you sure you want to delete "${deleteDialog.product?.name || ""}"?`}
+          confirmText="Delete"
+          onCancel={() => setDeleteDialog({ open: false, product: null })}
+          onConfirm={confirmDelete}
+        />
+
         {/* Products List */}
         {!selectedStore ? (
           <div className="empty-state">
             <div className="empty-state-icon">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
               </svg>
             </div>
             <h2 className="text-2xl font-semibold text-gray-900 mb-3 text-balance">
               Select a Store to Manage Products
             </h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto text-balance">
-              Choose one of your stores above to add and manage products for your inventory.
+              Choose one of your stores above to create and manage products.
             </p>
             <div className="flex items-center justify-center text-sm text-gray-500">
-              <svg className="icon icon-sm mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <svg
+                className="icon icon-sm mr-2 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
-              Products help you showcase what you're selling
+              Products help customers discover what you're selling
             </div>
           </div>
         ) : products.length === 0 ? (
           <div className="empty-state">
             <div className="empty-state-icon">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
               </svg>
             </div>
             <h2 className="text-2xl font-semibold text-gray-900 mb-3 text-balance">
               Ready to Add Your First Product?
             </h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto text-balance">
-              Start building your inventory by adding products that customers can discover and purchase from your store.
+              Start selling by adding products to your store. Include great photos, detailed descriptions, and competitive pricing.
             </p>
 
             <div className="space-y-4">
@@ -798,24 +884,54 @@ function ProductsContent() {
                 onClick={() => setShowForm(true)}
                 className="btn-primary btn-lg inline-flex items-center gap-2"
               >
-                <svg className="icon icon-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                <svg
+                  className="icon icon-md"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
                 </svg>
                 Add Your First Product
               </button>
 
               <div className="flex items-center justify-center space-x-6 text-sm text-gray-500">
                 <div className="flex items-center">
-                  <svg className="icon icon-sm mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="icon icon-sm mr-2 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
-                  Easy inventory management
+                  Professional images
                 </div>
                 <div className="flex items-center">
-                  <svg className="icon icon-sm mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <svg
+                    className="icon icon-sm mr-2 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
                   </svg>
-                  Start selling immediately
+                  Smart inventory tracking
                 </div>
               </div>
             </div>
@@ -825,55 +941,135 @@ function ProductsContent() {
             {products.map((product: any) => (
               <div key={product.uuid} className="card hover-lift">
                 <div className="card-body">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-xl font-bold text-[#16a34a]">
-                      ${parseFloat(product.price).toFixed(2)}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      Stock: {product.inventory_quantity}
-                    </span>
+                  {/* Product Image */}
+                  <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+                    {product.images && JSON.parse(product.images).length > 0 ? (
+                      <img
+                        src={JSON.parse(product.images)[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = '/placeholder-image.png';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <svg
+                          className="w-12 h-12 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs text-gray-500">
-                      SKU: {product.sku || "N/A"}
-                    </span>
-                    <span
-                      className={`badge ${
-                        product.is_active ? "badge-success" : "badge-gray"
-                      }`}
-                    >
-                      {product.is_active ? "Active" : "Inactive"}
-                    </span>
+                  {/* Product Info */}
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900 truncate flex-1">
+                        {product.name}
+                      </h3>
+                      <span
+                        className={`badge flex-shrink-0 ml-2 ${
+                          product.is_active ? "badge-success" : "badge-gray"
+                        }`}
+                      >
+                        {product.is_active ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+
+                    <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                      {product.description}
+                    </p>
+
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
+                      <span>SKU: {product.sku}</span>
+                      <span>Stock: {product.inventory_quantity || 0}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg font-semibold text-gray-900">
+                          {formatPrice(product.price)}
+                        </span>
+                        {product.compare_price && product.compare_price > product.price && (
+                          <span className="text-sm text-gray-500 line-through">
+                            {formatPrice(product.compare_price)}
+                          </span>
+                        )}
+                      </div>
+                      {product.is_featured && (
+                        <div className="badge badge-warning text-xs">Featured</div>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2">
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 pt-3 border-t border-gray-100">
                     <button
                       onClick={() => handleEdit(product)}
-                      className="btn-primary btn-sm text-xs"
+                      className="flex-1 btn-outline btn-sm justify-center"
                     >
+                      <svg
+                        className="icon icon-sm mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
                       Edit
                     </button>
                     <button
-                      onClick={() =>
-                        router.push(`/seller/products/${product.uuid}/variants`)
-                      }
-                      className="btn-outline btn-sm text-xs"
+                      onClick={() => router.push(`/seller/products/${product.uuid}/variants?store=${selectedStore}`)}
+                      className="btn-ghost btn-sm text-blue-600 hover:bg-blue-50 border border-blue-200 px-3"
                     >
+                      <svg
+                        className="icon icon-sm mr-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
+                        />
+                      </svg>
                       Variants
                     </button>
                     <button
-                      onClick={() => requestDeleteProduct(product)}
-                      className="px-2 py-1 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 transition-colors"
+                      onClick={() => handleDelete(product)}
+                      className="btn-ghost btn-sm text-red-600 hover:bg-red-50 hover:text-red-700 border border-red-200 px-3"
                     >
-                      Delete
+                      <svg
+                        className="icon icon-sm"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -889,14 +1085,7 @@ function ProductsContent() {
 export default function SellerProducts() {
   return (
     <Suspense
-      fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#16a34a] mx-auto mb-4"></div>
-            <p className="text-gray-600 text-sm">Loading...</p>
-          </div>
-        </div>
-      }
+      fallback={<div className="container mx-auto px-4 py-8">Loading...</div>}
     >
       <ProductsContent />
     </Suspense>

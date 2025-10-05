@@ -12,9 +12,18 @@ import PaymentSection from "@/components/checkout/PaymentSection";
 import type { CartItem, CheckoutFormData, CheckoutErrors } from '@/types/checkout';
 import { getDefaultCountry } from '@/lib/countries';
 
+interface CartTotals {
+  subtotal: number;
+  tax_amount: number;
+  shipping_amount: number;
+  total_amount: number;
+  requires_shipping: boolean;
+}
+
 export default function Checkout() {
   const [cart, setCart] = useState<Record<string, CartItem>>({});
   const [total, setTotal] = useState(0);
+  const [cartTotals, setCartTotals] = useState<CartTotals | null>(null);
   const [loading, setLoading] = useState(false);
   const [paymentError, setPaymentError] = useState("");
   const [errors, setErrors] = useState<CheckoutErrors>({});
@@ -53,10 +62,15 @@ export default function Checkout() {
 
   const loadCart = async () => {
     try {
-      const response = await api.getCart();
-      const cartData = response?.cart || {};
+      const [cartResponse, totalsResponse] = await Promise.all([
+        api.getCart(),
+        api.getCartTotals()
+      ]);
+
+      const cartData = cartResponse?.cart || {};
       setCart(cartData);
-      setTotal(response?.total || 0);
+      setTotal(cartResponse?.total || 0);
+      setCartTotals(totalsResponse || null);
 
       if (Object.keys(cartData).length === 0) {
         router.push("/cart");
@@ -65,6 +79,7 @@ export default function Checkout() {
       console.error("Failed to load cart:", error);
       setCart({});
       setTotal(0);
+      setCartTotals(null);
       router.push("/cart");
     }
   };
@@ -190,9 +205,11 @@ export default function Checkout() {
 
   const cartItems = cart ? Object.values(cart) : [];
   const subtotal = total || 0;
-  const taxAmount = subtotal * 0.1;
-  const shipping = subtotal >= 50 ? 0 : 9.99;
-  const finalTotal = subtotal + taxAmount + shipping;
+
+  // Use dynamic calculations from backend if available, otherwise fallback to defaults
+  const taxAmount = cartTotals?.tax_amount || 0;
+  const shipping = cartTotals?.shipping_amount || 0;
+  const finalTotal = cartTotals?.total_amount || subtotal;
   const customerFullName =
     `${formData.customer_first_name} ${formData.customer_last_name}`.trim();
   const isFormValid =
@@ -265,7 +282,7 @@ export default function Checkout() {
           <div className="xl:col-span-1">
             <CheckoutOrderSummary
               cartItems={cartItems}
-              subtotal={subtotal}
+              subtotal={cartTotals?.subtotal || subtotal}
               tax={taxAmount}
               shipping={shipping}
               total={finalTotal}
