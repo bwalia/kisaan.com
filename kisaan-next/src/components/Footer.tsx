@@ -2,28 +2,33 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="container py-8 px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-[#16a34a] rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#16a34a] rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="container py-12 px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <Link href="/" className="inline-flex items-center space-x-2 mb-3">
-              <div className="w-6 h-6 bg-[#16a34a] rounded-md flex items-center justify-center">
-                <span className="text-white font-bold text-sm">K</span>
+            <Link href="/" className="inline-flex items-center space-x-3 mb-4 group">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#16a34a] to-[#15803d] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                <span className="text-white font-bold text-lg">K</span>
               </div>
-              <span className="text-lg font-bold">Kisaan</span>
+              <span className="text-xl font-bold">Kisaan</span>
             </Link>
-            <p className="text-gray-400 text-sm mb-4 max-w-sm">
-              Your trusted Kisaan.com Multi-Tenancy E-Commerce marketplace connecting buyers and
-              sellers worldwide.
+            <p className="text-gray-300 text-sm mb-5 max-w-sm leading-relaxed">
+              Your trusted marketplace connecting buyers and sellers worldwide. Build your dream store with Kisaan.
             </p>
             <div className="flex space-x-3">
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="w-10 h-10 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-[#16a34a] hover:border-[#16a34a] transition-all duration-300 transform hover:scale-110"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -32,10 +37,10 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="w-10 h-10 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-[#16a34a] hover:border-[#16a34a] transition-all duration-300 transform hover:scale-110"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -44,14 +49,14 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="w-10 h-10 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg flex items-center justify-center text-gray-300 hover:text-white hover:bg-[#16a34a] hover:border-[#16a34a] transition-all duration-300 transform hover:scale-110"
               >
                 <svg
-                  className="w-4 h-4"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.001z" />
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
                 </svg>
               </a>
             </div>
@@ -59,7 +64,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-base mb-3">Quick Links</h3>
+            <h3 className="font-bold text-lg mb-4 text-white">Quick Links</h3>
             <ul className="space-y-1.5">
               <li>
                 <Link
@@ -137,36 +142,67 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="font-semibold text-base mb-3">Support</h3>
-            <ul className="space-y-1.5">
+            <h3 className="font-bold text-lg mb-4 text-white">Support</h3>
+            <ul className="space-y-2.5">
               <li>
                 <Link
-                  href="/help"
-                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                  href="/support"
+                  className="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
                 >
-                  Help Center
+                  24/7 Support
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/contact"
-                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                  href="/returns"
+                  className="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
                 >
-                  Contact Us
+                  Returns Policy
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/security"
+                  className="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
+                >
+                  Security
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/pricing"
+                  className="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
+                >
+                  Pricing
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h3 className="font-bold text-lg mb-4 text-white">Legal</h3>
+            <ul className="space-y-2.5">
               <li>
                 <Link
                   href="/privacy"
-                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                  className="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
                 >
                   Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link
+                  href="/cookies"
+                  className="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
+                >
+                  Cookie Policy
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/terms"
-                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                  className="text-gray-300 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
                 >
                   Terms of Service
                 </Link>
@@ -175,15 +211,26 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-xs">
-              © 2025 Workstation. All rights reserved.
+        <div className="border-t border-white/10 mt-10 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-300 text-sm">
+              © {new Date().getFullYear()} Kisaan. All rights reserved.
             </p>
-            <div className="flex items-center space-x-4 mt-3 md:mt-0">
-              <div className="flex items-center space-x-1.5 text-xs text-gray-400">
+            <div className="flex items-center gap-6">
+              <Link href="/privacy" className="text-gray-300 hover:text-white text-sm transition-colors">
+                Privacy
+              </Link>
+              <Link href="/cookies" className="text-gray-300 hover:text-white text-sm transition-colors">
+                Cookies
+              </Link>
+              <Link href="/terms" className="text-gray-300 hover:text-white text-sm transition-colors">
+                Terms
+              </Link>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-gray-300">
                 <svg
-                  className="w-3 h-3"
+                  className="w-4 h-4 text-[#16a34a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -197,9 +244,9 @@ export default function Footer() {
                 </svg>
                 <span>SSL Secured</span>
               </div>
-              <div className="flex items-center space-x-1.5 text-xs text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-gray-300">
                 <svg
-                  className="w-3 h-3"
+                  className="w-4 h-4 text-[#16a34a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -208,10 +255,10 @@ export default function Footer() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
-                <span>Trusted Platform</span>
+                <span>GDPR Compliant</span>
               </div>
             </div>
           </div>

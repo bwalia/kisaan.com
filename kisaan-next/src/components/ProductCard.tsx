@@ -56,20 +56,20 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   return (
     <Link href={`/products/${product.uuid}`} className="group">
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 h-full flex flex-col">
+      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-2xl hover:border-[#16a34a]/30 transition-all duration-300 h-full flex flex-col transform hover:-translate-y-1">
         {/* Product Image */}
-        <div className="relative aspect-square bg-gray-50 overflow-hidden">
+        <div className="relative aspect-square bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
           {productImage && !imageError ? (
             <img
               src={productImage}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               loading={priority ? 'eager' : 'lazy'}
               onError={() => setImageError(true)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-300">
-              <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -82,8 +82,8 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
           {/* Out of stock overlay */}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-              <span className="bg-white px-3 py-1 rounded-full text-sm font-medium text-gray-900">
+            <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
+              <span className="bg-white px-4 py-2 rounded-full text-sm font-bold text-gray-900 shadow-lg">
                 Out of Stock
               </span>
             </div>
@@ -91,7 +91,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
           {/* Discount badge */}
           {hasDiscount && (
-            <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
+            <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg">
               -0%
             </div>
           )}
@@ -101,18 +101,18 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
             <button
               onClick={handleQuickAdd}
               disabled={isLoading}
-              className="absolute bottom-2 right-2 bg-[#16a34a] text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-[#16a34a] transform translate-y-2 group-hover:translate-y-0 disabled:opacity-50"
+              className="absolute bottom-3 right-3 bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:shadow-xl transform translate-y-2 group-hover:translate-y-0 disabled:opacity-50 hover:scale-110"
               title="Quick Add to Cart"
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v4a2 2 0 01-2 2H9a2 2 0 01-2-2v-4m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
+                    strokeWidth={2.5}
+                    d="M12 4v16m8-8H4"
                   />
                 </svg>
               )}
@@ -121,18 +121,18 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         </div>
 
         {/* Product Info */}
-        <div className="p-4 flex-1 flex flex-col">
-          <h3 className="font-medium text-gray-900 line-clamp-2 text-sm mb-2 group-hover:text-[#16a34a] transition-colors">
+        <div className="p-5 flex-1 flex flex-col">
+          <h3 className="font-semibold text-gray-900 line-clamp-2 mb-3 group-hover:text-[#16a34a] transition-colors leading-snug">
             {product.name}
           </h3>
 
           {/* Price */}
-          <div className="flex items-center gap-2 mt-auto">
-            <span className="text-lg font-bold text-[#16a34a]">
+          <div className="flex items-baseline gap-2 mt-auto">
+            <span className="text-2xl font-bold text-[#16a34a]">
               {formatPrice(product.price)}
             </span>
             {hasDiscount && (
-              <span className="text-sm text-gray-500 line-through">
+              <span className="text-sm text-gray-400 line-through">
                 {formatPrice(0)}
               </span>
             )}
@@ -140,9 +140,14 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
           {/* Stock indicator */}
           {!isOutOfStock && product.inventory_quantity <= 5 && (
-            <p className="text-xs text-orange-600 mt-1">
-              Only {product.inventory_quantity} left in stock
-            </p>
+            <div className="flex items-center gap-1 mt-2">
+              <svg className="w-3 h-3 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <p className="text-xs text-orange-600 font-medium">
+                Only {product.inventory_quantity} left!
+              </p>
+            </div>
           )}
         </div>
       </div>

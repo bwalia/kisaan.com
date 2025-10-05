@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import HeroSection from "@/components/home/HeroSection";
+import FeaturesSection from "@/components/home/FeaturesSection";
 import CategoryFilter from "@/components/home/CategoryFilter";
 import ProductGrid from "@/components/home/ProductGrid";
 import FiltersSidebar, {
@@ -46,6 +47,9 @@ export default function Home() {
       {/* Hero Section */}
       <HeroSection onSearch={search} searchLoading={searchLoading} />
 
+      {/* Features Section */}
+      <FeaturesSection />
+
       {/* Category Filter */}
       {!categoriesLoading && categories.length > 0 && (
         <CategoryFilter
@@ -81,11 +85,11 @@ export default function Home() {
           {/* Main Product Area */}
           <div className="flex-1 min-w-0">
             {/* Header with results and controls */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex-1">
                   <h1
-                    className="text-2xl font-bold text-gray-900"
+                    className="text-3xl font-bold text-gray-900"
                     id="products"
                   >
                     {filters.query
@@ -93,7 +97,7 @@ export default function Home() {
                       : "All Products"}
                   </h1>
                   {filters.category && (
-                    <p className="text-gray-600 mt-1">
+                    <p className="text-gray-600 mt-2 font-medium">
                       in{" "}
                       {
                         categories.find((c) => c.uuid === filters.category)
@@ -101,23 +105,33 @@ export default function Home() {
                       }
                     </p>
                   )}
-                  <p className="text-sm text-gray-500 mt-1">
-                    {loading
-                      ? "Loading..."
-                      : `${products.length} products found`}
+                  <p className="text-sm text-gray-500 mt-2 flex items-center gap-2">
+                    {loading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-[#16a34a] border-t-transparent rounded-full animate-spin"></div>
+                        Loading...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4 text-[#16a34a]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span className="font-medium text-gray-700">{products.length} products found</span>
+                      </>
+                    )}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-4">
                   {/* Sort Dropdown */}
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-gray-700">
+                  <div className="flex items-center gap-3">
+                    <label className="text-sm font-semibold text-gray-700">
                       Sort by:
                     </label>
                     <select
                       value={filters.sortBy}
                       onChange={(e) => changeSort(e.target.value as any)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a]"
+                      className="px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#16a34a] focus:border-[#16a34a] font-medium hover:border-gray-300 transition-colors"
                     >
                       {SORT_OPTIONS.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -130,7 +144,7 @@ export default function Home() {
                   {/* Mobile Filter Button */}
                   <button
                     onClick={() => setFiltersOpen(true)}
-                    className="lg:hidden bg-[#16a34a] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16a34a] transition-colors inline-flex items-center gap-2"
+                    className="lg:hidden bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-5 py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all duration-200 inline-flex items-center gap-2 transform hover:scale-105"
                   >
                     <svg
                       className="icon icon-sm"

@@ -10,82 +10,93 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-14">
+    <nav className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-50 backdrop-blur-lg bg-opacity-95">
+      <div className="container mx-auto px-6">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-6 h-6 bg-[#16a34a] rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-sm">K</span>
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#16a34a] to-[#15803d] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+              <span className="text-white font-bold text-xl">K</span>
             </div>
-            <span className="text-lg font-bold text-gray-900">Kisaan</span>
+            <span className="text-2xl font-bold bg-gradient-to-r from-[#16a34a] to-[#15803d] bg-clip-text text-transparent">Kisaan</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className="text-gray-600 hover:text-[#16a34a] text-sm font-medium transition-colors"
+              className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
             >
               Home
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
+            </Link>
+
+            <Link
+              href="/support"
+              className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
+            >
+              Support
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
             </Link>
 
             <Link
               href="/cart"
-              className="relative text-gray-600 hover:text-[#16a34a] text-sm font-medium transition-colors"
+              className="relative text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 group"
             >
-              <div className="flex items-center space-x-1">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.1 5M7 13l-1.1 5m0 0h9.1M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6"
-                  />
-                </svg>
+              <div className="flex items-center space-x-2">
+                <div className="relative">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    />
+                  </svg>
+                  {itemCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-lg animate-pulse">
+                      {itemCount}
+                    </span>
+                  )}
+                </div>
                 <span>Cart</span>
               </div>
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#16a34a] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs font-medium">
-                  {itemCount}
-                </span>
-              )}
             </Link>
 
             {user ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-xs text-gray-500">Hi, {user.name}</span>
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-600 font-medium">Welcome, <span className="text-[#16a34a]">{user.name}</span></span>
                 {user.role === "seller" && (
                   <Link
                     href="/seller/stores"
-                    className="btn-secondary text-xs px-3 py-1.5"
+                    className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
                   >
                     Dashboard
                   </Link>
                 )}
                 <button
                   onClick={logout}
-                  className="text-gray-400 hover:text-gray-600 text-xs"
+                  className="text-gray-500 hover:text-red-600 font-medium transition-colors duration-200"
                 >
                   Logout
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-4">
                 <Link
                   href="/login"
-                  className="text-gray-600 hover:text-[#16a34a] text-sm font-medium"
+                  className="text-gray-700 hover:text-[#16a34a] font-medium transition-colors duration-200"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="btn-primary text-xs px-4 py-2"
+                  className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
                 >
                   Get Started
                 </Link>
