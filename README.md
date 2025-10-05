@@ -19,6 +19,10 @@ A modern Kisaan.com Multi-Tenancy E-Commerce e-commerce platform built with Next
 - Shopping cart and checkout process
 - Order history and tracking
 - User profile management
+- 24/7 customer support
+- Easy returns and refunds
+- Secure payment processing
+- Best price guarantee
 
 ### Platform Features
 
@@ -27,6 +31,9 @@ A modern Kisaan.com Multi-Tenancy E-Commerce e-commerce platform built with Next
 - TypeScript for type safety
 - Modern React 19 with Next.js 15
 - RESTful API integration
+- UK GDPR compliant privacy policy
+- Cookie consent management (PECR compliant)
+- Dedicated feature pages (Security, Pricing, Returns, Support)
 
 ## Tech Stack
 
@@ -42,10 +49,36 @@ A modern Kisaan.com Multi-Tenancy E-Commerce e-commerce platform built with Next
 ```
 kisaan.com/
 ├── kisaan-next/          # Next.js application (main codebase)
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── page.tsx              # Homepage
+│   │   │   ├── security/             # Fast & Secure page
+│   │   │   ├── pricing/              # Best Prices page
+│   │   │   ├── returns/              # Easy Returns page
+│   │   │   ├── support/              # 24/7 Support page
+│   │   │   ├── privacy/              # Privacy Policy (UK GDPR)
+│   │   │   ├── cookies/              # Cookie Policy (UK PECR)
+│   │   │   ├── cart/                 # Shopping cart
+│   │   │   ├── checkout/             # Checkout process
+│   │   │   └── seller/               # Seller dashboard
+│   │   ├── components/               # Reusable components
+│   │   └── lib/                      # Utility functions
 ├── kisaan.com/           # Legacy PHP frontend
 ├── kisaan-devops/    # DevOps configurations
 └── README.md
 ```
+
+## Key Pages
+
+### Customer Information Pages
+- **`/security`** - Fast & Secure: SSL encryption, PCI DSS compliance, fraud protection
+- **`/pricing`** - Best Prices: Price guarantee, discounts, bulk pricing, loyalty rewards
+- **`/returns`** - Easy Returns: 30-day return policy, free return shipping, exchange process
+- **`/support`** - 24/7 Support: Live chat, email support, phone support, knowledge base
+
+### Legal & Compliance Pages
+- **`/privacy`** - Privacy Policy: UK GDPR compliant, data protection rights, ICO information
+- **`/cookies`** - Cookie Policy: UK PECR compliant, cookie types, consent management
 
 ## Local Development Setup
 
