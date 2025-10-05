@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function EnhancedEmptyCart() {
   const popularCategories = [
     { name: 'Healthy foods', href: '/?category=healthy-foods', icon: '🥗' },
-    { name: 'Clothing', href: '/?category=clothing', icon: '👕' },
+    { name: 'Organic foods', href: '/?category=organic-foods', icon: '🌿' },
     { name: 'Home & Garden', href: '/?category=home-garden', icon: '🏠' },
     { name: 'Books', href: '/?category=books', icon: '📚' },
   ];

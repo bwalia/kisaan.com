@@ -491,7 +491,7 @@ function CategoriesContent() {
                       value={editFormData.name}
                       onChange={handleEditChange}
                       className="input"
-                      placeholder="e.g., Healthy foods, Clothing, Books"
+                      placeholder="e.g., Healthy foods, Organic foods, Books"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       This will be visible to customers
