@@ -49,7 +49,7 @@ docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
 #         docker push bwalia/kisaan-nextjs:latest --- IGNORE ---
 echo "Docker image pushed successfully to nexus docker registry"
 
-docker run -d -p 3000:3000 $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+docker run -d -p 30000:3000 $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
             sleep 20 # Give some time for the server to start
-            curl -I http://localhost:3000
+            curl -I http://localhost:30000
 echo "Docker container started successfully"
