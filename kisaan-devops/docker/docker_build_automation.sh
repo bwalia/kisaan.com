@@ -26,13 +26,13 @@ else
     ENV_REF="$2"
 fi
 
-NEXUS_USER=${3:-"admin"}
-NEXUS_PASSWD=${4:-"docker-registry-passwd"}
+DOCKER_USER=${3:-"admin"}
+DOCKER_PASSWD=${4:-"docker-registry-passwd"}
 DOCKER_REGISTRY=${5:-"docker.workstation.co.uk"}
 DOCKER_IMAGE_NAME=${6:-"kisaan-nextjs"}
 DOCKER_IMAGE_TAG=${7:-"latest"}
 
-echo "NEXUS_USER: $NEXUS_USER"
+echo "DOCKER_USER: $DOCKER_USER"
 echo "DOCKER_REGISTRY: $DOCKER_REGISTRY"
 echo "DOCKER_IMAGE_NAME: $DOCKER_IMAGE_NAME"
 echo "$ENV_FILE_CONTENT_BASE64" | base64 -d > kisaan-next/.env
@@ -42,7 +42,7 @@ echo "Environment reference: $ENV_REF"
 docker build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME . --no-cache
 docker tag ${ENV_REF}-$DOCKER_IMAGE_NAME $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
 
-echo $NEXUS_PASSWD | docker login -u $NEXUS_USER --password-stdin $DOCKER_REGISTRY
+echo $DOCKER_PASSWD | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
 
 docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
 # docker tag ${ENV_REF}-kisaan-nextjs bwalia/kisaan-nextjs:latest --- IGNORE ---
