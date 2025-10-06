@@ -1,4 +1,4 @@
-name: Deploy Kisaan.com Code Igniter 4 Docker Image to AWS EKS
+name: Deploy CodeIgniter4 Docker Image to AWS EKS
 
 # 2021 19 Dec 23:41 Build and Deploy Kisaan.com Code Igniter 4 Docker Image
 on:
