@@ -46,7 +46,7 @@ env:
     DOCKER_REGISTRY: docker.io
     DOCKER_REPO_NAME: bwalia
     TARGET_STACK: nextjs
-    IMAGE_NAME: nextjsjs
+    IMAGE_NAME: kisaan-nextjs
     TARGET_IMAGE_TAG: latest
     TARGET_ENV: ${{ github.event.inputs.TARGET_ENV || 'test' }}
     DEPLOYMENT_TYPE: ${{ github.event.inputs.DEPLOYMENT_TYPE || 'build-and-deploy' }}

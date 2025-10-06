@@ -1,95 +1,60 @@
-# Default values for kisaan-dot-com.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
+affinity: {}
+autoscaling:
+  enabled: false
+  maxReplicas: 10
+  minReplicas: 1
+  targetCPUUtilizationPercentage: 80
+fullnameOverride: ''
 image:
-  repository: nexus-service.nexus.svc.cluster.local:8082/nextjsjs
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-safeEnvFile: AgC4srZIztEjsXVb6dr2YQgXRjZbbxC93AMgRGT/nGmNUy0EniIIB/oTlM6B5Ak8I9FGXYaPyDEW42DATPXO83BqrbIGWeCsaR707jYDAD/MKrhzPV767F449aXNjrN7ad6Cljnm6KJnmdWoi0BbY4CVd3vLDpFe+Qqezyvnq8ApcDzk4dOBHB3yfLhDOJuzPY31tKK1HtjqtIj2Qb4FDUzs8AJu46iiAMyftJ+U6UvQZLSIxdIzQhBhO3S95ZRxf8FNu+HJCxbBRsD1nnPsqDve1Of52kBinun6S8C03uZhKBFNnn1pdgmJW2nTbCNg9mjtudBntScigDRof0z82O17Tc99ps7L3HbAieTn4DyWC7z1+UjvDycDgkI6Mck0igRWiSlk2yQO/U/m4iBSdb+9ZU8a+aOUUugUJfCXLO72zVz2cn0tfbc5eeri7ujsYiWORqlXfHcTGyyfHBK9eqDK9tSGBz9oTp/IogXMcr7j2BH3Id7kYAuRjGnwBnxgpq1VqZvf1IVn29RqQdyZrnVvcd15oprLaHq3aE43YdN4kXcLc8mqXUUnsD4XzF5Qklpbrsx2SSZSM3fvYyl4qjCWzk93aYM75Mk4uO2hlhvRhnRg7qCuDxK9a1fUHCdYLHJ919TBFTZoP5AaLiTAcb5tMQi4+UHUgGIg8DniE78K4a7zir2jzMuRFbtxkVgO1zn7AihORKqhxqFVN+9ZaiZrp+dn9lc/Apl7yyycb3rV41Fg+gutAdD7EHhB64VNYC5oM0mD2t2vuv44tnXSfKKAtZ38eaQx+pyqqSY+KPlXP69WmxUAehHzcriZJDGbf8Av/8TDQ1TzFoFwnf8Z2sK/vqET/E/Q6HcgicGmKlTKe8EJhv/i39Nj0momyTCMsIoqIuLqAQ/DUvRFzE+cSUYM
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
+  repository: bwalia/kisaan-nextjs
+  tag: latest
+imagePullSecrets:
+- name: hh-west-1-docker-registry
+ingress:
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  className: nginx
+  enabled: true
+  hosts:
+  - host: int.kisaan.com
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+  - host: int-www.kisaan.com
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+  tls: []
+nameOverride: ''
+nodeSelector: {}
 podAnnotations: {}
 podLabels: {}
 podSecurityContext: {}
-# fsGroup: 2000
-
+probes:
+  liveness:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+  readiness:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+replicaCount: 1
+resources: {}
+safeEnvFile: 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
 securityContext: {}
-# capabilities:
-#   drop:
-#   - ALL
-# readOnlyRootFilesystem: true
-# runAsNonRoot: true
-# runAsUser: 1000
-
 service:
-  type: ClusterIP
+  namespace: int
   port: 3000
   targetPort: 3000
-  namespace: "int"
-ingress:
-  enabled: true
-  className: "nginx"
+  type: ClusterIP
+serviceAccount:
   annotations: {}
-  # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: int.kisaan.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-    - host: int-www.kisaan.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-resources: {}
-# We usually recommend not to specify default resources and to leave this as a conscious
-# choice for the user. This also increases chances charts run on environments with little
-# resources, such as Minikube. If you do want to specify resources, uncomment the following
-# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-# limits:
-#   cpu: 100m
-#   memory: 128Mi
-# requests:
-#   cpu: 100m
-#   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
-
-nodeSelector: {}
+  automount: true
+  create: true
+  name: ''
 tolerations: []
-affinity: {}
+volumeMounts: []
+volumes: []

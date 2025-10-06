@@ -1,107 +1,60 @@
-# Default values for kisaan-dot-com.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
-
-image:
-  repository: nexus-service.nexus.svc.cluster.local:8082/nextjsjs
-  pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-safeEnvFile: AgAbEf3Opk6Ywz9nCUNSNo8nVUodn7rXYbZdGQsRKlIAFzTpZ9VNi7JoMhgM4ca0Y0mCS2pUhnWc1barIO/QgltClb9c4RUBg+k6vqEzCT0ppSxZ/Q0FLlR8AULxsJVL3f0lBkVYizL6H3Jl2/FBBK27SkyKxfp1EpX0QkAngt0lihLeyJrLgAtkbbF8pK4cK+KKMYen0jGRWiDpjpIY/B4SH4ujj4bPOq3r+zbxu8+zO8tfAb23fm64qL7ukLAFW+J8QG7cX4T4NDmSpddGSp1SVi0i5DeiO3yKn2ZqmH94cJ91IdkVQn4YNgsDFeqI6GhGltKYMuhclWFowgoaPGBtNJDopGwOQxbw2xnOYFuIsrBACv9NQLWo+xIAb6i5xh9tPUjsxl4F/pRGA7hsEN/GovdCkpiF0W958k6nLqYeyhHK3dm558HqYVK1qrz2lVrK3PllTt98rqcuk6YvU+SKvrXxYwyzB+z0jWnfhOB64ZDd8hL9fZ6dlSQwoYPzO5JsPx3oMLN8Et/Mfs7c0XRUb8lHyFDHVpnt19XejfP/agQKfx/TeroWQzZ2ifV+uF+BYV50523ZmDojNsAmnKN6atoZLU2SBUojTg9eP9Ep3vbT98G6zSfVrF5KWCoGwvNiCS8dQm3+KcYeXJSjReWXWCU9N0D/f0JGQJS4ufc+fgOd46Vaun0EDHFiTMEgxfiPJzIDasTxOZ3DgIp6t/iL112P7CaTwzffbS8N9GbUkm8H89Wxs4YnLcAuPPTTDpUvFxbXnBX3wVu/H0iyJvK1AJOPDwyOyTx4F9k1KsggLuacTdqZ6Q1Gbdhv6y4l+A90MJn7g8/Ye7RbC5CvsO9n5aFGo8m6g4EaXNgPZyjdmDEl/HxMwXWHEz+goGKvGxW1IT8XvJjSPM9aXkokew9B/cTLDiQYI2/ucW+GQxC5+6ER92l4yy44Qmep3js6k/x4KenJGAwEHrZaovm4h13w62AnCwzMMjyg/jni4GdSy1vbhgea5f2Sv9MQgfkisaansFjhOBPN3THVBv5rCqWr71VPo5FSjXX4dmLRwpTYrtPgrHNRziMv609gT5l
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
-podLabels: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-service:
-  type: ClusterIP
-  port: 3000
-  targetPort: 3000
-  namespace: "dev"
-
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: dev.kisaan.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-    - host: dev-www.kisaan.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
+affinity: {}
 autoscaling:
   enabled: false
+  maxReplicas: 10
   minReplicas: 1
-  maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
-
+fullnameOverride: ''
+image:
+  pullPolicy: Always
+  repository: bwalia/kisaan-nextjs
+  tag: latest
+imagePullSecrets:
+- name: hh-west-1-docker-registry
+ingress:
+  annotations: {}
+  className: nginx
+  enabled: true
+  hosts:
+  - host: dev.kisaan.com
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+  - host: dev-www.kisaan.com
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+  tls: []
+nameOverride: ''
 nodeSelector: {}
-
+podAnnotations: {}
+podLabels: {}
+podSecurityContext: {}
+probes:
+  liveness:
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+  readiness:
+    failureThreshold: 3
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+replicaCount: 1
+resources: {}
+safeEnvFile: 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
+securityContext: {}
+service:
+  namespace: dev
+  port: 3000
+  targetPort: 3000
+  type: ClusterIP
+serviceAccount:
+  annotations: {}
+  automount: true
+  create: true
+  name: ''
 tolerations: []
-
-affinity: {}
+volumeMounts: []
+volumes: []

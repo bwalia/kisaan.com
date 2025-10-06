@@ -40,7 +40,7 @@ echo "OSTYPE variable: $OSTYPE"
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "✓ Running on macOS"
     OS_TYPE="macos"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+elif [[ "$OSTYPE" == "linux-gnu"* || "$OSTYPE" == "linux"* ]]; then
     echo "✓ Running on Linux"
     OS_TYPE="linux"
 
@@ -95,29 +95,6 @@ fi
 
 echo "kubeseal binary found: $(which kubeseal)"
 echo "kubeseal version: $(kubeseal --version)"
-
-YQ_BIN_FILE="yq"
-# Install yq if not present
-if ! command -v $YQ_BIN_FILE &> /dev/null; then
-    echo "yq not found, installing..."
-    if [[ "$OS_TYPE" == "macos" ]]; then
-        brew install yq
-    elif [[ "$OS_TYPE" == "ubuntu" ]]; then
-        apt-get install -y yq
-    fi
-fi
-
-if ! command -v $YQ_BIN_FILE &> /dev/null; then
-    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /tmp/yq && chmod +x /tmp/yq
-    echo "yq installed successfully!"
-    YQ_BIN_FILE="/tmp/yq"
-fi
-
-if ! command -v $YQ_BIN_FILE &> /dev/null; then
-    echo "Error: yq is not installed!"
-    exit 1
-fi
-
 
 echo $ENV_FILE_CONTENT_BASE64 | base64 -d > temp.txt
 ENV_FILE_CONTENT_BASE64_DECODED_FILE="temp.txt"
@@ -193,17 +170,24 @@ echo "Sealed secret created at '$SEALED_SECRET_OUTPUT_PATH'"
 # extract the sealed secret env_file
 echo "Extracting sealed secret env_file encrypted value..."
 
-if ! command -v yq &> /dev/null; then
-    echo "Error: yq is not installed!"
+python3 -m pip install pyyaml --user
+
+# Use Python for reliable setting the replicaCount based on environment in helm values file
+SAFE_SEALEDSECRET_ENCRYPTED=$(python3 -c "import sys
+import yaml
+# Read the file
+with open('$SEALED_SECRET_OUTPUT_PATH', 'r') as f:
+    content = yaml.safe_load(f)
+print(content['spec']['encryptedData']['env_file'])")
+
+if [ -z "$SAFE_SEALEDSECRET_ENCRYPTED" ]; then
+    echo "Error: Python script failed to extract sealed secret env_file encrypted value!"
     exit 1
 fi
-
-SAFE_SEALEDSECRET_ENCRYPTED=$(yq .spec.encryptedData.env_file $SEALED_SECRET_OUTPUT_PATH)
 
 echo "Sealed env_file extracted to var SAFE_SEALEDSECRET_ENCRYPTED:"
 echo ""
 echo $SAFE_SEALEDSECRET_ENCRYPTED
-# cat sealed_secret_kisaan_prod.txt
 
 HELM_VALUES_INPUT_PATH=devops/helm-charts/kisaan-chart/values-env-template.yaml
 HELM_VALUES_OUTPUT_PATH=devops/helm-charts/kisaan-chart/values-${ENV_REF}.yaml
@@ -246,20 +230,40 @@ with open('$HELM_VALUES_OUTPUT_PATH', 'w') as f:
 print("Successfully replaced placeholder with encrypted secret")
 EOF
 
-if [ "$ENV_REF" == "prod" ]; then
-    echo "Production environment detected, setting replicaCount to 3"
-    $YQ_BIN_FILE e '.replicaCount = 3' -i $HELM_VALUES_OUTPUT_PATH
-    $YQ_BIN_FILE e '.autoscaling.minReplicas = 3' -i $HELM_VALUES_OUTPUT_PATH
-    $YQ_BIN_FILE e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
-elif [ "$ENV_REF" == "acc" ]; then
-    echo "Testing environment detected, setting replicaCount to 2"
-    $YQ_BIN_FILE e '.replicaCount = 2' -i $HELM_VALUES_OUTPUT_PATH
-    $YQ_BIN_FILE e '.autoscaling.minReplicas = 2' -i $HELM_VALUES_OUTPUT_PATH
-    $YQ_BIN_FILE e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
-else
-    echo "Non-production environment detected, setting replicaCount to 1"
-    $YQ_BIN_FILE e '.replicaCount = 1' -i $HELM_VALUES_OUTPUT_PATH
-fi
+# Use Python for reliable setting the replicaCount based on environment in helm values file
+python3 << EOF
+import sys
+import yaml
+
+# Read the file
+with open('$HELM_VALUES_OUTPUT_PATH', 'r') as f:
+    content = yaml.safe_load(f)
+
+if( "$ENV_REF" == "prod" ):
+    print("Production environment detected, setting replicaCount to 3")
+    content['replicaCount'] = 3
+    content['autoscaling']['minReplicas'] = 3
+    content['autoscaling']['enabled'] = True
+elif( "$ENV_REF" == "acc" ):
+    print("Testing environment detected, setting replicaCount to 2")
+    content['replicaCount'] = 2
+    content['autoscaling']['minReplicas'] = 2
+    content['autoscaling']['enabled'] = True
+else:
+    print("Non-production environment detected, setting replicaCount to 1")
+    content['replicaCount'] = 1
+    # If you want to enable autoscaling for non-prod, uncomment below lines
+    # content['autoscaling']['minReplicas'] = 1
+    # content['autoscaling']['enabled'] = True
+    # For non-prod, we keep autoscaling disabled by default
+    # content['autoscaling']['minReplicas'] = 1
+
+# Write back to file
+with open('$HELM_VALUES_OUTPUT_PATH', 'w') as f:
+    yaml.dump(content, f)
+
+print("Successfully replaced placeholder with encrypted secret")
+EOF
 
 cat $HELM_VALUES_OUTPUT_PATH
 
