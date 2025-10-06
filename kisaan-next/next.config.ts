@@ -17,9 +17,6 @@ const nextConfig: NextConfig = {
   // Enable standalone output for Docker builds
   output: "standalone",
 
-  // Disable telemetry
-  telemetry: false,
-
   async headers() {
     return [
       {
@@ -70,18 +67,16 @@ const nextConfig: NextConfig = {
   experimental: {
     // Enable modern features
     optimizePackageImports: ["lucide-react"],
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
+  },
+
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
       },
     },
   },
-
-  // Optimize bundle size
-  swcMinify: true,
 
   // Enable compression
   compress: true,

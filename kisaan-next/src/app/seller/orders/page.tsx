@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/lib/api";
@@ -8,7 +8,7 @@ import { Order, ORDER_STATUSES, FINANCIAL_STATUSES, FULFILLMENT_STATUSES } from 
 import toast from "react-hot-toast";
 import { formatPrice } from "@/lib/home-utils";
 
-export default function OrdersPage() {
+function OrdersContent() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
@@ -352,5 +352,13 @@ export default function OrdersPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <OrdersContent />
+    </Suspense>
   );
 }
