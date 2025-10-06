@@ -44,6 +44,7 @@ on:
 
 env:
     DOCKER_REGISTRY: docker.io
+    DOCKER_REPO_NAME: bwalia
     TARGET_STACK: nextjs
     IMAGE_NAME: kisaan-nextjs
     TARGET_IMAGE_TAG: latest
@@ -69,15 +70,15 @@ jobs:
         echo "kisaan.com Docker image builder!"
         echo "Build, tag, and push image to the given Docker Registry."
           if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
           elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} test
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} test
           elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} acc
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} acc
           elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
           else
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
           fi
       shell: bash
 

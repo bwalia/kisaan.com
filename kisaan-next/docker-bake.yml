@@ -1,0 +1,115 @@
+variable "TAG" {
+  default = "latest"
+}
+
+variable "REGISTRY" {
+  default = "docker.io"
+}
+
+variable "IMAGE_NAME" {
+  default = "kisaan-next"
+}
+
+variable "REPO_NAME" {
+  default = "bwalia"
+}
+
+# Default target for all environments
+target "_common" {
+  context = ".."
+  dockerfile = "kisaan-next/Dockerfile.dev"
+  platforms = ["linux/amd64"]
+  args = {
+    TAG = "${TAG}"
+  }
+}
+
+# Development build
+target "dev" {
+  inherits = ["_common"]
+  dockerfile = "kisaan-next/Dockerfile.dev"
+  tags = [
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:dev-${TAG}",
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:dev-latest"
+  ]
+  cache-from = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:dev-cache"
+  ]
+  cache-to = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:dev-cache,mode=max"
+  ]
+}
+
+# Test build
+target "test" {
+  inherits = ["_common"]
+  dockerfile = "kisaan-next/Dockerfile.test"
+  tags = [
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:test-${TAG}",
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:test-latest"
+  ]
+  cache-from = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:test-cache"
+  ]
+  cache-to = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:test-cache,mode=max"
+  ]
+}
+
+# Acceptance build
+target "acc" {
+  inherits = ["_common"]
+  dockerfile = "kisaan-next/Dockerfile.acc"
+  tags = [
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:acc-${TAG}",
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:acc-latest"
+  ]
+  cache-from = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:acc-cache"
+  ]
+  cache-to = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:acc-cache,mode=max"
+  ]
+}
+
+# Production build
+target "prod" {
+  inherits = ["_common"]
+  dockerfile = "kisaan-next/Dockerfile.prod"
+  tags = [
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:prod-${TAG}",
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:prod-latest",
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:${TAG}"
+  ]
+  cache-from = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:prod-cache"
+  ]
+  cache-to = [
+    "type=registry,ref=${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:prod-cache,mode=max"
+  ]
+}
+
+# Build all environments
+group "all" {
+  targets = ["dev", "test", "acc", "prod"]
+}
+
+# Build development environments only
+group "development" {
+  targets = ["dev", "test"]
+}
+
+# Build production-ready environments
+group "production" {
+  targets = ["acc", "prod"]
+}
+
+# Multi-platform build for production
+target "prod-multiplatform" {
+  inherits = ["prod"]
+  platforms = ["linux/amd64", "linux/arm64"]
+  tags = [
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:prod-${TAG}-multiplatform",
+    "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:multiplatform"
+  ]
+}

@@ -28,34 +28,43 @@ fi
 
 DOCKER_USER=${3:-"admin"}
 DOCKER_PASSWD=${4:-"docker-registry-passwd"}
-DOCKER_REGISTRY=${5:-"docker.workstation.co.uk"}
-DOCKER_IMAGE_NAME=${6:-"kisaan-nextjs"}
-DOCKER_IMAGE_TAG=${7:-"latest"}
+DOCKER_REPO_NAME=${5:-"bwalia"}
+DOCKER_REGISTRY=${6:-"docker.workstation.co.uk"}
+DOCKER_IMAGE_NAME=${7:-"kisaan-nextjs"}
+DOCKER_IMAGE_TAG=${8:-"latest"}
 
 echo "DOCKER_USER: $DOCKER_USER"
 echo "DOCKER_REGISTRY: $DOCKER_REGISTRY"
 echo "DOCKER_IMAGE_NAME: $DOCKER_IMAGE_NAME"
+echo "DOCKER_IMAGE_TAG: $DOCKER_IMAGE_TAG"
 echo "$ENV_FILE_CONTENT_BASE64" | base64 -d > kisaan-next/.env
 
 echo "Environment reference: $ENV_REF"
 
-echo "build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME . --no-cache"
-docker build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME . --no-cache
-echo "docker tag ${ENV_REF}-$DOCKER_IMAGE_NAME $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
-docker tag ${ENV_REF}-$DOCKER_IMAGE_NAME $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+echo "build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG . --no-cache"
+#   docker build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG . --no-cache
+echo "docker tag ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_REPO_NAME/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+docker tag ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_REPO_NAME/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
 
 echo $DOCKER_PASSWD | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+echo "Docker logged in successfully to $DOCKER_REGISTRY docker registry"
 
-echo "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
-exit 0
-docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
-# docker tag ${ENV_REF}-kisaan-nextjs bwalia/kisaan-nextjs:latest --- IGNORE ---
-#         docker push bwalia/kisaan-nextjs:latest --- IGNORE ---
-echo "Docker image pushed successfully to $DOCKER_REGISTRY docker registry"
-
-sleep 10
-echo "Starting docker container to verify the image..."
-docker run -d -p 30000:3000 $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
-            sleep 60 # Give some time for the server to start
-            curl -I http://localhost:30000
-echo "Docker container started successfully"
+echo "docker push $DOCKER_REGISTRY/$DOCKER_REPO_NAME/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+if docker push $DOCKER_REGISTRY/$DOCKER_REPO_NAME/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG; then
+    # docker tag ${ENV_REF}-kisaan-nextjs bwalia/kisaan-nextjs:latest --- IGNORE ---
+    #         docker push bwalia/kisaan-nextjs:latest --- IGNORE ---
+    echo "Docker image pushed successfully to $DOCKER_REGISTRY docker registry"
+    
+    sleep 10
+    echo "Starting docker container to verify the image..."
+    docker container stop kisaan-nextjs || true
+    docker container rm kisaan-nextjs || true
+    docker run --name kisaan-nextjs -d -p 30000:3000 $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+    sleep 10 # Give some time for the server to start
+    curl -I http://localhost:30000
+    echo "Docker container started successfully"
+else
+    echo "ERROR: Failed to push Docker image to $DOCKER_REGISTRY docker registry"
+    echo "Skipping container verification due to push failure"
+    exit 1
+fi
