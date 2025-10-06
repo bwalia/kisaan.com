@@ -42,7 +42,7 @@ echo "$ENV_FILE_CONTENT_BASE64" | base64 -d > kisaan-next/.env
 echo "Environment reference: $ENV_REF"
 
 echo "build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG . --no-cache"
-#   docker build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG . --no-cache
+docker build -f kisaan-next/Dockerfile.${ENV_REF} --build-arg TAG=$DOCKER_IMAGE_TAG -t ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG . --no-cache
 echo "docker tag ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_REPO_NAME/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
 docker tag ${ENV_REF}-$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_REPO_NAME/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
 
