@@ -62,7 +62,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       uses: actions/checkout@v3
     - name: Build kisaan.com Docker image on Public runner and push to Docker Registry (docker.io)
       if: ${{ (env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy') }}
@@ -166,9 +165,7 @@ jobs:
                 -d '{"purge_everything": true}'
         fi
 
-
     - name: Fire Slack Notification for kisaan.com release to ${{ env.TARGET_ENV }} environment
-      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_CHANNEL: general
