@@ -102,14 +102,20 @@ if ! command -v yq &> /dev/null; then
     if [[ "$OS_TYPE" == "macos" ]]; then
         brew install yq
     elif [[ "$OS_TYPE" == "ubuntu" ]]; then
-        sudo apt-get install -y yq
+        apt-get install -y yq
     fi
+fi
+
+if ! command -v yq &> /dev/null; then
+    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+    echo "yq installed successfully!"
 fi
 
 if ! command -v yq &> /dev/null; then
     echo "Error: yq is not installed!"
     exit 1
 fi
+
 
 echo $ENV_FILE_CONTENT_BASE64 | base64 -d > temp.txt
 ENV_FILE_CONTENT_BASE64_DECODED_FILE="temp.txt"
