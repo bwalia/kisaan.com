@@ -1,9 +1,10 @@
-name: Build, Push and Deploy Kisaan.com
+name: Build, Push to Nexus and Deploy Kisaan.com
 
 on:
   push:
-    branches:
-      - main
+    branches: [ dummy-branch ]
+  pull_request:
+    branches: [ dummy-branch, nexus ]
 
   workflow_dispatch:
     inputs:
@@ -28,15 +29,6 @@ on:
             - deploy
             - build-and-deploy
 
-      RUNNER_TYPE:
-        type: choice
-        description: 'Please select the build only, deploy only or build and deploy'
-        default: 'self-hosted'
-        required: true
-        options:
-            - self-hosted
-            - public
-
       ACTION:
         type: choice
         description: 'Please choose the action to perform'
@@ -52,15 +44,13 @@ on:
             - list-workers
 
 env:
-    DOCKER_REGISTRY: docker.io
-    NEXUS_REGISTRY: localhost:30082
+    DOCKER_REGISTRY: localhost:30082
     TARGET_STACK: nextjs
     IMAGE_NAME: kisaan-nextjs
     TARGET_IMAGE_TAG: latest
     TARGET_ENV: ${{ github.event.inputs.TARGET_ENV || 'test' }}
     DEPLOYMENT_TYPE: ${{ github.event.inputs.DEPLOYMENT_TYPE || 'build-and-deploy' }}
     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    RUNNER_TYPE: ${{ github.event.inputs.RUNNER_TYPE || 'self-hosted' }}
     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
@@ -68,30 +58,6 @@ env:
     # SCRIPT_PATH: kisaan-next/cloudflare/worker.js
     ACTION: ${{ github.event.inputs.ACTION || 'purge-cache' }}      
 jobs:
-
-  build-public:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      if: ${{ env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
-      uses: actions/checkout@v3
-    - name: Build kisaan.com Docker image on Public runner and push to Docker Registry (docker.io)
-      if: ${{ (env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy') }}
-      run: |
-        echo "kisaan.com Docker image builder!"
-        echo "Build, tag, and push image to the given Docker Registry."
-          if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
-          elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} test
-          elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} acc
-          elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
-          else
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
-          fi
-      shell: bash
   build-private:
     runs-on: self-hosted
     steps:
@@ -105,22 +71,22 @@ jobs:
         echo "kisaan.com Docker image builder!"
         echo "Build, tag, and push image to the given Docker Registry."
           if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.NEXUS_REGISTRY }} ${{ env.IMAGE_NAME }} dev
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
           elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.NEXUS_REGISTRY }} ${{ env.IMAGE_NAME }} test
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} test
           elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.NEXUS_REGISTRY }} ${{ env.IMAGE_NAME }} acc
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} acc
           elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.NEXUS_REGISTRY }} ${{ env.IMAGE_NAME }} prod
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
           else
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.NEXUS_REGISTRY }} ${{ env.IMAGE_NAME }} int
+              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.NEXUS_USER }} ${{ secrets.NEXUS_PASSWD }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
           fi
       shell: bash
 
   deploy:
     name: Deploy Helm Chart
-    runs-on: ubuntu-latest
-    needs: [ build-private, build-public ]
+    runs-on: self-hosted
+    needs: [ build-private ]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -181,20 +147,15 @@ jobs:
         echo "Using values file: ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml"
         echo "Helm Chart path: ./kisaan-devops/helm-charts/kisaan-chart"
         echo "Target Namespace: ${{ env.TARGET_ENV }}"
-        echo "Image Repository: ${{ env.NEXUS_REGISTRY }}/${{ env.IMAGE_NAME }}"
+        echo "Image Repository: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}"
         echo "Image Tag: ${{ env.TARGET_IMAGE_TAG }}"
         helm list -n ${{ env.TARGET_ENV }} | grep -q "kisaan-${{ env.TARGET_ENV }}" && helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }} || echo "Release kisaan-${{ env.TARGET_ENV }} not found in namespace ${{ env.TARGET_ENV }}, skipping deletion"
-        if [ "${{ env.RUNNER_TYPE }}" == "self-hosted" ]; then
-        helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
-          --set image.repository=${{ env.NEXUS_REGISTRY }}/${{ env.IMAGE_NAME }} \
-          --set image.tag=${{ env.TARGET_ENV }} \
-          --namespace ${{ env.TARGET_ENV }} --create-namespace
-        else
         helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
           --set image.repository=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }} \
           --set image.tag=${{ env.TARGET_ENV }} \
           --namespace ${{ env.TARGET_ENV }} --create-namespace
-        fi
+      shell: bash
+
     - name: Purge Cloudflare Cache for kisaan.com
       if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       run: |
@@ -205,7 +166,6 @@ jobs:
                 -H "X-Auth-Key: ${{ env.CLOUDFLARE_API_TOKEN }}" \
                 -d '{"purge_everything": true}'
         fi
-
 
     - name: Fire Slack Notification for kisaan.com release to ${{ env.TARGET_ENV }} environment
       if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
