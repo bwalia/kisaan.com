@@ -52,10 +52,10 @@ Fixed missing footer links and created a comprehensive Seller Guide page.
 ## File Changes
 
 ### New Files (1)
-✅ `kisaan-next/src/app/seller-guide/page.tsx` (950+ lines)
+✅ `nextjs/src/app/seller-guide/page.tsx` (950+ lines)
 
 ### Modified Files (2)
-✅ `kisaan-next/src/components/Footer.tsx` (2 link updates)  
+✅ `nextjs/src/components/Footer.tsx` (2 link updates)  
 ✅ `README.md` (documentation updated)
 
 ### Documentation (2)

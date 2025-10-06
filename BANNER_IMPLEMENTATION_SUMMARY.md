@@ -12,7 +12,7 @@ Add background banner images to the Kisaan marketplace homepage and feature page
 
 ### 1. Python Generation Scripts
 
-#### `kisaan-next/scripts/generate-banner.py`
+#### `nextjs/scripts/generate-banner.py`
 **Purpose:** Generate main hero section farmer banner
 
 **Features:**
@@ -28,7 +28,7 @@ Add background banner images to the Kisaan marketplace homepage and feature page
 - `hero-farmer-banner.jpg` (main banner)
 - `hero-farmer-banner-blurred.jpg` (soft version)
 
-#### `kisaan-next/scripts/generate-feature-banners.py`
+#### `nextjs/scripts/generate-feature-banners.py`
 **Purpose:** Generate themed banners for feature pages
 
 **Features:**
@@ -93,14 +93,14 @@ Add background banner images to the Kisaan marketplace homepage and feature page
 
 ### 3. Documentation Files
 
-#### `kisaan-next/scripts/README.md`
+#### `nextjs/scripts/README.md`
 Complete guide for banner generation scripts:
 - Usage instructions
 - Customization options
 - Troubleshooting guide
 - Future enhancement ideas
 
-#### `kisaan-next/public/BANNERS.md`
+#### `nextjs/public/BANNERS.md`
 Comprehensive banner documentation:
 - All banner specifications
 - Usage examples for each banner
@@ -150,28 +150,28 @@ Added banner section with:
 ## Files Modified
 
 ### New Files (15 total)
-1. `kisaan-next/scripts/generate-banner.py`
-2. `kisaan-next/scripts/generate-feature-banners.py`
-3. `kisaan-next/scripts/README.md`
-4. `kisaan-next/public/hero-farmer-banner.jpg`
-5. `kisaan-next/public/hero-farmer-banner-blurred.jpg`
-6. `kisaan-next/public/banner-security.jpg`
-7. `kisaan-next/public/banner-pricing.jpg`
-8. `kisaan-next/public/banner-returns.jpg`
-9. `kisaan-next/public/banner-support.jpg`
-10. `kisaan-next/public/texture-green-light.jpg`
-11. `kisaan-next/public/texture-blue-light.jpg`
-12. `kisaan-next/public/texture-purple-light.jpg`
-13. `kisaan-next/public/texture-orange-light.jpg`
-14. `kisaan-next/public/BANNERS.md`
+1. `nextjs/scripts/generate-banner.py`
+2. `nextjs/scripts/generate-feature-banners.py`
+3. `nextjs/scripts/README.md`
+4. `nextjs/public/hero-farmer-banner.jpg`
+5. `nextjs/public/hero-farmer-banner-blurred.jpg`
+6. `nextjs/public/banner-security.jpg`
+7. `nextjs/public/banner-pricing.jpg`
+8. `nextjs/public/banner-returns.jpg`
+9. `nextjs/public/banner-support.jpg`
+10. `nextjs/public/texture-green-light.jpg`
+11. `nextjs/public/texture-blue-light.jpg`
+12. `nextjs/public/texture-purple-light.jpg`
+13. `nextjs/public/texture-orange-light.jpg`
+14. `nextjs/public/BANNERS.md`
 15. `NEW_PAGES_SUMMARY.md` (updated)
 
 ### Modified Files (6 total)
-1. `kisaan-next/src/components/home/HeroSection.tsx`
-2. `kisaan-next/src/app/security/page.tsx`
-3. `kisaan-next/src/app/pricing/page.tsx`
-4. `kisaan-next/src/app/returns/page.tsx`
-5. `kisaan-next/src/app/support/page.tsx`
+1. `nextjs/src/components/home/HeroSection.tsx`
+2. `nextjs/src/app/security/page.tsx`
+3. `nextjs/src/app/pricing/page.tsx`
+4. `nextjs/src/app/returns/page.tsx`
+5. `nextjs/src/app/support/page.tsx`
 6. `README.md`
 
 ---
@@ -299,7 +299,7 @@ Local: http://localhost:3001
 ### Script Updates
 ```bash
 # Regenerate all banners
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-banner.py
 python3 generate-feature-banners.py
 ```
@@ -342,14 +342,14 @@ pip3 install Pillow --user
 
 ### Generate Banners
 ```bash
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-banner.py          # Hero banner
 python3 generate-feature-banners.py  # Feature banners
 ```
 
 ### Start Development Server
 ```bash
-cd kisaan-next
+cd nextjs
 npm run dev
 ```
 

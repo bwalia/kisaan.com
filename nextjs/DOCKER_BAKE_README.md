@@ -72,7 +72,7 @@ docker buildx install
 | `TAG` | `latest` | Image tag |
 | `REGISTRY` | `docker.io` | Docker registry |
 | `REPO_NAME` | `bwalia` | Repository name |
-| `IMAGE_NAME` | `kisaan-next` | Image name |
+| `IMAGE_NAME` | `nextjs` | Image name |
 
 ## Examples
 

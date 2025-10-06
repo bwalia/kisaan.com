@@ -26,7 +26,7 @@ env:
     ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
     # WORKER_NAME: ${{ secrets.CLOUDFLARE_WORKER_NAME }}
-    # SCRIPT_PATH: kisaan-next/cloudflare/worker.js
+    # SCRIPT_PATH: nextjs/cloudflare/worker.js
     ACTION: ${{ github.event.inputs.ACTION || 'purge-cache' }}  
 jobs:
   manage-cloudflare:

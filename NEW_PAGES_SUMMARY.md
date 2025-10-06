@@ -8,7 +8,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ## Pages Created
 
 ### 1. Fast & Secure (`/security`)
-**File:** `kisaan-next/src/app/security/page.tsx`
+**File:** `nextjs/src/app/security/page.tsx`
 
 **Features:**
 - SSL Encryption explanation
@@ -24,7 +24,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ---
 
 ### 2. Best Prices (`/pricing`)
-**File:** `kisaan-next/src/app/pricing/page.tsx`
+**File:** `nextjs/src/app/pricing/page.tsx`
 
 **Features:**
 - Price Promise: Lowest prices, regular discounts, price match guarantee
@@ -41,7 +41,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ---
 
 ### 3. Easy Returns (`/returns`)
-**File:** `kisaan-next/src/app/returns/page.tsx`
+**File:** `nextjs/src/app/returns/page.tsx`
 
 **Features:**
 - Simple 3-step return process
@@ -58,7 +58,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ---
 
 ### 4. 24/7 Support (`/support`)
-**File:** `kisaan-next/src/app/support/page.tsx`
+**File:** `nextjs/src/app/support/page.tsx`
 
 **Features:**
 - Multiple support channels:
@@ -82,7 +82,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ---
 
 ### 5. Privacy Policy (`/privacy`)
-**File:** `kisaan-next/src/app/privacy/page.tsx`
+**File:** `nextjs/src/app/privacy/page.tsx`
 
 **Compliance:** UK GDPR, Data Protection Act 2018
 
@@ -115,7 +115,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ---
 
 ### 6. Cookie Policy (`/cookies`)
-**File:** `kisaan-next/src/app/cookies/page.tsx`
+**File:** `nextjs/src/app/cookies/page.tsx`
 
 **Compliance:** UK PECR (Privacy and Electronic Communications Regulations), UK GDPR
 
@@ -146,7 +146,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ## Integration Points
 
 ### 1. Features Section Component Updated
-**File:** `kisaan-next/src/components/home/FeaturesSection.tsx`
+**File:** `nextjs/src/components/home/FeaturesSection.tsx`
 
 **Changes:**
 - Added `link` property to each feature
@@ -161,7 +161,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ---
 
 ### 2. Footer Updated
-**File:** `kisaan-next/src/components/Footer.tsx`
+**File:** `nextjs/src/components/Footer.tsx`
 
 **Changes:**
 - Changed from 4-column to 5-column layout
@@ -183,7 +183,7 @@ Added 6 new dedicated pages to the Kisaan marketplace platform, including 4 feat
 ---
 
 ### 3. Navbar Updated
-**File:** `kisaan-next/src/components/Navbar.tsx`
+**File:** `nextjs/src/components/Navbar.tsx`
 
 **Changes:**
 - Added "Support" link in main navigation
@@ -345,17 +345,17 @@ All pages include:
 **Total Lines Added:** ~3,500+
 
 ### New Files
-1. `/kisaan-next/src/app/security/page.tsx` (215 lines)
-2. `/kisaan-next/src/app/pricing/page.tsx` (280 lines)
-3. `/kisaan-next/src/app/returns/page.tsx` (240 lines)
-4. `/kisaan-next/src/app/support/page.tsx` (290 lines)
-5. `/kisaan-next/src/app/privacy/page.tsx` (350 lines)
-6. `/kisaan-next/src/app/cookies/page.tsx` (370 lines)
+1. `/nextjs/src/app/security/page.tsx` (215 lines)
+2. `/nextjs/src/app/pricing/page.tsx` (280 lines)
+3. `/nextjs/src/app/returns/page.tsx` (240 lines)
+4. `/nextjs/src/app/support/page.tsx` (290 lines)
+5. `/nextjs/src/app/privacy/page.tsx` (350 lines)
+6. `/nextjs/src/app/cookies/page.tsx` (370 lines)
 
 ### Modified Files
-1. `/kisaan-next/src/components/home/FeaturesSection.tsx`
-2. `/kisaan-next/src/components/Footer.tsx`
-3. `/kisaan-next/src/components/Navbar.tsx`
+1. `/nextjs/src/components/home/FeaturesSection.tsx`
+2. `/nextjs/src/components/Footer.tsx`
+3. `/nextjs/src/components/Navbar.tsx`
 4. `/README.md`
 
 ---

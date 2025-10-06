@@ -3,7 +3,7 @@ FROM node:22-alpine AS deps
 
 WORKDIR /app
 
-COPY kisaan-next/. ./
+COPY nextjs/. ./
 
 # Install TailwindCSS and PostCSS dependencies
 RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss country-state-city
@@ -20,7 +20,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 
-COPY kisaan-next/ .
+COPY nextjs/ .
 
 RUN yarn run build
 

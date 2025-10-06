@@ -46,7 +46,7 @@ env:
     DOCKER_REGISTRY: docker.io
     DOCKER_REPO_NAME: bwalia
     TARGET_STACK: nextjs
-    IMAGE_NAME: kisaan-nextjs
+    IMAGE_NAME: nextjsjs
     TARGET_IMAGE_TAG: latest
     TARGET_ENV: ${{ github.event.inputs.TARGET_ENV || 'test' }}
     DEPLOYMENT_TYPE: ${{ github.event.inputs.DEPLOYMENT_TYPE || 'build-and-deploy' }}
@@ -55,7 +55,7 @@ env:
     ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
     # WORKER_NAME: secrets.CLOUDFLARE_WORKER_NAME
-    # SCRIPT_PATH: kisaan-next/cloudflare/worker.js
+    # SCRIPT_PATH: nextjs/cloudflare/worker.js
     ACTION: ${{ github.event.inputs.ACTION || 'purge-cache' }}      
 jobs:
 
@@ -70,15 +70,15 @@ jobs:
         echo "kisaan.com Docker image builder!"
         echo "Build, tag, and push image to the given Docker Registry."
           if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
           elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} test
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} test
           elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} acc
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} acc
           elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
           else
-              ./kisaan-devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
           fi
       shell: bash
 
@@ -103,15 +103,15 @@ jobs:
       run: |
           export KUBECONFIG=$(pwd)/kubeconfig
           if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
-              ./kisaan-devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} "dev"
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} "dev"
           elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
-              ./kisaan-devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} "test"
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} "test"
           elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
-              ./kisaan-devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} "acc"
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} "acc"
           elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
-              ./kisaan-devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} "prod"
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} "prod"
           else
-              ./kisaan-devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} "int"
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} "int"
           fi
       shell: bash
     - name: Check and Install kubectl Binary
@@ -143,13 +143,13 @@ jobs:
       run: |
         export KUBECONFIG=$(pwd)/kubeconfig
         echo "Deploying Helm Chart for kisaan.com in the ${{ env.TARGET_ENV }} environment."
-        echo "Using values file: ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml"
-        echo "Helm Chart path: ./kisaan-devops/helm-charts/kisaan-chart"
+        echo "Using values file: ./devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml"
+        echo "Helm Chart path: ./devops/helm-charts/kisaan-chart"
         echo "Target Namespace: ${{ env.TARGET_ENV }}"
         echo "Image Repository: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}"
         echo "Image Tag: ${{ env.TARGET_IMAGE_TAG }}"
         helm list -n ${{ env.TARGET_ENV }} | grep -q "kisaan-${{ env.TARGET_ENV }}" && helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }} || echo "Release kisaan-${{ env.TARGET_ENV }} not found in namespace ${{ env.TARGET_ENV }}, skipping deletion"
-        helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./kisaan-devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./kisaan-devops/helm-charts/kisaan-chart \
+        helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./devops/helm-charts/kisaan-chart \
           --set image.repository=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO_NAME }}/${{ env.IMAGE_NAME }} \
           --set image.tag=${{ env.TARGET_ENV }} \
           --namespace ${{ env.TARGET_ENV }} --create-namespace

@@ -115,8 +115,8 @@ echo $ENV_FILE_CONTENT_BASE64 | base64 -d > temp.txt
 ENV_FILE_CONTENT_BASE64_DECODED_FILE="temp.txt"
 #"/Users/balinderwalia/Documents/Work/aws_keys/.env_wsl_prod"
 
-SECRET_INPUT_PATH="kisaan-devops/kubeseal/secret_kisaan_per_env_input_template.yaml"
-SECRET_OUTPUT_PATH="kisaan-devops/kubeseal/secret_kisaan_${ENV_REF}.yaml"
+SECRET_INPUT_PATH="devops/kubeseal/secret_kisaan_per_env_input_template.yaml"
+SECRET_OUTPUT_PATH="devops/kubeseal/secret_kisaan_${ENV_REF}.yaml"
 SEALED_SECRET_OUTPUT_PATH="/tmp/sealed_secret_kisaan_${ENV_REF}.yaml"
 
 if [ ! -f "$ENV_FILE_CONTENT_BASE64_DECODED_FILE" ]; then
@@ -197,8 +197,8 @@ echo ""
 echo $SAFE_SEALEDSECRET_ENCRYPTED
 # cat sealed_secret_kisaan_prod.txt
 
-HELM_VALUES_INPUT_PATH=kisaan-devops/helm-charts/kisaan-chart/values-env-template.yaml
-HELM_VALUES_OUTPUT_PATH=kisaan-devops/helm-charts/kisaan-chart/values-${ENV_REF}.yaml
+HELM_VALUES_INPUT_PATH=devops/helm-charts/kisaan-chart/values-env-template.yaml
+HELM_VALUES_OUTPUT_PATH=devops/helm-charts/kisaan-chart/values-${ENV_REF}.yaml
 
 if [ ! -f "$HELM_VALUES_INPUT_PATH" ]; then
     echo "Error: Helm values template file '$HELM_VALUES_INPUT_PATH' not found!"

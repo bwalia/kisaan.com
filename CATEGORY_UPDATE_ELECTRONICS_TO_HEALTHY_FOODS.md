@@ -12,7 +12,7 @@ Successfully changed all instances of "Electronics" category to "Healthy foods" 
 ## Files Updated (3 files)
 
 ### 1. ✅ HeroSection.tsx
-**File:** `kisaan-next/src/components/home/HeroSection.tsx`
+**File:** `nextjs/src/components/home/HeroSection.tsx`
 
 **Change:** Trending Now section
 ```tsx
@@ -28,7 +28,7 @@ Successfully changed all instances of "Electronics" category to "Healthy foods" 
 ---
 
 ### 2. ✅ EnhancedEmptyCart.tsx
-**File:** `kisaan-next/src/components/cart/EnhancedEmptyCart.tsx`
+**File:** `nextjs/src/components/cart/EnhancedEmptyCart.tsx`
 
 **Changes:**
 - Category name: `Electronics` → `Healthy foods`
@@ -48,7 +48,7 @@ Successfully changed all instances of "Electronics" category to "Healthy foods" 
 ---
 
 ### 3. ✅ Seller Categories Page
-**File:** `kisaan-next/src/app/seller/categories/page.tsx`
+**File:** `nextjs/src/app/seller/categories/page.tsx`
 
 **Changes:**
 - Name placeholder: `e.g., Electronics, Clothing, Books` → `e.g., Healthy foods, Clothing, Books`

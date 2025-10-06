@@ -95,13 +95,13 @@ All banners feature:
 
 ### Server not running?
 ```bash
-cd kisaan-next
+cd nextjs
 npm run dev
 ```
 
 ### Want to regenerate banners?
 ```bash
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-banner.py
 python3 generate-feature-banners.py
 ```
@@ -110,7 +110,7 @@ python3 generate-feature-banners.py
 
 ## 📚 Learn More
 
-- **Complete Guide**: `kisaan-next/public/BANNERS.md`
+- **Complete Guide**: `nextjs/public/BANNERS.md`
 - **Visual Reference**: `VISUAL_PREVIEW_GUIDE.md`
 - **Implementation Details**: `BANNER_IMPLEMENTATION_SUMMARY.md`
 

@@ -4,7 +4,7 @@
 
 ### Running the Development Server
 ```bash
-cd kisaan-next
+cd nextjs
 npm install
 npm run dev
 ```
@@ -14,7 +14,7 @@ Visit `http://localhost:3000` to see your changes.
 ## File Structure
 
 ```
-kisaan-next/src/
+nextjs/src/
 ├── app/
 │   ├── page.tsx                 # Home page (Updated ✅)
 │   ├── globals.css              # Global styles (Updated ✅)

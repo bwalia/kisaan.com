@@ -2,17 +2,16 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 3
 image:
-  repository: docker.workstation.co.uk/kisaan-nextjs
+  repository: nexus-service.nexus.svc.cluster.local:8082/nextjsjs
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
-imagePullSecrets:
-  - name: hh-west-1-docker-registry
+imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-safeEnvFile: AgAPtFgA42bxt3k2qA5Ka1jrQDz3DWBM0UBWPkHasE9DvmX6hh1toebkANlHzXw80A1eFqN6oDhaPyIFmbq/pucnJ++gahTatp/nRscQcl5+C7FMHQGdnGWXFIAjm+EUl0nOd/9YZc+28thWO73LOfW6O+gjM0TFcABSiRaRf268x4pCVlhy61HzW361wo6PQs9BODHNTJG67F24Rxc6siogjm/xZkm06CtF3nnd2gQKaxLPTwOKQv660XQZQGq3FczEK1EP8+GyogrrnwntCLImnFzHOp/uLibeblig/tI7bIXNYelBbMjENbLLibERw6j8VDJn9Pa4MQCZTEv0d+ImwWswBZbyZwW53G2ztJEGAQzw9c5jWFpkikoYs89nt7ya6DfERJ76mz29RFJCVQ8Nfo1TIi3eqgFvmXp0S2uiuCPz2OSQakdY0lP1aViYaRoZjQ+BH5hCBzKH5WXMt6fiDTb3Gg5xE3rJRM3dCcJV/YxsOmu7xlP3gidV7ZkqF28kHp5QkXR5jkkwk2eLOuaG2v007oE5oErCWbnwaQL8XIYr++M9gZDimUGG05haAycJvj0Lrv7P/nQgVRI9PYPgJ90R39B2CiS4gTsq1jwL05zncMgaVE+LiycxaNzueyQe2ler+Wja0Z/EzQPVlIQH1C5HQwPPUyKrP6yvaGkKYycvhyq6n9pBP4er5oW24PrBRexjIe6Z+qmm0zAtYWCZrIKK+EyMPxQeWomgyFWs/kJu3hflxo9ZpRjlF1AqPd/TtQ5wSM1SITTdaFCWTHbm/6B2Fsf22HCZL9fb7bEVr6tP34fwgeITrIr4Fxo57fWh3E8BrafVLhHKKKaDf8VNkgQiBaZWlsoIftKFFUgkB1N8NTztEYkaRaGLuApRPzrY35DN45DwOHa7p3XaoEoZ
+safeEnvFile: AgBfi5mFmFB8ggmkHOq2cLVAyU9toBvHkfJzhxLL5qRf3z48l5sB/qlbhr3CZyR5e83pUiA6t4I+ms8aMEIb2BtqkhgwtxK+u4x3BGAl5SPPOEEnzFZnZAjwt7Y26SDN3dWoOgkli/Pl6GPVs+PolXFV19esJTqWebcuEuqr3iqrovnK8h10mEHLY+WN/UofwUfwbFH8xwshHFMGjWx3YkNILLkbuMpnSUY/F0kn4WVOK7O2RuxBWFS5+tDfumoqqsIa6f327yIvwFrsz4pamW5MepWmpEyHHD484a+KhoIR/54lckPsLQh2NgsOGySsuoH6Xg7rpxusExZB96r2MVpzGr0Cign5HeOq5SmKb5LDkmxd4I4mNl8oYDSnV8lQqN8BvlsliSJt7bQO78493OkQBnxEgkjIIdjB7FsAjYVV5Is8lJq/3FJEKkhRAokujl/Vmy7FB+JiK+973FPD3HvUPAkBap7qKwXa7CaNjCWb21Z+lVw3er3/zb1LcD2y7Iw/LLHerlJX7bEhchOBA0CfVF9G+ZjQhSfry+9FuryqNWbDzHjL7dXeGEgbmEGEuP2UPUNvFTR6XrXcPA+JOjoBTmPnqzNJM8/ABbv1RXXuwyDhtGjNiJSTKNgZxL+nymoKLeC8cvguRu95CfRE5vaVyUdbeLhe2tm3XHwXcVFNFhKpKY21AGo44Xl/mpJAMWwnPe8exf3RQ6u+Wn5yTCMiR54UTn8/EY0REZ+rqXD6t5ys4AVgWxgZsN0Yn+xsJh+SQ5FCA43XatoFdI7E2fEKUk8QsLc7MFTZiGYKWZD9oLquIPiGqBGPwqQ1yhS9gPtAuJgo4vZKWZ1hOTFkeUM37hAQ/REcYUqPcbmd41Q9AmBknq3HsM7ZEi6xYNandIMmD/IHThQjfIMPjn/nOl8L
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -40,7 +39,7 @@ service:
   type: ClusterIP
   port: 3000
   targetPort: 3000
-  namespace: "test"
+  namespace: "prod"
 ingress:
   enabled: true
   className: "nginx"
@@ -48,11 +47,11 @@ ingress:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: test.kisaan.com
+    - host: kisaan.com
       paths:
         - path: /
           pathType: ImplementationSpecific
-    - host: test-www.kisaan.com
+    - host: www.kisaan.com
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -73,7 +72,7 @@ resources: {}
 #   memory: 128Mi
 
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
@@ -94,15 +93,3 @@ volumeMounts: []
 nodeSelector: {}
 tolerations: []
 affinity: {}
-
-probes:
-  liveness:
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 3
-  readiness:
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 3

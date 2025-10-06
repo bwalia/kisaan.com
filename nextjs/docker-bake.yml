@@ -7,7 +7,7 @@ variable "REGISTRY" {
 }
 
 variable "IMAGE_NAME" {
-  default = "kisaan-next"
+  default = "nextjs"
 }
 
 variable "REPO_NAME" {
@@ -17,7 +17,7 @@ variable "REPO_NAME" {
 # Default target for all environments
 target "_common" {
   context = ".."
-  dockerfile = "kisaan-next/Dockerfile.dev"
+  dockerfile = "nextjs/Dockerfile.dev"
   platforms = ["linux/amd64"]
   args = {
     TAG = "${TAG}"
@@ -27,7 +27,7 @@ target "_common" {
 # Development build
 target "dev" {
   inherits = ["_common"]
-  dockerfile = "kisaan-next/Dockerfile.dev"
+  dockerfile = "nextjs/Dockerfile.dev"
   tags = [
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:dev-${TAG}",
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:dev-latest"
@@ -43,7 +43,7 @@ target "dev" {
 # Test build
 target "test" {
   inherits = ["_common"]
-  dockerfile = "kisaan-next/Dockerfile.test"
+  dockerfile = "nextjs/Dockerfile.test"
   tags = [
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:test-${TAG}",
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:test-latest"
@@ -59,7 +59,7 @@ target "test" {
 # Acceptance build
 target "acc" {
   inherits = ["_common"]
-  dockerfile = "kisaan-next/Dockerfile.acc"
+  dockerfile = "nextjs/Dockerfile.acc"
   tags = [
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:acc-${TAG}",
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:acc-latest"
@@ -75,7 +75,7 @@ target "acc" {
 # Production build
 target "prod" {
   inherits = ["_common"]
-  dockerfile = "kisaan-next/Dockerfile.prod"
+  dockerfile = "nextjs/Dockerfile.prod"
   tags = [
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:prod-${TAG}",
     "${REGISTRY}/${REPO_NAME}/${IMAGE_NAME}:prod-latest",

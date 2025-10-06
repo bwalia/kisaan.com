@@ -117,7 +117,7 @@ Zero Errors:           ✓
 
 ### Regenerate Banners (if needed)
 ```bash
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-banner.py           # Hero banner
 python3 generate-feature-banners.py  # Feature banners
 ```
@@ -133,7 +133,7 @@ python3 generate-feature-banners.py  # Feature banners
 
 ### Images
 ```
-kisaan-next/public/
+nextjs/public/
 ├── hero-farmer-banner.jpg
 ├── hero-farmer-banner-blurred.jpg
 ├── banner-security.jpg
@@ -145,7 +145,7 @@ kisaan-next/public/
 
 ### Scripts
 ```
-kisaan-next/scripts/
+nextjs/scripts/
 ├── generate-banner.py
 ├── generate-feature-banners.py
 └── README.md
@@ -156,7 +156,7 @@ kisaan-next/scripts/
 kisaan.com/
 ├── BANNER_IMPLEMENTATION_SUMMARY.md
 ├── VISUAL_PREVIEW_GUIDE.md
-└── kisaan-next/public/BANNERS.md
+└── nextjs/public/BANNERS.md
 ```
 
 ---
@@ -299,9 +299,9 @@ Your Kisaan marketplace now has beautiful, professional background images that:
 ## 📞 Need Help?
 
 ### Documentation
-- 📖 Full details: `kisaan-next/public/BANNERS.md`
+- 📖 Full details: `nextjs/public/BANNERS.md`
 - 🎨 Visual guide: `VISUAL_PREVIEW_GUIDE.md`
-- 🔧 Scripts: `kisaan-next/scripts/README.md`
+- 🔧 Scripts: `nextjs/scripts/README.md`
 
 ### Quick Links
 - Development Server: http://localhost:3001

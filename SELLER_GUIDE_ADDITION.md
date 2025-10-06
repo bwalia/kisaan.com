@@ -6,7 +6,7 @@ October 5, 2025
 ## Changes Made
 
 ### 1. Created Seller Guide Page
-**File:** `kisaan-next/src/app/seller-guide/page.tsx`
+**File:** `nextjs/src/app/seller-guide/page.tsx`
 
 **Features:**
 - Comprehensive guide for sellers on the Kisaan marketplace
@@ -38,7 +38,7 @@ October 5, 2025
 - Animated icons and smooth transitions
 
 ### 2. Updated Footer Component
-**File:** `kisaan-next/src/components/Footer.tsx`
+**File:** `nextjs/src/components/Footer.tsx`
 
 **Changes:**
 - Changed "Seller Guide" link from `/help/seller-guide` to `/seller-guide`
@@ -163,12 +163,12 @@ description: "Complete guide for sellers on how to start, manage, and grow your 
 
 ### New File
 ```
-kisaan-next/src/app/seller-guide/page.tsx
+nextjs/src/app/seller-guide/page.tsx
 ```
 
 ### Modified File
 ```
-kisaan-next/src/components/Footer.tsx
+nextjs/src/components/Footer.tsx
 ```
 
 ## Testing

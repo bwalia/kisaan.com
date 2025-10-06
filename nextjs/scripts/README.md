@@ -29,12 +29,12 @@ pip3 install Pillow --user
 
 ### Generate Banner
 ```bash
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-banner.py
 ```
 
 ### Output
-The script will create two images in `kisaan-next/public/`:
+The script will create two images in `nextjs/public/`:
 1. **hero-farmer-banner.jpg** - Main banner with full detail
 2. **hero-farmer-banner-blurred.jpg** - Softly blurred version
 
@@ -132,7 +132,7 @@ pip3 install Pillow --user
 ### Permission Error
 Ensure write permissions in the `public/` directory:
 ```bash
-chmod 755 kisaan-next/public/
+chmod 755 nextjs/public/
 ```
 
 ### Low Quality Output

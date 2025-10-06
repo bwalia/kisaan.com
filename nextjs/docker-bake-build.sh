@@ -9,7 +9,7 @@ set -e
 DEFAULT_TAG="latest"
 DEFAULT_REGISTRY="docker.io"
 DEFAULT_REPO="bwalia"
-DEFAULT_IMAGE="kisaan-next"
+DEFAULT_IMAGE="nextjs"
 
 # Help function
 show_help() {
@@ -124,7 +124,7 @@ if ! docker buildx version &> /dev/null; then
     exit 1
 fi
 
-# Navigate to kisaan-next directory
+# Navigate to nextjs directory
 cd "$(dirname "$0")"
 
 echo "Building Docker images with the following configuration:"

@@ -9,7 +9,7 @@ set -e
 DEFAULT_TAG="latest"
 DEFAULT_REGISTRY="docker.io"
 DEFAULT_REPO="bwalia"
-DEFAULT_IMAGE="kisaan-next"
+DEFAULT_IMAGE="nextjs"
 
 # Help function
 show_help() {
@@ -127,9 +127,9 @@ if [[ ! -f "$DOCKERFILE" ]]; then
     exit 1
 fi
 
-# Navigate to correct directory (we should be in kisaan-next)
+# Navigate to correct directory (we should be in nextjs)
 if [[ ! -f "package.json" ]]; then
-    echo "Error: package.json not found. Run this script from the kisaan-next directory."
+    echo "Error: package.json not found. Run this script from the nextjs directory."
     exit 1
 fi
 

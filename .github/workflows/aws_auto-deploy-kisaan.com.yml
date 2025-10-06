@@ -52,7 +52,7 @@ jobs:
 
     - name: Build, tag, and push image to Amazon ECR
       run: |
-        docker build -f kisaan-devops/docker/kisaan.com-website/Dockerfile -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/tenthmatrix/kisaan.com:${{ env.SHA }} .
+        docker build -f devops/docker/kisaan.com-website/Dockerfile -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/tenthmatrix/kisaan.com:${{ env.SHA }} .
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-2.amazonaws.com/tenthmatrix/kisaan.com:${{ env.SHA }}
 
     - name: helm deploy
@@ -61,4 +61,4 @@ jobs:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       with:
         #command: helm delete tizohub
-        command: helm upgrade -i kisaan ./kisaan-devops/kisaanComChart --set=image.tag=${{ env.SHA }} --set DEFAULT_DOMAIN="${{ secrets.DEFAULT_DOMAIN }}" --set DB_HOSTNAME="${{ secrets.DB_HOSTNAME }}" --set DB_NAME="${{ secrets.DB_NAME }}" --set DB_USERNAME="${{ secrets.DB_USERNAME }}" --set DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+        command: helm upgrade -i kisaan ./devops/kisaanComChart --set=image.tag=${{ env.SHA }} --set DEFAULT_DOMAIN="${{ secrets.DEFAULT_DOMAIN }}" --set DB_HOSTNAME="${{ secrets.DB_HOSTNAME }}" --set DB_NAME="${{ secrets.DB_NAME }}" --set DB_USERNAME="${{ secrets.DB_USERNAME }}" --set DB_PASSWORD="${{ secrets.DB_PASSWORD }}"

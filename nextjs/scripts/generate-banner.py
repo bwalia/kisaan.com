@@ -299,7 +299,7 @@ if __name__ == "__main__":
         create_banner()
         print("\n🎉 Banner generation complete!")
         print("\nNext steps:")
-        print("1. Check the generated images in kisaan-next/public/")
+        print("1. Check the generated images in nextjs/public/")
         print("2. Update HeroSection.tsx to use the new background")
         print("3. Adjust overlay opacity if needed for text readability")
     except Exception as e:

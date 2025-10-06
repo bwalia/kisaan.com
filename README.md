@@ -50,7 +50,7 @@ A modern Kisaan.com Multi-Tenancy E-Commerce e-commerce platform built with Next
 
 ```
 kisaan.com/
-├── kisaan-next/          # Next.js application (main codebase)
+├── nextjs/          # Next.js application (main codebase)
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── page.tsx              # Homepage
@@ -67,7 +67,7 @@ kisaan.com/
 │   │   ├── components/               # Reusable components
 │   │   └── lib/                      # Utility functions
 ├── kisaan.com/           # Legacy PHP frontend
-├── kisaan-devops/    # DevOps configurations
+├── devops/    # DevOps configurations
 └── README.md
 ```
 
@@ -105,7 +105,7 @@ kisaan.com/
 2. **Navigate to the Next.js application**
 
    ```bash
-   cd kisaan-next
+   cd nextjs
    ```
 
 3. **Install dependencies**
@@ -146,7 +146,7 @@ kisaan.com/
 For containerized development:
 
 ```bash
-cd kisaan-next
+cd nextjs
 
 # Development
 docker build -f Dockerfile.dev -t kisaan-dev .
@@ -165,7 +165,7 @@ The platform features custom-generated banner images created with Python PIL/Pil
 
 ```bash
 # Main hero banner (farmer in fields)
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-banner.py
 
 # Feature page banners (security, pricing, returns, support)
@@ -184,7 +184,7 @@ pip3 install Pillow --user
 - **Feature Banners**: Abstract geometric patterns for each feature page
 - **Textures**: Light background textures for content sections
 
-See `kisaan-next/public/BANNERS.md` for complete documentation.
+See `nextjs/public/BANNERS.md` for complete documentation.
 
 ## API Configuration
 

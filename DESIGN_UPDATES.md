@@ -1,7 +1,7 @@
 # Kisaan Frontend Design Updates
 
 ## Overview
-Based on the reference image (`kisaan-next/public/kisaan.jpg`), the Kisaan marketplace frontend has been completely redesigned with a modern, professional aesthetic that emphasizes user experience, visual appeal, and conversion optimization.
+Based on the reference image (`nextjs/public/kisaan.jpg`), the Kisaan marketplace frontend has been completely redesigned with a modern, professional aesthetic that emphasizes user experience, visual appeal, and conversion optimization.
 
 ## 🎨 Design Philosophy
 - **Modern & Clean**: Minimalist design with purposeful use of gradients and shadows

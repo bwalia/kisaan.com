@@ -2,16 +2,16 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 3
+replicaCount: 2
 image:
-  repository: nexus-service.nexus.svc.cluster.local:8082/kisaan-nextjs
+  repository: nexus-service.nexus.svc.cluster.local:8082/nextjsjs
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-safeEnvFile: AgBfi5mFmFB8ggmkHOq2cLVAyU9toBvHkfJzhxLL5qRf3z48l5sB/qlbhr3CZyR5e83pUiA6t4I+ms8aMEIb2BtqkhgwtxK+u4x3BGAl5SPPOEEnzFZnZAjwt7Y26SDN3dWoOgkli/Pl6GPVs+PolXFV19esJTqWebcuEuqr3iqrovnK8h10mEHLY+WN/UofwUfwbFH8xwshHFMGjWx3YkNILLkbuMpnSUY/F0kn4WVOK7O2RuxBWFS5+tDfumoqqsIa6f327yIvwFrsz4pamW5MepWmpEyHHD484a+KhoIR/54lckPsLQh2NgsOGySsuoH6Xg7rpxusExZB96r2MVpzGr0Cign5HeOq5SmKb5LDkmxd4I4mNl8oYDSnV8lQqN8BvlsliSJt7bQO78493OkQBnxEgkjIIdjB7FsAjYVV5Is8lJq/3FJEKkhRAokujl/Vmy7FB+JiK+973FPD3HvUPAkBap7qKwXa7CaNjCWb21Z+lVw3er3/zb1LcD2y7Iw/LLHerlJX7bEhchOBA0CfVF9G+ZjQhSfry+9FuryqNWbDzHjL7dXeGEgbmEGEuP2UPUNvFTR6XrXcPA+JOjoBTmPnqzNJM8/ABbv1RXXuwyDhtGjNiJSTKNgZxL+nymoKLeC8cvguRu95CfRE5vaVyUdbeLhe2tm3XHwXcVFNFhKpKY21AGo44Xl/mpJAMWwnPe8exf3RQ6u+Wn5yTCMiR54UTn8/EY0REZ+rqXD6t5ys4AVgWxgZsN0Yn+xsJh+SQ5FCA43XatoFdI7E2fEKUk8QsLc7MFTZiGYKWZD9oLquIPiGqBGPwqQ1yhS9gPtAuJgo4vZKWZ1hOTFkeUM37hAQ/REcYUqPcbmd41Q9AmBknq3HsM7ZEi6xYNandIMmD/IHThQjfIMPjn/nOl8L
+safeEnvFile: AgBbya4x0zdgOqCSk1AQhPezoOXFmbiibNBFVgT3xd2Fq32LmNrFW6fJ6ZV3uTQ+oa+gV/XdsIM02ZpdtcV67/YSgqbZB99T71QVRjOs8+WYR8w/h0GUbdabTrblhwGRvl98Ec+JlFyTRuihE9owk4WQwKFgj4llHdz8z2FMyZz+MSRNdUgEajymacD6vEeugwvroYobTb6meNc4cLyTNrhZnpWUPWg9iZrvSoeiIEfc04Do28GvqyrozIEFb696ZdJ+g/df20I302Tj3xW/dEHl/OtM3vdVGFQGfIHa1wi9ASDoYM0aL4uO6lqhkI0wTpQqor6SreT3X9R4RzU7Gw6aN0XY8qZV0e0c7smzUMAbh95GSqYvwPVwmE0bELuE3cxB9LApcMBSFXersegML0RJ4ztz8573hsITN5SogL9gT3oTyTFUNONu8pM+VPC4NDssaDT1jUU1z8eR7GcUz45VRm93B3PiCca7BnAnoz6gnoIqbJojM50THRXIhId6ZCXal1gkFnr+/DQQ/WNM/w0TRDbXvCfQIAY9TR0e4gYdgYmoqO9df6FIi9/++O9DxhJjZAVFb4iqiaqmrSvvsrMDE8zQfKcskLiDyRt7bN7rRFFfXLUiisGDMSgqCfsNhtZi2lKjCbtB+RMsRZwE5lgJU0hN6bmrE587CGf/+4D2Ki6EmeDRKMtbqk/P8mlBaRnrm9RaD+vJFQQI+rmNsZy/7jmYUU6aER+lOWpxleUq4GB2vaQlidv+qGhwq6o3X3Khq4BINfF456zqFVGz1WszTFUSagzGwOIiCthg4+YGHZeQOJD/jmrM9B4q7IvB4HEs6eo9hJQvoTFUuaL3jKab71E+KsKF2AS9pMLMnxjGdlS3/CPIJWSejfkNDUmpMHCmMsnHR4AeP2jqR3gZTl6Q
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -39,7 +39,7 @@ service:
   type: ClusterIP
   port: 3000
   targetPort: 3000
-  namespace: "prod"
+  namespace: "acc"
 ingress:
   enabled: true
   className: "nginx"
@@ -47,11 +47,11 @@ ingress:
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: kisaan.com
+    - host: acc.kisaan.com
       paths:
         - path: /
           pathType: ImplementationSpecific
-    - host: www.kisaan.com
+    - host: acc-www.kisaan.com
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -72,7 +72,7 @@ resources: {}
 #   memory: 128Mi
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80

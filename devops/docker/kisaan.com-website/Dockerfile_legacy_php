@@ -1,7 +1,7 @@
 FROM bwalia/openresty119php74:2022-01-02-04-20
 
-#COPY kisaan-devops/docker/php/php.ini /usr/local/etc/php/php.ini
-COPY kisaan-devops/docker/nginx/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+#COPY devops/docker/php/php.ini /usr/local/etc/php/php.ini
+COPY devops/docker/nginx/nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
 
 RUN mkdir -p /var/www/html/kisaan.com
 

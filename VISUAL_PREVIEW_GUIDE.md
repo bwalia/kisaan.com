@@ -403,8 +403,8 @@ Layer 1: Base gradient (fallback)                 [background]
 
 ---
 
-**For detailed technical documentation, see:** `kisaan-next/public/BANNERS.md`  
-**For generation scripts, see:** `kisaan-next/scripts/README.md`
+**For detailed technical documentation, see:** `nextjs/public/BANNERS.md`  
+**For generation scripts, see:** `nextjs/scripts/README.md`
 
 ---
 

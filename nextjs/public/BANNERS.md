@@ -193,7 +193,7 @@ Generates the main hero farmer banner.
 
 **Run:**
 ```bash
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-banner.py
 ```
 
@@ -208,7 +208,7 @@ Generates all feature page banners and textures.
 
 **Run:**
 ```bash
-cd kisaan-next/scripts
+cd nextjs/scripts
 python3 generate-feature-banners.py
 ```
 
