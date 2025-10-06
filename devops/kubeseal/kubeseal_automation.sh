@@ -96,6 +96,7 @@ fi
 echo "kubeseal binary found: $(which kubeseal)"
 echo "kubeseal version: $(kubeseal --version)"
 
+YQ_BIN_FILE="yq"
 # Install yq if not present
 if ! command -v yq &> /dev/null; then
     echo "yq not found, installing..."
@@ -107,8 +108,9 @@ if ! command -v yq &> /dev/null; then
 fi
 
 if ! command -v yq &> /dev/null; then
-    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /tmp/yq && chmod +x /tmp/yq
     echo "yq installed successfully!"
+    YQ_BIN_FILE="/tmp/yq"
 fi
 
 if ! command -v yq &> /dev/null; then
@@ -246,17 +248,17 @@ EOF
 
 if [ "$ENV_REF" == "prod" ]; then
     echo "Production environment detected, setting replicaCount to 3"
-    yq e '.replicaCount = 3' -i $HELM_VALUES_OUTPUT_PATH
-    yq e '.autoscaling.minReplicas = 3' -i $HELM_VALUES_OUTPUT_PATH
-    yq e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
+    $YQ_BIN_FILE e '.replicaCount = 3' -i $HELM_VALUES_OUTPUT_PATH
+    $YQ_BIN_FILE e '.autoscaling.minReplicas = 3' -i $HELM_VALUES_OUTPUT_PATH
+    $YQ_BIN_FILE e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
 elif [ "$ENV_REF" == "acc" ]; then
     echo "Testing environment detected, setting replicaCount to 2"
-    yq e '.replicaCount = 2' -i $HELM_VALUES_OUTPUT_PATH
-    yq e '.autoscaling.minReplicas = 2' -i $HELM_VALUES_OUTPUT_PATH
-    yq e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
+    $YQ_BIN_FILE e '.replicaCount = 2' -i $HELM_VALUES_OUTPUT_PATH
+    $YQ_BIN_FILE e '.autoscaling.minReplicas = 2' -i $HELM_VALUES_OUTPUT_PATH
+    $YQ_BIN_FILE e '.autoscaling.enabled = true' -i $HELM_VALUES_OUTPUT_PATH
 else
     echo "Non-production environment detected, setting replicaCount to 1"
-    yq e '.replicaCount = 1' -i $HELM_VALUES_OUTPUT_PATH
+    $YQ_BIN_FILE e '.replicaCount = 1' -i $HELM_VALUES_OUTPUT_PATH
 fi
 
 cat $HELM_VALUES_OUTPUT_PATH
