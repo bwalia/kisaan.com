@@ -4,6 +4,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import UnderConstructionBanner from "@/components/UnderConstructionBanner";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
           <CartProvider>
             <div className="flex flex-col min-h-screen">
               <Navbar />
+              <UnderConstructionBanner />
               <main className="flex-1">
                 <div className="">{children}</div>
               </main>

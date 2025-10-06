@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { isOrderingDisabled } from "@/utils/site-config";
+import DisabledFeatureMessage from "@/components/DisabledFeatureMessage";
 import api from "@/lib/api";
 import CheckoutHeader from "@/components/checkout/CheckoutHeader";
 import CustomerInfoForm from "@/components/checkout/CustomerInfoForm";
@@ -232,6 +234,31 @@ export default function Checkout() {
           <p className="text-gray-600">
             {authLoading ? "Authenticating..." : "Loading checkout..."}
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show disabled message if ordering is disabled
+  if (isOrderingDisabled()) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md mx-auto px-4">
+          <DisabledFeatureMessage featureType="ordering" className="mb-4" />
+          <div className="text-center mt-6">
+            <button
+              onClick={() => router.push('/cart')}
+              className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors mr-4"
+            >
+              Back to Cart
+            </button>
+            <button
+              onClick={() => router.push('/')}
+              className="px-6 py-2 bg-[#16a34a] text-white rounded-lg hover:bg-[#15803d] transition-colors"
+            >
+              Continue Shopping
+            </button>
+          </div>
         </div>
       </div>
     );
