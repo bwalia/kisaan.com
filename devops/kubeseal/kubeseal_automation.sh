@@ -98,7 +98,7 @@ echo "kubeseal version: $(kubeseal --version)"
 
 YQ_BIN_FILE="yq"
 # Install yq if not present
-if ! command -v yq &> /dev/null; then
+if ! command -v $YQ_BIN_FILE &> /dev/null; then
     echo "yq not found, installing..."
     if [[ "$OS_TYPE" == "macos" ]]; then
         brew install yq
@@ -107,13 +107,13 @@ if ! command -v yq &> /dev/null; then
     fi
 fi
 
-if ! command -v yq &> /dev/null; then
+if ! command -v $YQ_BIN_FILE &> /dev/null; then
     wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /tmp/yq && chmod +x /tmp/yq
     echo "yq installed successfully!"
     YQ_BIN_FILE="/tmp/yq"
 fi
 
-if ! command -v yq &> /dev/null; then
+if ! command -v $YQ_BIN_FILE &> /dev/null; then
     echo "Error: yq is not installed!"
     exit 1
 fi
