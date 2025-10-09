@@ -1,11 +1,13 @@
 // Site configuration for under construction mode
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 export const SITE_CONFIG = {
-  isUnderConstruction: true,
+  isUnderConstruction: isDevelopment ? false : true,
   maintenanceMode: false,
   allowBrowsing: true,
-  allowOrders: false,
-  allowRegistration: false,
-  allowSelling: false,
+  allowOrders: isDevelopment ? true : false,
+  allowRegistration: isDevelopment ? true : false,
+  allowSelling: isDevelopment ? true : false,
   underConstructionMessage: "This site is currently under construction and not accepting orders yet. Please check back soon!",
   expectedLaunchDate: "2025-Q1",
 } as const;

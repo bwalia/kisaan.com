@@ -454,14 +454,87 @@ class ApiClient {
 
   async updateOrderStatus(orderId: string, statusData: {
     status?: string;
-    financial_status?: string;
-    fulfillment_status?: string;
-    internal_notes?: string;
+    notes?: string;
+    tracking_number?: string;
+    tracking_url?: string;
+    carrier?: string;
+    estimated_delivery_date?: string;
   }) {
-    return this.request(`/api/v2/orders/${orderId}/status`, {
+    return this.request(`/api/v2/orders/${orderId}/update-status`, {
       method: "PUT",
       body: JSON.stringify(statusData)
     }, true);
+  }
+
+  // Buyer Orders
+  async getBuyerOrders() {
+    return this.request("/api/v2/buyer/orders");
+  }
+
+  async getBuyerOrderDetails(orderId: string) {
+    return this.request(`/api/v2/buyer/orders/${orderId}`);
+  }
+
+  async repeatOrder(orderId: string) {
+    return this.request(`/api/v2/buyer/orders/${orderId}/repeat`, {
+      method: "POST"
+    });
+  }
+
+  async cancelOrder(orderId: string, reason?: string) {
+    return this.request(`/api/v2/buyer/orders/${orderId}/cancel`, {
+      method: "POST",
+      body: JSON.stringify({ reason })
+    });
+  }
+
+  // Notifications
+  async getNotifications(params?: { limit?: number; offset?: number; unread_only?: boolean }) {
+    const query = new URLSearchParams(params as any).toString();
+    return this.request(`/api/v2/notifications${query ? '?' + query : ''}`);
+  }
+
+  async markNotificationRead(notificationId: string) {
+    return this.request(`/api/v2/notifications/${notificationId}/read`, {
+      method: "PUT"
+    });
+  }
+
+  async markAllNotificationsRead() {
+    return this.request("/api/v2/notifications/mark-all-read", {
+      method: "PUT"
+    });
+  }
+
+  async deleteNotification(notificationId: string) {
+    return this.request(`/api/v2/notifications/${notificationId}`, {
+      method: "DELETE"
+    });
+  }
+
+  // Public Store Profile
+  async getPublicStoreProfile(slug: string) {
+    return this.publicRequest(`/api/v2/public/stores/${slug}`);
+  }
+
+  async getPublicStoreProducts(slug: string, params?: {
+    page?: number;
+    per_page?: number;
+    category?: string;
+    search?: string;
+    sort?: 'created_at' | 'price_asc' | 'price_desc' | 'name';
+  }) {
+    const query = new URLSearchParams(params as any).toString();
+    return this.publicRequest(`/api/v2/public/stores/${slug}/products${query ? '?' + query : ''}`);
+  }
+
+  async getPublicStoreReviews(slug: string, params?: { page?: number; per_page?: number }) {
+    const query = new URLSearchParams(params as any).toString();
+    return this.publicRequest(`/api/v2/public/stores/${slug}/reviews${query ? '?' + query : ''}`);
+  }
+
+  async getPublicProductDetails(storeSlug: string, productId: string) {
+    return this.publicRequest(`/api/v2/public/stores/${storeSlug}/products/${productId}`);
   }
 }
 

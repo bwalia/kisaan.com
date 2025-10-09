@@ -127,14 +127,18 @@ export default function EnhancedOrderSummary({ className }: EnhancedOrderSummary
 
     for (const storeId in cartTotals.store_totals) {
       const storeData = cartTotals.store_totals[storeId];
-      const freeThreshold = storeData.store_info?.free_shipping_threshold || 0;
+
+      // Safely access store_info with null checks
+      if (!storeData || !storeData.store_info) continue;
+
+      const freeThreshold = storeData.store_info.free_shipping_threshold || 0;
 
       if (freeThreshold > 0 && storeData.subtotal < freeThreshold && storeData.subtotal > 0) {
         const remaining = freeThreshold - storeData.subtotal;
         return {
           remaining,
           threshold: freeThreshold,
-          storeName: storeData.store_info?.name || 'this store',
+          storeName: storeData.store_info.name || 'this store',
         };
       }
     }
