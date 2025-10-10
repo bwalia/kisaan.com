@@ -29,7 +29,7 @@ interface Product {
   price: number;
   image_url?: string;
   description?: string;
-  stock: number;
+  inventory_quantity: number;
   category?: string;
 }
 
@@ -53,11 +53,15 @@ export default function PublicStorePage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [ratingDistribution, setRatingDistribution] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'products' | 'reviews'>('products');
+  const [activeTab, setActiveTab] = useState<"products" | "reviews">(
+    "products"
+  );
   const [productPage, setProductPage] = useState(1);
   const [reviewPage, setReviewPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'created_at' | 'price_asc' | 'price_desc' | 'name'>('created_at');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<
+    "created_at" | "price_asc" | "price_desc" | "name"
+  >("created_at");
 
   useEffect(() => {
     if (storeSlug) {
@@ -66,7 +70,7 @@ export default function PublicStorePage() {
   }, [storeSlug]);
 
   useEffect(() => {
-    if (activeTab === 'products') {
+    if (activeTab === "products") {
       loadProducts();
     } else {
       loadReviews();
@@ -90,8 +94,8 @@ export default function PublicStorePage() {
       const response = await api.getPublicStoreProducts(storeSlug, {
         page: productPage,
         per_page: 12,
-        search: searchQuery || undefined,
-        sort: sortBy
+        search: searchQuery,
+        sort: sortBy,
       });
       setProducts(response.products);
     } catch (error: any) {
@@ -103,7 +107,7 @@ export default function PublicStorePage() {
     try {
       const response = await api.getPublicStoreReviews(storeSlug, {
         page: reviewPage,
-        per_page: 10
+        per_page: 10,
       });
       setReviews(response.reviews);
       setRatingDistribution(response.rating_distribution);
@@ -116,7 +120,10 @@ export default function PublicStorePage() {
     return (
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((star) => (
-          <span key={star} className={star <= rating ? "text-yellow-400" : "text-gray-300"}>
+          <span
+            key={star}
+            className={star <= rating ? "text-yellow-400" : "text-gray-300"}
+          >
             ★
           </span>
         ))}
@@ -136,7 +143,9 @@ export default function PublicStorePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Store not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Store not found
+          </h2>
           <button
             onClick={() => router.push("/")}
             className="text-green-600 hover:underline"
@@ -169,7 +178,11 @@ export default function PublicStorePage() {
             {/* Logo */}
             <div className="w-32 h-32 rounded-full bg-white shadow-lg overflow-hidden border-4 border-white">
               {store.logo_url ? (
-                <img src={store.logo_url} alt={store.name} className="w-full h-full object-cover" />
+                <img
+                  src={store.logo_url}
+                  alt={store.name}
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-4xl font-bold">
                   {store.name.charAt(0)}
@@ -181,7 +194,9 @@ export default function PublicStorePage() {
               <h1 className="text-3xl font-bold text-gray-900">{store.name}</h1>
               <p className="text-gray-600 mt-1">by {store.owner_name}</p>
               {store.description && (
-                <p className="text-gray-700 mt-2 max-w-3xl">{store.description}</p>
+                <p className="text-gray-700 mt-2 max-w-3xl">
+                  {store.description}
+                </p>
               )}
 
               {/* Stats */}
@@ -189,17 +204,20 @@ export default function PublicStorePage() {
                 <div className="flex items-center gap-2">
                   {renderStars(Math.round(store.average_rating))}
                   <span className="text-sm font-medium text-gray-700">
-                    {store.average_rating.toFixed(1)} ({store.review_count} reviews)
+                    {store.average_rating.toFixed(1)} ({store.review_count}{" "}
+                    reviews)
                   </span>
                 </div>
                 <div className="text-sm text-gray-600">
-                  <span className="font-medium">{store.product_count}</span> Products
+                  <span className="font-medium">{store.product_count}</span>{" "}
+                  Products
                 </div>
                 <div className="text-sm text-gray-600">
-                  <span className="font-medium">{store.completed_orders}</span> Orders Completed
+                  <span className="font-medium">{store.completed_orders}</span>{" "}
+                  Orders Completed
                 </div>
                 <div className="text-sm text-gray-600">
-                  Member since {format(new Date(store.owner_since), 'MMM yyyy')}
+                  Member since {format(new Date(store.owner_since), "MMM yyyy")}
                 </div>
               </div>
             </div>
@@ -209,21 +227,21 @@ export default function PublicStorePage() {
           <div className="border-t border-gray-200">
             <div className="flex gap-8">
               <button
-                onClick={() => setActiveTab('products')}
+                onClick={() => setActiveTab("products")}
                 className={`py-4 font-medium border-b-2 transition-colors ${
-                  activeTab === 'products'
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                  activeTab === "products"
+                    ? "border-green-600 text-green-600"
+                    : "border-transparent text-gray-600 hover:text-gray-900"
                 }`}
               >
                 Products ({store.product_count})
               </button>
               <button
-                onClick={() => setActiveTab('reviews')}
+                onClick={() => setActiveTab("reviews")}
                 className={`py-4 font-medium border-b-2 transition-colors ${
-                  activeTab === 'reviews'
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                  activeTab === "reviews"
+                    ? "border-green-600 text-green-600"
+                    : "border-transparent text-gray-600 hover:text-gray-900"
                 }`}
               >
                 Reviews ({store.review_count})
@@ -235,7 +253,7 @@ export default function PublicStorePage() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'products' && (
+        {activeTab === "products" && (
           <>
             {/* Filters */}
             <div className="bg-white rounded-lg shadow p-4 mb-6">
@@ -283,16 +301,24 @@ export default function PublicStorePage() {
                       </div>
                     )}
                     <div className="p-4">
-                      <h3 className="font-semibold text-gray-900 mb-1 truncate">{product.name}</h3>
-                      <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
+                      <h3 className="font-semibold text-gray-900 mb-1 truncate">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                        {product.description}
+                      </p>
                       <div className="flex justify-between items-center">
                         <p className="text-xl font-bold text-green-600">
                           ${parseFloat(product.price.toString()).toFixed(2)}
                         </p>
-                        {product.stock > 0 ? (
-                          <span className="text-sm text-green-600">In Stock</span>
+                        {product.inventory_quantity > 0 ? (
+                          <span className="text-sm text-green-600">
+                            In Stock
+                          </span>
                         ) : (
-                          <span className="text-sm text-red-600">Out of Stock</span>
+                          <span className="text-sm text-red-600">
+                            Out of Stock
+                          </span>
                         )}
                       </div>
                     </div>
@@ -303,7 +329,7 @@ export default function PublicStorePage() {
           </>
         )}
 
-        {activeTab === 'reviews' && (
+        {activeTab === "reviews" && (
           <>
             {/* Rating Overview */}
             {ratingDistribution.length > 0 && (
@@ -316,23 +342,34 @@ export default function PublicStorePage() {
                     <div className="flex justify-center my-2">
                       {renderStars(Math.round(store.average_rating))}
                     </div>
-                    <p className="text-gray-600">{store.review_count} reviews</p>
+                    <p className="text-gray-600">
+                      {store.review_count} reviews
+                    </p>
                   </div>
                   <div className="space-y-2">
                     {[5, 4, 3, 2, 1].map((rating) => {
-                      const dist = ratingDistribution.find(d => d.rating === rating);
+                      const dist = ratingDistribution.find(
+                        (d) => d.rating === rating
+                      );
                       const count = dist?.count || 0;
-                      const percentage = store.review_count > 0 ? (count / store.review_count) * 100 : 0;
+                      const percentage =
+                        store.review_count > 0
+                          ? (count / store.review_count) * 100
+                          : 0;
                       return (
                         <div key={rating} className="flex items-center gap-2">
-                          <span className="text-sm text-gray-600 w-8">{rating}★</span>
+                          <span className="text-sm text-gray-600 w-8">
+                            {rating}★
+                          </span>
                           <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                             <div
                               className="h-full bg-yellow-400"
                               style={{ width: `${percentage}%` }}
                             />
                           </div>
-                          <span className="text-sm text-gray-600 w-12 text-right">{count}</span>
+                          <span className="text-sm text-gray-600 w-12 text-right">
+                            {count}
+                          </span>
                         </div>
                       );
                     })}
@@ -349,7 +386,10 @@ export default function PublicStorePage() {
             ) : (
               <div className="space-y-4">
                 {reviews.map((review) => (
-                  <div key={review.uuid} className="bg-white rounded-lg shadow p-6">
+                  <div
+                    key={review.uuid}
+                    className="bg-white rounded-lg shadow p-6"
+                  >
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
@@ -360,14 +400,18 @@ export default function PublicStorePage() {
                             </span>
                           )}
                         </div>
-                        <p className="font-medium text-gray-900">{review.reviewer_name}</p>
+                        <p className="font-medium text-gray-900">
+                          {review.reviewer_name}
+                        </p>
                       </div>
                       <p className="text-sm text-gray-600">
-                        {format(new Date(review.created_at), 'MMM dd, yyyy')}
+                        {format(new Date(review.created_at), "MMM dd, yyyy")}
                       </p>
                     </div>
                     {review.title && (
-                      <h4 className="font-semibold text-gray-900 mb-2">{review.title}</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">
+                        {review.title}
+                      </h4>
                     )}
                     {review.comment && (
                       <p className="text-gray-700">{review.comment}</p>

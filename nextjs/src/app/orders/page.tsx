@@ -10,7 +10,7 @@ interface Order {
   uuid: string;
   order_number: string;
   status: string;
-  total_price: number;
+  total_amount: number;
   currency: string;
   created_at: string;
   store_name: string;
@@ -222,8 +222,8 @@ export default function OrdersPage() {
                     <div className="text-right">
                       <p className="text-2xl font-bold text-gray-900">
                         $
-                        {order.total_price
-                          ? parseFloat(order.total_price.toString()).toFixed(2)
+                        {order.total_amount
+                          ? parseFloat(order.total_amount.toString()).toFixed(2)
                           : "0.00"}
                       </p>
                       <p className="text-sm text-gray-600">
@@ -235,8 +235,9 @@ export default function OrdersPage() {
                   {/* Order Items */}
                   <div className="border-t border-gray-200 pt-4 mb-4">
                     <div className="space-y-3">
-                      {Object.keys(order.items).length &&
-                        order.items?.slice(0, 2).map((item, idx) => (
+                      {Array.isArray(order.items) &&
+                        order.items.length > 0 &&
+                        order.items.slice(0, 2).map((item, idx) => (
                           <div key={idx} className="flex items-center gap-3">
                             {item.product_image && (
                               <img

@@ -27,7 +27,7 @@ interface Order {
   uuid: string;
   order_number: string;
   status: string;
-  total_price: number;
+  total_amount: number;
   subtotal: number;
   tax: number;
   shipping_cost: number;
@@ -141,7 +141,9 @@ export default function OrderDetailsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Order not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Order not found
+          </h2>
           <button
             onClick={() => router.push("/orders")}
             className="text-green-600 hover:underline"
@@ -153,7 +155,15 @@ export default function OrderDetailsPage() {
     );
   }
 
-  const statusSteps = ['pending', 'accepted', 'preparing', 'packing', 'shipping', 'shipped', 'delivered'];
+  const statusSteps = [
+    "pending",
+    "accepted",
+    "preparing",
+    "packing",
+    "shipping",
+    "shipped",
+    "delivered",
+  ];
   const currentStepIndex = statusSteps.indexOf(order.status);
 
   return (
@@ -169,13 +179,21 @@ export default function OrderDetailsPage() {
           </button>
           <div className="flex flex-wrap justify-between items-start gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Order #{order.order_number}</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Order #{order.order_number}
+              </h1>
               <p className="text-gray-600 mt-1">
-                Placed on {format(new Date(order.created_at), 'MMMM dd, yyyy \'at\' HH:mm')}
+                Placed on{" "}
+                {format(new Date(order.created_at), "MMMM dd, yyyy 'at' HH:mm")}
               </p>
             </div>
-            <span className={`px-4 py-2 rounded-lg text-lg font-semibold border-2 ${getStatusColor(order.status)}`}>
-              {getStatusIcon(order.status)} {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+            <span
+              className={`px-4 py-2 rounded-lg text-lg font-semibold border-2 ${getStatusColor(
+                order.status
+              )}`}
+            >
+              {getStatusIcon(order.status)}{" "}
+              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
             </span>
           </div>
         </div>
@@ -184,45 +202,63 @@ export default function OrderDetailsPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Order Timeline */}
-            {order.status !== 'cancelled' && order.status !== 'refunded' && (
+            {order.status !== "cancelled" && order.status !== "refunded" && (
               <div className="bg-white rounded-xl shadow p-6">
                 <h2 className="text-xl font-semibold mb-6">Order Progress</h2>
                 <div className="relative">
                   {statusSteps.map((step, index) => {
                     const isCompleted = index < currentStepIndex;
                     const isCurrent = index === currentStepIndex;
-                    const stepHistory = order.status_history?.find(h => h.new_status === step);
+                    const stepHistory = order.status_history?.find(
+                      (h) => h.new_status === step
+                    );
 
                     return (
-                      <div key={step} className="flex items-start mb-8 last:mb-0">
+                      <div
+                        key={step}
+                        className="flex items-start mb-8 last:mb-0"
+                      >
                         {/* Timeline line */}
                         {index < statusSteps.length - 1 && (
                           <div
                             className={`absolute left-4 top-10 w-0.5 h-16 ${
-                              isCompleted ? 'bg-green-600' : 'bg-gray-300'
+                              isCompleted ? "bg-green-600" : "bg-gray-300"
                             }`}
                           />
                         )}
 
                         {/* Status icon */}
-                        <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center ${
-                          isCompleted
-                            ? 'bg-green-600 text-white'
-                            : isCurrent
-                            ? 'bg-blue-600 text-white ring-4 ring-blue-100'
-                            : 'bg-gray-300 text-gray-600'
-                        }`}>
-                          {isCompleted ? '✓' : getStatusIcon(step)}
+                        <div
+                          className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center ${
+                            isCompleted
+                              ? "bg-green-600 text-white"
+                              : isCurrent
+                              ? "bg-blue-600 text-white ring-4 ring-blue-100"
+                              : "bg-gray-300 text-gray-600"
+                          }`}
+                        >
+                          {isCompleted ? "✓" : getStatusIcon(step)}
                         </div>
 
                         {/* Status info */}
                         <div className="ml-4 flex-1">
-                          <p className={`font-medium ${isCurrent ? 'text-blue-600' : isCompleted ? 'text-green-600' : 'text-gray-500'}`}>
+                          <p
+                            className={`font-medium ${
+                              isCurrent
+                                ? "text-blue-600"
+                                : isCompleted
+                                ? "text-green-600"
+                                : "text-gray-500"
+                            }`}
+                          >
                             {step.charAt(0).toUpperCase() + step.slice(1)}
                           </p>
                           {stepHistory && (
                             <p className="text-sm text-gray-600">
-                              {format(new Date(stepHistory.created_at), 'MMM dd, yyyy HH:mm')}
+                              {format(
+                                new Date(stepHistory.created_at),
+                                "MMM dd, yyyy HH:mm"
+                              )}
                             </p>
                           )}
                         </div>
@@ -236,12 +272,16 @@ export default function OrderDetailsPage() {
             {/* Tracking Information */}
             {(order.tracking_number || order.carrier) && (
               <div className="bg-white rounded-xl shadow p-6">
-                <h2 className="text-xl font-semibold mb-4">Tracking Information</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Tracking Information
+                </h2>
                 <div className="space-y-3">
                   {order.tracking_number && (
                     <div>
                       <p className="text-sm text-gray-600">Tracking Number</p>
-                      <p className="font-mono font-semibold text-lg">{order.tracking_number}</p>
+                      <p className="font-mono font-semibold text-lg">
+                        {order.tracking_number}
+                      </p>
                     </div>
                   )}
                   {order.carrier && (
@@ -252,9 +292,14 @@ export default function OrderDetailsPage() {
                   )}
                   {order.estimated_delivery_date && (
                     <div>
-                      <p className="text-sm text-gray-600">Estimated Delivery</p>
+                      <p className="text-sm text-gray-600">
+                        Estimated Delivery
+                      </p>
                       <p className="font-semibold">
-                        {format(new Date(order.estimated_delivery_date), 'MMMM dd, yyyy')}
+                        {format(
+                          new Date(order.estimated_delivery_date),
+                          "MMMM dd, yyyy"
+                        )}
                       </p>
                     </div>
                   )}
@@ -276,50 +321,71 @@ export default function OrderDetailsPage() {
             <div className="bg-white rounded-xl shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Order Items</h2>
               <div className="divide-y divide-gray-200">
-                {order.items?.map((item, idx) => (
-                  <div key={idx} className="py-4 first:pt-0 last:pb-0 flex gap-4">
-                    {item.product_image && (
-                      <img
-                        src={item.product_image}
-                        alt={item.product_name}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{item.product_name}</h3>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Quantity: {item.quantity}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Price: ${parseFloat(item.price.toString()).toFixed(2)} each
-                      </p>
+                {Object.keys(order.items).length &&
+                  order.items?.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="py-4 first:pt-0 last:pb-0 flex gap-4"
+                    >
+                      {item.product_image && (
+                        <img
+                          src={item.product_image}
+                          alt={item.product_name}
+                          className="w-20 h-20 object-cover rounded-lg"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900">
+                          {item.product_name}
+                        </h3>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Quantity: {item.quantity}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Price: ${parseFloat(item.price.toString()).toFixed(2)}{" "}
+                          each
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-gray-900">
+                          $
+                          {(
+                            parseFloat(item.price.toString()) * item.quantity
+                          ).toFixed(2)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-gray-900">
-                        ${(parseFloat(item.price.toString()) * item.quantity).toFixed(2)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               {/* Order Summary */}
               <div className="mt-6 pt-6 border-t border-gray-200 space-y-2">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>${parseFloat(order.subtotal?.toString() || '0').toFixed(2)}</span>
+                  <span>
+                    ${parseFloat(order.subtotal?.toString() || "0").toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span>${parseFloat(order.shipping_cost?.toString() || '0').toFixed(2)}</span>
+                  <span>
+                    $
+                    {parseFloat(order.shipping_cost?.toString() || "0").toFixed(
+                      2
+                    )}
+                  </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Tax</span>
-                  <span>${parseFloat(order.tax?.toString() || '0').toFixed(2)}</span>
+                  <span>
+                    ${parseFloat(order.tax?.toString() || "0").toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-xl font-bold text-gray-900 pt-2 border-t border-gray-200">
                   <span>Total</span>
-                  <span>${parseFloat(order.total_price.toString()).toFixed(2)}</span>
+                  <span>
+                    ${parseFloat(order.total_amount.toString()).toFixed(2)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -332,7 +398,8 @@ export default function OrderDetailsPage() {
               <h2 className="text-xl font-semibold mb-4">Store</h2>
               <div className="space-y-3">
                 <div>
-                  <p className="text-lg font-semibold text-green-600 cursor-pointer hover:underline"
+                  <p
+                    className="text-lg font-semibold text-green-600 cursor-pointer hover:underline"
                     onClick={() => router.push(`/stores/${order.store_slug}`)}
                   >
                     {order.store_name}
@@ -341,7 +408,10 @@ export default function OrderDetailsPage() {
                 {order.store_email && (
                   <div>
                     <p className="text-sm text-gray-600">Email</p>
-                    <a href={`mailto:${order.store_email}`} className="text-sm text-blue-600 hover:underline">
+                    <a
+                      href={`mailto:${order.store_email}`}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
                       {order.store_email}
                     </a>
                   </div>
@@ -349,7 +419,10 @@ export default function OrderDetailsPage() {
                 {order.store_phone && (
                   <div>
                     <p className="text-sm text-gray-600">Phone</p>
-                    <a href={`tel:${order.store_phone}`} className="text-sm text-blue-600 hover:underline">
+                    <a
+                      href={`tel:${order.store_phone}`}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
                       {order.store_phone}
                     </a>
                   </div>
@@ -362,13 +435,23 @@ export default function OrderDetailsPage() {
               <div className="bg-white rounded-xl shadow p-6">
                 <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
                 <div className="text-sm text-gray-700 space-y-1">
-                  {order.shipping_address.name && <p className="font-medium">{order.shipping_address.name}</p>}
-                  {order.shipping_address.line1 && <p>{order.shipping_address.line1}</p>}
-                  {order.shipping_address.line2 && <p>{order.shipping_address.line2}</p>}
+                  {order.shipping_address.name && (
+                    <p className="font-medium">{order.shipping_address.name}</p>
+                  )}
+                  {order.shipping_address.line1 && (
+                    <p>{order.shipping_address.line1}</p>
+                  )}
+                  {order.shipping_address.line2 && (
+                    <p>{order.shipping_address.line2}</p>
+                  )}
                   <p>
-                    {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.postal_code}
+                    {order.shipping_address.city},{" "}
+                    {order.shipping_address.state}{" "}
+                    {order.shipping_address.postal_code}
                   </p>
-                  {order.shipping_address.country && <p>{order.shipping_address.country}</p>}
+                  {order.shipping_address.country && (
+                    <p>{order.shipping_address.country}</p>
+                  )}
                 </div>
               </div>
             )}
@@ -382,7 +465,9 @@ export default function OrderDetailsPage() {
                     <div>
                       <p className="text-sm text-gray-600">Payment Method</p>
                       <p className="font-medium">
-                        {order.card_brand.charAt(0).toUpperCase() + order.card_brand.slice(1)} •••• {order.card_last4}
+                        {order.card_brand.charAt(0).toUpperCase() +
+                          order.card_brand.slice(1)}{" "}
+                        •••• {order.card_last4}
                       </p>
                     </div>
                   )}
@@ -408,7 +493,7 @@ export default function OrderDetailsPage() {
               >
                 Repeat Order
               </button>
-              {order.status === 'pending' && (
+              {order.status === "pending" && (
                 <button
                   onClick={handleCancelOrder}
                   className="w-full border border-red-600 text-red-600 px-6 py-3 rounded-lg hover:bg-red-50 transition-colors font-medium"
