@@ -38,7 +38,9 @@ export default function Navbar() {
             <div className="w-10 h-10 bg-gradient-to-br from-[#16a34a] to-[#15803d] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
               <span className="text-white font-bold text-xl">K</span>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-[#16a34a] to-[#15803d] bg-clip-text text-transparent">Kisaan</span>
+            <span className="text-2xl font-bold bg-gradient-to-r from-[#16a34a] to-[#15803d] bg-clip-text text-transparent">
+              Kisaan
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -58,6 +60,16 @@ export default function Navbar() {
               Support
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
             </Link>
+
+            {user && (
+              <Link
+                href="/orders"
+                className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
+              >
+                Orders
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
+              </Link>
+            )}
 
             <Link
               href="/cart"
@@ -90,22 +102,20 @@ export default function Navbar() {
 
             {user ? (
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600 font-medium">Welcome, <span className="text-[#16a34a]">{user.name}</span></span>
+                <span className="text-sm text-gray-600 font-medium">
+                  Welcome, <span className="text-[#16a34a]">{user.name}</span>
+                </span>
                 {user.role === "seller" && (
-                  <div className="flex items-center space-x-2">
-                    <Link
-                      href={primaryStoreSlug ? `/seller/${primaryStoreSlug}` : "/seller/stores"}
-                      className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      href="/seller/orders"
-                      className="text-gray-700 hover:text-[#16a34a] font-medium transition-colors duration-200"
-                    >
-                      Orders
-                    </Link>
-                  </div>
+                  <Link
+                    href={
+                      primaryStoreSlug
+                        ? `/seller/${primaryStoreSlug}`
+                        : "/seller/stores"
+                    }
+                    className="btn-secondary text-xs px-3 py-1.5"
+                  >
+                    Dashboard
+                  </Link>
                 )}
                 <button
                   onClick={logout}
@@ -163,6 +173,14 @@ export default function Navbar() {
               >
                 Home
               </Link>
+              {user && (
+                <Link
+                  href="/orders"
+                  className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
+                >
+                  Orders
+                </Link>
+              )}
               <Link
                 href="/cart"
                 className="text-gray-600 hover:text-[#16a34a] text-sm font-medium flex items-center py-1"
@@ -178,7 +196,11 @@ export default function Navbar() {
                 <>
                   {user.role === "seller" && (
                     <Link
-                      href={primaryStoreSlug ? `/seller/${primaryStoreSlug}` : "/seller/stores"}
+                      href={
+                        primaryStoreSlug
+                          ? `/seller/${primaryStoreSlug}`
+                          : "/seller/stores"
+                      }
                       className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                     >
                       Dashboard

@@ -39,7 +39,7 @@ function SocialLoginButton({ provider, onClick, disabled }: SocialLoginButtonPro
 
 function LoginContent() {
   const [formData, setFormData] = useState({
-    username: "",
+    identifier: "", // Can be email or username
     password: "",
   });
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ function LoginContent() {
     setLoading(true);
     setError("");
     try {
-      const user = await login(formData.username, formData.password);
+      const user = await login(formData.identifier, formData.password);
       if (user?.role === "seller" && redirectTo === '/') {
         router.push("/seller/stores");
       } else {
@@ -119,20 +119,20 @@ function LoginContent() {
               <div className="space-y-5">
                 <div>
                   <label
-                    htmlFor="username"
+                    htmlFor="identifier"
                     className="block text-base font-medium text-gray-900 mb-2"
                   >
-                    Email Address
+                    Email or Username
                   </label>
                   <input
-                    id="username"
-                    name="username"
-                    type="email"
+                    id="identifier"
+                    name="identifier"
+                    type="text"
                     required
-                    value={formData.username}
+                    value={formData.identifier}
                     onChange={handleChange}
                     className="input"
-                    placeholder="Enter your email"
+                    placeholder="Enter your email or username"
                   />
                 </div>
 

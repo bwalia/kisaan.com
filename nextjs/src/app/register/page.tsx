@@ -9,6 +9,7 @@ export default function Register() {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     first_name: "",
     last_name: "",
     role: "buyer",
@@ -16,17 +17,54 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
   const { register } = useAuth();
   const router = useRouter();
+
+  const validatePassword = (password: string): string[] => {
+    const errors: string[] = [];
+
+    if (password.length < 8) {
+      errors.push("Password must be at least 8 characters long");
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push("Password must contain at least one uppercase letter");
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push("Password must contain at least one lowercase letter");
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push("Password must contain at least one number");
+    }
+
+    return errors;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setPasswordErrors([]);
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    // Validate password strength
+    const errors = validatePassword(formData.password);
+    if (errors.length > 0) {
+      setPasswordErrors(errors);
+      setLoading(false);
+      return;
+    }
 
     try {
-      await register(formData);
+      const { confirmPassword, ...registerData } = formData;
+      await register(registerData);
       setSuccess(true);
       setTimeout(() => {
         router.push("/login");
@@ -75,6 +113,17 @@ export default function Register() {
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
               {error}
+            </div>
+          )}
+
+          {passwordErrors.length > 0 && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <p className="font-medium mb-2">Password requirements:</p>
+              <ul className="list-disc list-inside space-y-1">
+                {passwordErrors.map((err, idx) => (
+                  <li key={idx}>{err}</li>
+                ))}
+              </ul>
             </div>
           )}
 
@@ -168,6 +217,27 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 className="input"
+                placeholder="At least 8 characters, with uppercase, lowercase, and number"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-base font-medium text-gray-900 mb-2"
+              >
+                Confirm Password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                minLength={8}
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="input"
+                placeholder="Re-enter your password"
               />
             </div>
 
