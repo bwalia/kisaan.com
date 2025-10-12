@@ -1,0 +1,61 @@
+# Development Stage
+FROM node:22-alpine AS deps
+
+WORKDIR /app
+
+COPY nextjs/. ./
+
+# Install TailwindCSS and PostCSS dependencies
+RUN yarn add --dev tailwindcss postcss autoprefixer @tailwindcss/postcss country-state-city
+
+RUN yarn install --frozen-lockfile
+
+# Builder Stage
+FROM node:22-alpine AS builder
+
+ENV NODE_ENV=production
+ENV TAG=latest
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+
+COPY nextjs/ .
+
+RUN yarn run build
+
+RUN rm -rf node_modules
+RUN yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
+
+# Production Stage
+FROM node:22-alpine 
+
+ENV NODE_ENV=production
+ENV TAG=latest
+
+RUN addgroup -g 1002 nodejs
+RUN addgroup -g 1001 -S nextjs
+RUN adduser -S nextjs -u 1001
+
+#RUN     apk add doas;	 \
+ #       adduser nodejs -G wheel; \
+  #      echo 'nodejs:nodejs' | chpasswd; \
+   #     echo 'permit :wheel as root' > /etc/doas.d/doas.conf
+#USER nodejs 
+
+WORKDIR /app
+
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+#   COPY --from=builder --chown=nextjs:nodejs /app/next.config.* ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+
+# Set the environment variables (if needed)
+
+USER nextjs
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+CMD ["yarn", "start"]
