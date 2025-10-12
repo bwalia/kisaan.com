@@ -34,7 +34,7 @@ export default function DeliveryPartnerOnboarding() {
     business_address: "",
 
     // Contact Information
-    contact_person_name: user?.first_name + " " + user?.last_name || "",
+    contact_person_name: user?.name || "",
     contact_person_phone: "",
     contact_person_email: user?.email || "",
 

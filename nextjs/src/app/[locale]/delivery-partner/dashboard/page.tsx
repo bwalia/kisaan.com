@@ -13,8 +13,12 @@ interface DashboardStats {
   success_rate: number;
   average_rating: number;
   total_deliveries: number;
+  successful_deliveries: number;
+  total_earnings: number;
   current_capacity: number;
   max_capacity: number;
+  is_verified: boolean;
+  is_active: boolean;
 }
 
 interface Assignment {
@@ -69,9 +73,9 @@ export default function DeliveryPartnerDashboard() {
     try {
       setLoading(true);
       const [statsResponse, assignmentsResponse, requestsResponse] = await Promise.all([
-        api.request("/api/v2/delivery-partner/dashboard", { method: "GET" }),
-        api.request("/api/v2/delivery-partner/assignments?status=active", { method: "GET" }),
-        api.request("/api/v2/delivery-requests/partner?status=pending", { method: "GET" })
+        api.getDeliveryPartnerDashboard(),
+        api.getDeliveryAssignments("active"),
+        api.getPartnerDeliveryRequests("pending")
       ]);
 
       // Safely set stats with defaults
@@ -122,9 +126,7 @@ export default function DeliveryPartnerDashboard() {
 
   const handleAcceptRequest = async (requestUuid: string) => {
     try {
-      await api.request(`/api/v2/delivery-requests/${requestUuid}/accept`, {
-        method: "PUT"
-      });
+      await api.acceptDeliveryRequest(requestUuid);
       toast.success("Request accepted!");
       loadDashboardData();
     } catch (error: any) {
@@ -134,9 +136,7 @@ export default function DeliveryPartnerDashboard() {
 
   const handleRejectRequest = async (requestUuid: string) => {
     try {
-      await api.request(`/api/v2/delivery-requests/${requestUuid}/reject`, {
-        method: "PUT"
-      });
+      await api.rejectDeliveryRequest(requestUuid);
       toast.success("Request rejected");
       loadDashboardData();
     } catch (error: any) {
