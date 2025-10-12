@@ -55,7 +55,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (data: any) => {
     try {
-      await api.register(data);
+      const response = await api.register(data);
+      // If registration returns a token, set it immediately
+      if (response.token) {
+        api.setToken(response.token);
+        setUser(response.user);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('user', JSON.stringify(response.user));
+        }
+      }
+      return response;
     } catch (error) {
       throw error;
     }

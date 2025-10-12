@@ -304,7 +304,7 @@ export default function StoreSpecificDashboard() {
         {/* Quick Actions */}
         <div className="bg-white rounded-xl border border-gray-200 p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
             <button
               onClick={() => router.push("/seller/products")}
               className="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg text-center transition-colors border border-blue-200"
@@ -333,6 +333,16 @@ export default function StoreSpecificDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
               <p className="text-sm font-medium text-orange-700">Categories</p>
+            </button>
+
+            <button
+              onClick={() => router.push(`/seller/${currentStore.slug}/delivery-requests`)}
+              className="p-4 bg-green-50 hover:bg-green-100 rounded-lg text-center transition-colors border border-green-200"
+            >
+              <svg className="w-8 h-8 text-green-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+              </svg>
+              <p className="text-sm font-medium text-green-700">Delivery Requests</p>
             </button>
 
             <button

@@ -117,6 +117,14 @@ export default function Navbar() {
                     Dashboard
                   </Link>
                 )}
+                {user.role === "delivery_partner" && (
+                  <Link
+                    href="/delivery-partner/dashboard"
+                    className="btn-secondary text-xs px-3 py-1.5"
+                  >
+                    Delivery Dashboard
+                  </Link>
+                )}
                 <button
                   onClick={logout}
                   className="text-gray-500 hover:text-red-600 font-medium transition-colors duration-200"
@@ -204,6 +212,14 @@ export default function Navbar() {
                       className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                     >
                       Dashboard
+                    </Link>
+                  )}
+                  {user.role === "delivery_partner" && (
+                    <Link
+                      href="/delivery-partner/dashboard"
+                      className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
+                    >
+                      Delivery Dashboard
                     </Link>
                   )}
                   <button
