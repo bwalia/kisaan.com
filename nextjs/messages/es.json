@@ -1,0 +1,145 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "support": "Soporte",
+    "cart": "Carrito",
+    "welcome": "Bienvenido",
+    "dashboard": "Panel de control",
+    "orders": "Pedidos",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "getStarted": "Comenzar"
+  },
+  "home": {
+    "hero": {
+      "title": "Compra y vende con confianza",
+      "subtitle": "Tu mercado de confianza que conecta compradores y vendedores de todo el mundo",
+      "searchPlaceholder": "Buscar productos..."
+    },
+    "features": {
+      "securePayments": {
+        "title": "Pagos seguros",
+        "description": "Compra con confianza usando nuestro sistema de pago seguro"
+      },
+      "fastShipping": {
+        "title": "Envío rápido",
+        "description": "Recibe tus productos rápido y de forma segura"
+      },
+      "customerSupport": {
+        "title": "Soporte 24/7",
+        "description": "Nuestro equipo está aquí para ayudarte en cualquier momento"
+      }
+    },
+    "products": {
+      "allProducts": "Todos los productos",
+      "searchResults": "Resultados de búsqueda para",
+      "in": "en",
+      "productsFound": "productos encontrados",
+      "loading": "Cargando...",
+      "sortBy": "Ordenar por:",
+      "filters": "Filtros",
+      "activeFilters": "Filtros activos:",
+      "search": "Buscar",
+      "readyToSell": "¿Listo para comenzar a vender?",
+      "readyToSellDesc": "Únete a miles de vendedores que confían en nuestra plataforma para hacer crecer su negocio",
+      "getFreeStarted": "Comenzar gratis"
+    },
+    "sort": {
+      "featured": "Destacados",
+      "priceLowToHigh": "Precio: De menor a mayor",
+      "priceHighToLow": "Precio: De mayor a menor",
+      "newest": "Más reciente primero"
+    }
+  },
+  "auth": {
+    "loginTitle": "Inicia sesión en tu cuenta",
+    "registerTitle": "Crea tu cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre",
+    "role": "Quiero",
+    "buyer": "Comprar productos",
+    "seller": "Vender productos",
+    "loginButton": "Iniciar sesión",
+    "registerButton": "Registrarse",
+    "noAccount": "¿No tienes una cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "registerHere": "Regístrate aquí",
+    "loginHere": "Inicia sesión aquí"
+  },
+  "product": {
+    "details": "Detalles del producto",
+    "price": "Precio",
+    "addToCart": "Añadir al carrito",
+    "outOfStock": "Agotado",
+    "description": "Descripción",
+    "seller": "Vendedor",
+    "category": "Categoría"
+  },
+  "cart": {
+    "title": "Carrito de compras",
+    "empty": "Tu carrito está vacío",
+    "continueShopping": "Continuar comprando",
+    "subtotal": "Subtotal",
+    "checkout": "Proceder al pago",
+    "remove": "Eliminar",
+    "quantity": "Cantidad"
+  },
+  "checkout": {
+    "title": "Pagar",
+    "shippingAddress": "Dirección de envío",
+    "paymentMethod": "Método de pago",
+    "orderSummary": "Resumen del pedido",
+    "placeOrder": "Realizar pedido",
+    "fullName": "Nombre completo",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "state": "Estado",
+    "zipCode": "Código postal",
+    "country": "País"
+  },
+  "seller": {
+    "dashboard": "Panel del vendedor",
+    "myStores": "Mis tiendas",
+    "myProducts": "Mis productos",
+    "orders": "Pedidos",
+    "createStore": "Crear tienda",
+    "addProduct": "Añadir producto",
+    "storeName": "Nombre de la tienda",
+    "storeDescription": "Descripción de la tienda",
+    "productName": "Nombre del producto",
+    "productDescription": "Descripción del producto",
+    "productPrice": "Precio",
+    "productStock": "Stock"
+  },
+  "footer": {
+    "aboutUs": "Sobre nosotros",
+    "contactUs": "Contáctanos",
+    "terms": "Términos y condiciones",
+    "privacy": "Política de privacidad",
+    "cookies": "Política de cookies",
+    "returns": "Devoluciones",
+    "security": "Seguridad",
+    "pricing": "Precios",
+    "sellerGuide": "Guía del vendedor",
+    "allRightsReserved": "Todos los derechos reservados"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "clear": "Limpiar",
+    "apply": "Aplicar"
+  }
+}

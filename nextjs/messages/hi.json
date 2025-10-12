@@ -1,0 +1,145 @@
+{
+  "nav": {
+    "home": "होम",
+    "support": "सहायता",
+    "cart": "कार्ट",
+    "welcome": "स्वागत है",
+    "dashboard": "डैशबोर्ड",
+    "orders": "ऑर्डर",
+    "logout": "लॉगआउट",
+    "login": "लॉगिन",
+    "getStarted": "शुरू करें"
+  },
+  "home": {
+    "hero": {
+      "title": "विश्वास के साथ खरीदें और बेचें",
+      "subtitle": "दुनिया भर में खरीदारों और विक्रेताओं को जोड़ने वाला आपका विश्वसनीय बाज़ार",
+      "searchPlaceholder": "उत्पाद खोजें..."
+    },
+    "features": {
+      "securePayments": {
+        "title": "सुरक्षित भुगतान",
+        "description": "हमारी सुरक्षित भुगतान प्रणाली के साथ विश्वास के साथ खरीदारी करें"
+      },
+      "fastShipping": {
+        "title": "तेज़ शिपिंग",
+        "description": "अपने उत्पाद जल्दी और सुरक्षित रूप से प्राप्त करें"
+      },
+      "customerSupport": {
+        "title": "24/7 सहायता",
+        "description": "हमारी टीम किसी भी समय आपकी मदद के लिए यहाँ है"
+      }
+    },
+    "products": {
+      "allProducts": "सभी उत्पाद",
+      "searchResults": "खोज परिणाम",
+      "in": "में",
+      "productsFound": "उत्पाद मिले",
+      "loading": "लोड हो रहा है...",
+      "sortBy": "इसके अनुसार क्रमबद्ध करें:",
+      "filters": "फ़िल्टर",
+      "activeFilters": "सक्रिय फ़िल्टर:",
+      "search": "खोजें",
+      "readyToSell": "बेचना शुरू करने के लिए तैयार हैं?",
+      "readyToSellDesc": "हजारों विक्रेताओं के साथ जुड़ें जो अपने व्यवसाय को बढ़ाने के लिए हमारे मंच पर भरोसा करते हैं",
+      "getFreeStarted": "मुफ्त में शुरू करें"
+    },
+    "sort": {
+      "featured": "विशेष रुप से प्रदर्शित",
+      "priceLowToHigh": "कीमत: कम से अधिक",
+      "priceHighToLow": "कीमत: अधिक से कम",
+      "newest": "नवीनतम पहले"
+    }
+  },
+  "auth": {
+    "loginTitle": "अपने खाते में लॉगिन करें",
+    "registerTitle": "अपना खाता बनाएँ",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "name": "नाम",
+    "role": "मैं चाहता हूँ",
+    "buyer": "उत्पाद खरीदें",
+    "seller": "उत्पाद बेचें",
+    "loginButton": "लॉगिन करें",
+    "registerButton": "पंजीकरण करें",
+    "noAccount": "खाता नहीं है?",
+    "haveAccount": "पहले से खाता है?",
+    "registerHere": "यहाँ पंजीकरण करें",
+    "loginHere": "यहाँ लॉगिन करें"
+  },
+  "product": {
+    "details": "उत्पाद विवरण",
+    "price": "कीमत",
+    "addToCart": "कार्ट में डालें",
+    "outOfStock": "स्टॉक में नहीं",
+    "description": "विवरण",
+    "seller": "विक्रेता",
+    "category": "श्रेणी"
+  },
+  "cart": {
+    "title": "शॉपिंग कार्ट",
+    "empty": "आपका कार्ट खाली है",
+    "continueShopping": "खरीदारी जारी रखें",
+    "subtotal": "उपयोग",
+    "checkout": "चेकआउट के लिए आगे बढ़ें",
+    "remove": "हटाएं",
+    "quantity": "मात्रा"
+  },
+  "checkout": {
+    "title": "चेकआउट",
+    "shippingAddress": "शिपिंग पता",
+    "paymentMethod": "भुगतान का तरीका",
+    "orderSummary": "ऑर्डर सारांश",
+    "placeOrder": "ऑर्डर करें",
+    "fullName": "पूरा नाम",
+    "address": "पता",
+    "city": "शहर",
+    "state": "राज्य",
+    "zipCode": "पिन कोड",
+    "country": "देश"
+  },
+  "seller": {
+    "dashboard": "विक्रेता डैशबोर्ड",
+    "myStores": "मेरे स्टोर",
+    "myProducts": "मेरे उत्पाद",
+    "orders": "ऑर्डर",
+    "createStore": "स्टोर बनाएं",
+    "addProduct": "उत्पाद जोड़ें",
+    "storeName": "स्टोर का नाम",
+    "storeDescription": "स्टोर विवरण",
+    "productName": "उत्पाद का नाम",
+    "productDescription": "उत्पाद विवरण",
+    "productPrice": "कीमत",
+    "productStock": "स्टॉक"
+  },
+  "footer": {
+    "aboutUs": "हमारे बारे में",
+    "contactUs": "संपर्क करें",
+    "terms": "नियम और शर्तें",
+    "privacy": "गोपनीयता नीति",
+    "cookies": "कुकी नीति",
+    "returns": "वापसी",
+    "security": "सुरक्षा",
+    "pricing": "मूल्य निर्धारण",
+    "sellerGuide": "विक्रेता गाइड",
+    "allRightsReserved": "सर्वाधिकार सुरक्षित"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "success": "सफलता",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "view": "देखें",
+    "back": "वापस",
+    "next": "अगला",
+    "previous": "पिछला",
+    "submit": "जमा करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर करें",
+    "clear": "साफ करें",
+    "apply": "लागू करें"
+  }
+}

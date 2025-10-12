@@ -1,0 +1,145 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "support": "Support",
+    "cart": "Panier",
+    "welcome": "Bienvenue",
+    "dashboard": "Tableau de bord",
+    "orders": "Commandes",
+    "logout": "Déconnexion",
+    "login": "Connexion",
+    "getStarted": "Commencer"
+  },
+  "home": {
+    "hero": {
+      "title": "Achetez et vendez en toute confiance",
+      "subtitle": "Votre marché de confiance connectant acheteurs et vendeurs du monde entier",
+      "searchPlaceholder": "Rechercher des produits..."
+    },
+    "features": {
+      "securePayments": {
+        "title": "Paiements sécurisés",
+        "description": "Achetez en toute confiance avec notre système de paiement sécurisé"
+      },
+      "fastShipping": {
+        "title": "Livraison rapide",
+        "description": "Recevez vos produits rapidement et en toute sécurité"
+      },
+      "customerSupport": {
+        "title": "Support 24/7",
+        "description": "Notre équipe est là pour vous aider à tout moment"
+      }
+    },
+    "products": {
+      "allProducts": "Tous les produits",
+      "searchResults": "Résultats de recherche pour",
+      "in": "dans",
+      "productsFound": "produits trouvés",
+      "loading": "Chargement...",
+      "sortBy": "Trier par:",
+      "filters": "Filtres",
+      "activeFilters": "Filtres actifs:",
+      "search": "Rechercher",
+      "readyToSell": "Prêt à commencer à vendre?",
+      "readyToSellDesc": "Rejoignez des milliers de vendeurs qui font confiance à notre plateforme pour développer leur entreprise",
+      "getFreeStarted": "Commencer gratuitement"
+    },
+    "sort": {
+      "featured": "En vedette",
+      "priceLowToHigh": "Prix: Du plus bas au plus élevé",
+      "priceHighToLow": "Prix: Du plus élevé au plus bas",
+      "newest": "Les plus récents"
+    }
+  },
+  "auth": {
+    "loginTitle": "Connexion à votre compte",
+    "registerTitle": "Créez votre compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "name": "Nom",
+    "role": "Je veux",
+    "buyer": "Acheter des produits",
+    "seller": "Vendre des produits",
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
+    "noAccount": "Vous n'avez pas de compte?",
+    "haveAccount": "Vous avez déjà un compte?",
+    "registerHere": "Inscrivez-vous ici",
+    "loginHere": "Connectez-vous ici"
+  },
+  "product": {
+    "details": "Détails du produit",
+    "price": "Prix",
+    "addToCart": "Ajouter au panier",
+    "outOfStock": "Rupture de stock",
+    "description": "Description",
+    "seller": "Vendeur",
+    "category": "Catégorie"
+  },
+  "cart": {
+    "title": "Panier d'achat",
+    "empty": "Votre panier est vide",
+    "continueShopping": "Continuer vos achats",
+    "subtotal": "Sous-total",
+    "checkout": "Passer à la caisse",
+    "remove": "Retirer",
+    "quantity": "Quantité"
+  },
+  "checkout": {
+    "title": "Paiement",
+    "shippingAddress": "Adresse de livraison",
+    "paymentMethod": "Mode de paiement",
+    "orderSummary": "Résumé de la commande",
+    "placeOrder": "Passer la commande",
+    "fullName": "Nom complet",
+    "address": "Adresse",
+    "city": "Ville",
+    "state": "État",
+    "zipCode": "Code postal",
+    "country": "Pays"
+  },
+  "seller": {
+    "dashboard": "Tableau de bord vendeur",
+    "myStores": "Mes boutiques",
+    "myProducts": "Mes produits",
+    "orders": "Commandes",
+    "createStore": "Créer une boutique",
+    "addProduct": "Ajouter un produit",
+    "storeName": "Nom de la boutique",
+    "storeDescription": "Description de la boutique",
+    "productName": "Nom du produit",
+    "productDescription": "Description du produit",
+    "productPrice": "Prix",
+    "productStock": "Stock"
+  },
+  "footer": {
+    "aboutUs": "À propos",
+    "contactUs": "Contactez-nous",
+    "terms": "Conditions générales",
+    "privacy": "Politique de confidentialité",
+    "cookies": "Politique de cookies",
+    "returns": "Retours",
+    "security": "Sécurité",
+    "pricing": "Tarification",
+    "sellerGuide": "Guide du vendeur",
+    "allRightsReserved": "Tous droits réservés"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "submit": "Soumettre",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "clear": "Effacer",
+    "apply": "Appliquer"
+  }
+}

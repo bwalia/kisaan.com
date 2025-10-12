@@ -1,0 +1,145 @@
+{
+  "nav": {
+    "home": "หน้าแรก",
+    "support": "การสนับสนุน",
+    "cart": "ตะกร้าสินค้า",
+    "welcome": "ยินดีต้อนรับ",
+    "dashboard": "แดชบอร์ด",
+    "orders": "คำสั่งซื้อ",
+    "logout": "ออกจากระบบ",
+    "login": "เข้าสู่ระบบ",
+    "getStarted": "เริ่มต้น"
+  },
+  "home": {
+    "hero": {
+      "title": "ซื้อและขายด้วยความมั่นใจ",
+      "subtitle": "ตลาดกลางที่เชื่อถือได้ของคุณที่เชื่อมโยงผู้ซื้อและผู้ขายทั่วโลก",
+      "searchPlaceholder": "ค้นหาสินค้า..."
+    },
+    "features": {
+      "securePayments": {
+        "title": "การชำระเงินที่ปลอดภัย",
+        "description": "ช็อปด้วยความมั่นใจด้วยระบบการชำระเงินที่ปลอดภัยของเรา"
+      },
+      "fastShipping": {
+        "title": "จัดส่งรวดเร็ว",
+        "description": "รับสินค้าของคุณอย่างรวดเร็วและปลอดภัย"
+      },
+      "customerSupport": {
+        "title": "การสนับสนุน 24/7",
+        "description": "ทีมของเราพร้อมช่วยเหลือคุณตลอดเวลา"
+      }
+    },
+    "products": {
+      "allProducts": "สินค้าทั้งหมด",
+      "searchResults": "ผลการค้นหาสำหรับ",
+      "in": "ใน",
+      "productsFound": "พบสินค้า",
+      "loading": "กำลังโหลด...",
+      "sortBy": "เรียงตาม:",
+      "filters": "ตัวกรอง",
+      "activeFilters": "ตัวกรองที่ใช้งาน:",
+      "search": "ค้นหา",
+      "readyToSell": "พร้อมที่จะเริ่มขาย?",
+      "readyToSellDesc": "เข้าร่วมกับผู้ขายหลายพันรายที่ไว้วางใจแพลตฟอร์มของเราเพื่อขยายธุรกิจ",
+      "getFreeStarted": "เริ่มต้นฟรี"
+    },
+    "sort": {
+      "featured": "แนะนำ",
+      "priceLowToHigh": "ราคา: ต่ำไปสูง",
+      "priceHighToLow": "ราคา: สูงไปต่ำ",
+      "newest": "ใหม่ล่าสุดก่อน"
+    }
+  },
+  "auth": {
+    "loginTitle": "เข้าสู่ระบบบัญชีของคุณ",
+    "registerTitle": "สร้างบัญชีของคุณ",
+    "email": "อีเมล",
+    "password": "รหัสผ่าน",
+    "name": "ชื่อ",
+    "role": "ฉันต้องการ",
+    "buyer": "ซื้อสินค้า",
+    "seller": "ขายสินค้า",
+    "loginButton": "เข้าสู่ระบบ",
+    "registerButton": "ลงทะเบียน",
+    "noAccount": "ยังไม่มีบัญชี?",
+    "haveAccount": "มีบัญชีอยู่แล้ว?",
+    "registerHere": "ลงทะเบียนที่นี่",
+    "loginHere": "เข้าสู่ระบบที่นี่"
+  },
+  "product": {
+    "details": "รายละเอียดสินค้า",
+    "price": "ราคา",
+    "addToCart": "เพิ่มลงตะกร้า",
+    "outOfStock": "สินค้าหมด",
+    "description": "คำอธิบาย",
+    "seller": "ผู้ขาย",
+    "category": "หมวดหมู่"
+  },
+  "cart": {
+    "title": "ตะกร้าสินค้า",
+    "empty": "ตะกร้าของคุณว่างเปล่า",
+    "continueShopping": "ซื้อของต่อ",
+    "subtotal": "ยอดรวมย่อย",
+    "checkout": "ดำเนินการชำระเงิน",
+    "remove": "ลบ",
+    "quantity": "จำนวน"
+  },
+  "checkout": {
+    "title": "ชำระเงิน",
+    "shippingAddress": "ที่อยู่จัดส่ง",
+    "paymentMethod": "วิธีการชำระเงิน",
+    "orderSummary": "สรุปคำสั่งซื้อ",
+    "placeOrder": "ทำการสั่งซื้อ",
+    "fullName": "ชื่อเต็ม",
+    "address": "ที่อยู่",
+    "city": "เมือง",
+    "state": "จังหวัด",
+    "zipCode": "รหัสไปรษณีย์",
+    "country": "ประเทศ"
+  },
+  "seller": {
+    "dashboard": "แดชบอร์ดผู้ขาย",
+    "myStores": "ร้านค้าของฉัน",
+    "myProducts": "สินค้าของฉัน",
+    "orders": "คำสั่งซื้อ",
+    "createStore": "สร้างร้านค้า",
+    "addProduct": "เพิ่มสินค้า",
+    "storeName": "ชื่อร้านค้า",
+    "storeDescription": "คำอธิบายร้านค้า",
+    "productName": "ชื่อสินค้า",
+    "productDescription": "คำอธิบายสินค้า",
+    "productPrice": "ราคา",
+    "productStock": "สต็อก"
+  },
+  "footer": {
+    "aboutUs": "เกี่ยวกับเรา",
+    "contactUs": "ติดต่อเรา",
+    "terms": "ข้อกำหนดและเงื่อนไข",
+    "privacy": "นโยบายความเป็นส่วนตัว",
+    "cookies": "นโยบายคุกกี้",
+    "returns": "การคืนสินค้า",
+    "security": "ความปลอดภัย",
+    "pricing": "ราคา",
+    "sellerGuide": "คู่มือผู้ขาย",
+    "allRightsReserved": "สงวนลิขสิทธิ์"
+  },
+  "common": {
+    "loading": "กำลังโหลด...",
+    "error": "ข้อผิดพลาด",
+    "success": "สำเร็จ",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "delete": "ลบ",
+    "edit": "แก้ไข",
+    "view": "ดู",
+    "back": "กลับ",
+    "next": "ถัดไป",
+    "previous": "ก่อนหน้า",
+    "submit": "ส่ง",
+    "search": "ค้นหา",
+    "filter": "กรอง",
+    "clear": "ล้าง",
+    "apply": "ใช้"
+  }
+}

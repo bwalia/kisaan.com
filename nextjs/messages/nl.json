@@ -1,0 +1,145 @@
+{
+  "nav": {
+    "home": "Home",
+    "support": "Ondersteuning",
+    "cart": "Winkelwagen",
+    "welcome": "Welkom",
+    "dashboard": "Dashboard",
+    "orders": "Bestellingen",
+    "logout": "Uitloggen",
+    "login": "Inloggen",
+    "getStarted": "Aan de slag"
+  },
+  "home": {
+    "hero": {
+      "title": "Koop en verkoop met vertrouwen",
+      "subtitle": "Uw vertrouwde marktplaats die kopers en verkopers wereldwijd verbindt",
+      "searchPlaceholder": "Zoek naar producten..."
+    },
+    "features": {
+      "securePayments": {
+        "title": "Veilige betalingen",
+        "description": "Shop met vertrouwen met ons veilige betalingssysteem"
+      },
+      "fastShipping": {
+        "title": "Snelle verzending",
+        "description": "Ontvang uw producten snel en veilig"
+      },
+      "customerSupport": {
+        "title": "24/7 Ondersteuning",
+        "description": "Ons team staat altijd voor u klaar"
+      }
+    },
+    "products": {
+      "allProducts": "Alle producten",
+      "searchResults": "Zoekresultaten voor",
+      "in": "in",
+      "productsFound": "producten gevonden",
+      "loading": "Laden...",
+      "sortBy": "Sorteren op:",
+      "filters": "Filters",
+      "activeFilters": "Actieve filters:",
+      "search": "Zoeken",
+      "readyToSell": "Klaar om te beginnen met verkopen?",
+      "readyToSellDesc": "Sluit je aan bij duizenden verkopers die ons platform vertrouwen om hun bedrijf te laten groeien",
+      "getFreeStarted": "Gratis beginnen"
+    },
+    "sort": {
+      "featured": "Uitgelicht",
+      "priceLowToHigh": "Prijs: Laag naar hoog",
+      "priceHighToLow": "Prijs: Hoog naar laag",
+      "newest": "Nieuwste eerst"
+    }
+  },
+  "auth": {
+    "loginTitle": "Inloggen op uw account",
+    "registerTitle": "Maak uw account aan",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "name": "Naam",
+    "role": "Ik wil",
+    "buyer": "Producten kopen",
+    "seller": "Producten verkopen",
+    "loginButton": "Inloggen",
+    "registerButton": "Registreren",
+    "noAccount": "Heeft u geen account?",
+    "haveAccount": "Heeft u al een account?",
+    "registerHere": "Registreer hier",
+    "loginHere": "Log hier in"
+  },
+  "product": {
+    "details": "Productdetails",
+    "price": "Prijs",
+    "addToCart": "Toevoegen aan winkelwagen",
+    "outOfStock": "Niet op voorraad",
+    "description": "Beschrijving",
+    "seller": "Verkoper",
+    "category": "Categorie"
+  },
+  "cart": {
+    "title": "Winkelwagen",
+    "empty": "Uw winkelwagen is leeg",
+    "continueShopping": "Verder winkelen",
+    "subtotal": "Subtotaal",
+    "checkout": "Afrekenen",
+    "remove": "Verwijderen",
+    "quantity": "Aantal"
+  },
+  "checkout": {
+    "title": "Afrekenen",
+    "shippingAddress": "Verzendadres",
+    "paymentMethod": "Betaalmethode",
+    "orderSummary": "Besteloverzicht",
+    "placeOrder": "Bestelling plaatsen",
+    "fullName": "Volledige naam",
+    "address": "Adres",
+    "city": "Stad",
+    "state": "Provincie",
+    "zipCode": "Postcode",
+    "country": "Land"
+  },
+  "seller": {
+    "dashboard": "Verkoper dashboard",
+    "myStores": "Mijn winkels",
+    "myProducts": "Mijn producten",
+    "orders": "Bestellingen",
+    "createStore": "Winkel aanmaken",
+    "addProduct": "Product toevoegen",
+    "storeName": "Winkelnaam",
+    "storeDescription": "Winkelbeschrijving",
+    "productName": "Productnaam",
+    "productDescription": "Productbeschrijving",
+    "productPrice": "Prijs",
+    "productStock": "Voorraad"
+  },
+  "footer": {
+    "aboutUs": "Over ons",
+    "contactUs": "Contact",
+    "terms": "Algemene voorwaarden",
+    "privacy": "Privacybeleid",
+    "cookies": "Cookiebeleid",
+    "returns": "Retouren",
+    "security": "Beveiliging",
+    "pricing": "Prijzen",
+    "sellerGuide": "Verkoopgids",
+    "allRightsReserved": "Alle rechten voorbehouden"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Fout",
+    "success": "Succes",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "view": "Bekijken",
+    "back": "Terug",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "submit": "Verzenden",
+    "search": "Zoeken",
+    "filter": "Filteren",
+    "clear": "Wissen",
+    "apply": "Toepassen"
+  }
+}
