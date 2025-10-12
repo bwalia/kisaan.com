@@ -67,7 +67,12 @@ export default function Register() {
       await register(registerData);
       setSuccess(true);
       setTimeout(() => {
-        router.push("/login");
+        // Redirect delivery partners to onboarding
+        if (formData.role === "delivery_partner") {
+          router.push("/delivery-partner/onboarding");
+        } else {
+          router.push("/login");
+        }
       }, 2000);
     } catch (err: any) {
       setError(err.message || "Registration failed");
@@ -259,7 +264,15 @@ export default function Register() {
                 <option value="seller">
                   Seller - Create store & sell products
                 </option>
+                <option value="delivery_partner">
+                  Delivery Partner - Provide delivery services
+                </option>
               </select>
+              {formData.role === "delivery_partner" && (
+                <p className="mt-2 text-sm text-blue-600">
+                  After registration, you'll be guided to complete your delivery partner profile.
+                </p>
+              )}
             </div>
           </div>
 

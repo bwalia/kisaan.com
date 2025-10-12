@@ -85,7 +85,7 @@ class ApiClient {
 
   // Auth
   async register(data: any) {
-    return this.request(
+    const response = await this.request(
       "/api/v2/register",
       {
         method: "POST",
@@ -93,6 +93,11 @@ class ApiClient {
       },
       true
     );
+    // If registration returns a token, store it immediately
+    if (response.token) {
+      this.setToken(response.token);
+    }
+    return response;
   }
 
   async login(data: any) {
@@ -536,7 +541,171 @@ class ApiClient {
   async getPublicProductDetails(storeSlug: string, productId: string) {
     return this.publicRequest(`/api/v2/public/stores/${storeSlug}/products/${productId}`);
   }
+
+  // Delivery Partner APIs
+  async registerDeliveryPartner(data: any) {
+    return this.request("/api/v2/delivery-partners/register", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+  }
+
+  async getDeliveryPartnerProfile() {
+    return this.request("/api/v2/delivery-partners/profile", { method: "GET" }, true);
+  }
+
+  async updateDeliveryPartnerProfile(data: any) {
+    return this.request("/api/v2/delivery-partners/profile", {
+      method: "PUT",
+      body: JSON.stringify(data)
+    }, true);
+  }
+
+  async addServiceArea(data: any) {
+    return this.request("/api/v2/delivery-partners/areas", {
+      method: "POST",
+      body: JSON.stringify(data)
+    }, true);
+  }
+
+  async searchDeliveryPartners(params: any) {
+    const query = new URLSearchParams(params).toString();
+    return this.request(`/api/v2/delivery-partners/search?${query}`, { method: "GET" }, true);
+  }
+
+  async getDeliveryPartnersByArea(city: string, state: string, country?: string) {
+    const params = new URLSearchParams({ city, state, ...(country && { country }) });
+    return this.request(`/api/v2/delivery-partners/by-area?${params.toString()}`, { method: "GET" }, true);
+  }
+
+  // Delivery Assignment APIs
+  async getDeliveryAssignments(status?: string) {
+    const query = status ? `?status=${status}` : '';
+    return this.request(`/api/v2/delivery-partner/assignments${query}`, { method: "GET" }, true);
+  }
+
+  async getDeliveryAssignment(uuid: string) {
+    return this.request(`/api/v2/delivery-assignments/${uuid}`, { method: "GET" }, true);
+  }
+
+  async updateAssignmentStatus(uuid: string, data: any) {
+    return this.request(`/api/v2/delivery-assignments/${uuid}/status`, {
+      method: "PUT",
+      body: JSON.stringify(data)
+    }, true);
+  }
+
+  // Delivery Request APIs
+  async createDeliveryRequest(data: any) {
+    return this.request("/api/v2/delivery-requests", {
+      method: "POST",
+      body: JSON.stringify(data)
+    }, true);
+  }
+
+  async getPartnerDeliveryRequests(status?: string) {
+    const query = status ? `?status=${status}` : '';
+    return this.request(`/api/v2/delivery-requests/partner${query}`, { method: "GET" }, true);
+  }
+
+  async getStoreDeliveryRequests(status?: string) {
+    const query = status ? `?status=${status}` : '';
+    return this.request(`/api/v2/delivery-requests/store${query}`, { method: "GET" }, true);
+  }
+
+  async acceptDeliveryRequest(uuid: string) {
+    return this.request(`/api/v2/delivery-requests/${uuid}/accept`, {
+      method: "PUT"
+    }, true);
+  }
+
+  async rejectDeliveryRequest(uuid: string, reason?: string) {
+    return this.request(`/api/v2/delivery-requests/${uuid}/reject`, {
+      method: "PUT",
+      body: JSON.stringify({ reason })
+    }, true);
+  }
+
+  // Delivery Partner Dashboard
+  async getDeliveryPartnerDashboard() {
+    return this.request("/api/v2/delivery-partner/dashboard", { method: "GET" }, true);
+  }
+
+  async getAvailableOrders(params?: any) {
+    const query = params ? `?${new URLSearchParams(params).toString()}` : '';
+    return this.request(`/api/v2/delivery-partner/available-orders${query}`, { method: "GET" }, true);
+  }
+
+  async getDeliveryEarnings(fromDate?: string, toDate?: string) {
+    const params = new URLSearchParams();
+    if (fromDate) params.append('from_date', fromDate);
+    if (toDate) params.append('to_date', toDate);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/api/v2/delivery-partner/earnings${query}`, { method: "GET" }, true);
+  }
+
+  // Store Delivery Partner Management
+  async linkDeliveryPartnerToStore(storeSlug: string, deliveryPartnerUuid: string) {
+    return this.request(`/api/v2/stores/${storeSlug}/delivery-partners`, {
+      method: "POST",
+      body: JSON.stringify({ delivery_partner_uuid: deliveryPartnerUuid })
+    }, true);
+  }
+
+  async getStoreDeliveryPartners(storeSlug: string) {
+    return this.request(`/api/v2/stores/${storeSlug}/delivery-partners`, { method: "GET" }, true);
+  }
+
+  async removeDeliveryPartnerFromStore(storeSlug: string, deliveryPartnerUuid: string) {
+    return this.request(`/api/v2/stores/${storeSlug}/delivery-partners/${deliveryPartnerUuid}`, {
+      method: "DELETE"
+    }, true);
+  }
+
+  async setPreferredDeliveryPartner(storeSlug: string, deliveryPartnerUuid: string) {
+    return this.request(`/api/v2/stores/${storeSlug}/delivery-partners/${deliveryPartnerUuid}/prefer`, {
+      method: "PUT"
+    }, true);
+  }
+
+  // Get available orders in delivery partner's service area
+  async getAvailableOrders() {
+    return this.request("/api/v2/delivery-partner/available-orders", {
+      method: "GET"
+    });
+  }
+
+  // Request to deliver an order (partner → seller)
+  async requestOrderDelivery(data: { order_id: number; proposed_fee: number; message?: string }) {
+    return this.request("/api/v2/delivery-partner/request-order", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+  }
+
+  // Seller: Get delivery requests for store
+  async getStoreDeliveryRequests(storeSlug: string) {
+    return this.request(`/api/v2/delivery-requests/store/${storeSlug}`, {
+      method: "GET"
+    });
+  }
+
+  // Seller: Accept delivery request
+  async acceptDeliveryRequest(requestUuid: string) {
+    return this.request(`/api/v2/delivery-requests/${requestUuid}/accept`, {
+      method: "PUT"
+    });
+  }
+
+  // Seller: Reject delivery request
+  async rejectDeliveryRequest(requestUuid: string, reason?: string) {
+    return this.request(`/api/v2/delivery-requests/${requestUuid}/reject`, {
+      method: "PUT",
+      body: JSON.stringify({ reason })
+    });
+  }
 }
+
 
 export const api = new ApiClient(API_BASE_URL!);
 export default api;
