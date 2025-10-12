@@ -1,0 +1,146 @@
+{
+  "nav": {
+    "home": "Home",
+    "support": "Support",
+    "cart": "Cart",
+    "welcome": "Welcome",
+    "dashboard": "Dashboard",
+    "deliveryDashboard": "Delivery Dashboard",
+    "orders": "Orders",
+    "logout": "Logout",
+    "login": "Login",
+    "getStarted": "Get Started"
+  },
+  "home": {
+    "hero": {
+      "title": "Buy and Sell with Confidence",
+      "subtitle": "Your trusted marketplace connecting buyers and sellers worldwide",
+      "searchPlaceholder": "Search for products..."
+    },
+    "features": {
+      "securePayments": {
+        "title": "Secure Payments",
+        "description": "Shop with confidence using our secure payment system"
+      },
+      "fastShipping": {
+        "title": "Fast Shipping",
+        "description": "Get your products delivered quickly and safely"
+      },
+      "customerSupport": {
+        "title": "24/7 Support",
+        "description": "Our team is here to help you anytime"
+      }
+    },
+    "products": {
+      "allProducts": "All Products",
+      "searchResults": "Search results for",
+      "in": "in",
+      "productsFound": "products found",
+      "loading": "Loading...",
+      "sortBy": "Sort by:",
+      "filters": "Filters",
+      "activeFilters": "Active filters:",
+      "search": "Search",
+      "readyToSell": "Ready to Start Selling?",
+      "readyToSellDesc": "Join thousands of sellers who trust our platform to grow their business",
+      "getFreeStarted": "Get Started for Free"
+    },
+    "sort": {
+      "featured": "Featured",
+      "priceLowToHigh": "Price: Low to High",
+      "priceHighToLow": "Price: High to Low",
+      "newest": "Newest First"
+    }
+  },
+  "auth": {
+    "loginTitle": "Login to Your Account",
+    "registerTitle": "Create Your Account",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "role": "I want to",
+    "buyer": "Buy Products",
+    "seller": "Sell Products",
+    "loginButton": "Login",
+    "registerButton": "Register",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "registerHere": "Register here",
+    "loginHere": "Login here"
+  },
+  "product": {
+    "details": "Product Details",
+    "price": "Price",
+    "addToCart": "Add to Cart",
+    "outOfStock": "Out of Stock",
+    "description": "Description",
+    "seller": "Seller",
+    "category": "Category"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "subtotal": "Subtotal",
+    "checkout": "Proceed to Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shippingAddress": "Shipping Address",
+    "paymentMethod": "Payment Method",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order",
+    "fullName": "Full Name",
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "zipCode": "ZIP Code",
+    "country": "Country"
+  },
+  "seller": {
+    "dashboard": "Seller Dashboard",
+    "myStores": "My Stores",
+    "myProducts": "My Products",
+    "orders": "Orders",
+    "createStore": "Create Store",
+    "addProduct": "Add Product",
+    "storeName": "Store Name",
+    "storeDescription": "Store Description",
+    "productName": "Product Name",
+    "productDescription": "Product Description",
+    "productPrice": "Price",
+    "productStock": "Stock"
+  },
+  "footer": {
+    "aboutUs": "About Us",
+    "contactUs": "Contact Us",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "returns": "Returns",
+    "security": "Security",
+    "pricing": "Pricing",
+    "sellerGuide": "Seller Guide",
+    "allRightsReserved": "All rights reserved"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "apply": "Apply"
+  }
+}

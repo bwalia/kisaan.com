@@ -1,11 +1,14 @@
 "use client";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useState, useEffect } from "react";
 import api from "@/lib/api";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
+  const t = useTranslations("nav");
   const { user, logout } = useAuth();
   const { itemCount } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,7 +52,7 @@ export default function Navbar() {
               href="/"
               className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
             >
-              Home
+              {t("home")}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
             </Link>
 
@@ -57,7 +60,7 @@ export default function Navbar() {
               href="/support"
               className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
             >
-              Support
+              {t("support")}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
             </Link>
 
@@ -96,40 +99,49 @@ export default function Navbar() {
                     </span>
                   )}
                 </div>
-                <span>Cart</span>
+                <span>{t("cart")}</span>
               </div>
             </Link>
 
             {user ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-600 font-medium">
-                  Welcome, <span className="text-[#16a34a]">{user.name}</span>
+                  {t("welcome")},{" "}
+                  <span className="text-[#16a34a]">{user.name}</span>
                 </span>
                 {user.role === "seller" && (
-                  <Link
-                    href={
-                      primaryStoreSlug
-                        ? `/seller/${primaryStoreSlug}`
-                        : "/seller/stores"
-                    }
-                    className="btn-secondary text-xs px-3 py-1.5"
-                  >
-                    Dashboard
-                  </Link>
+                  <div className="flex items-center space-x-2">
+                    <Link
+                      href={
+                        primaryStoreSlug
+                          ? `/seller/${primaryStoreSlug}`
+                          : "/seller/stores"
+                      }
+                      className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                    >
+                      {t("dashboard")}
+                    </Link>
+                    <Link
+                      href="/seller/orders"
+                      className="text-gray-700 hover:text-[#16a34a] font-medium transition-colors duration-200"
+                    >
+                      {t("orders")}
+                    </Link>
+                  </div>
                 )}
                 {user.role === "delivery_partner" && (
                   <Link
                     href="/delivery-partner/dashboard"
-                    className="btn-secondary text-xs px-3 py-1.5"
+                    className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
                   >
-                    Delivery Dashboard
+                    {t("deliveryDashboard")}
                   </Link>
                 )}
                 <button
                   onClick={logout}
                   className="text-gray-500 hover:text-red-600 font-medium transition-colors duration-200"
                 >
-                  Logout
+                  {t("logout")}
                 </button>
               </div>
             ) : (
@@ -138,16 +150,18 @@ export default function Navbar() {
                   href="/login"
                   className="text-gray-700 hover:text-[#16a34a] font-medium transition-colors duration-200"
                 >
-                  Login
+                  {t("login")}
                 </Link>
                 <Link
                   href="/register"
                   className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
                 >
-                  Get Started
+                  {t("getStarted")}
                 </Link>
               </div>
             )}
+
+            <LanguageSwitcher />
           </div>
 
           {/* Mobile menu button */}
@@ -179,7 +193,7 @@ export default function Navbar() {
                 href="/"
                 className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
               >
-                Home
+                {t("home")}
               </Link>
               {user && (
                 <Link
@@ -193,7 +207,7 @@ export default function Navbar() {
                 href="/cart"
                 className="text-gray-600 hover:text-[#16a34a] text-sm font-medium flex items-center py-1"
               >
-                Cart{" "}
+                {t("cart")}{" "}
                 {itemCount > 0 && (
                   <span className="ml-2 bg-[#16a34a] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
                     {itemCount}
@@ -211,7 +225,7 @@ export default function Navbar() {
                       }
                       className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                     >
-                      Dashboard
+                      {t("dashboard")}
                     </Link>
                   )}
                   {user.role === "delivery_partner" && (
@@ -219,14 +233,14 @@ export default function Navbar() {
                       href="/delivery-partner/dashboard"
                       className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                     >
-                      Delivery Dashboard
+                      {t("deliveryDashboard")}
                     </Link>
                   )}
                   <button
                     onClick={logout}
                     className="text-left text-gray-400 hover:text-gray-600 text-sm py-1"
                   >
-                    Logout
+                    {t("logout")}
                   </button>
                 </>
               ) : (
@@ -235,16 +249,19 @@ export default function Navbar() {
                     href="/login"
                     className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
                   >
-                    Login
+                    {t("login")}
                   </Link>
                   <Link
                     href="/register"
                     className="btn-primary text-xs px-4 py-2 inline-block text-center mt-2"
                   >
-                    Get Started
+                    {t("getStarted")}
                   </Link>
                 </>
               )}
+              <div className="pt-2 mt-2 border-t border-gray-200">
+                <LanguageSwitcher />
+              </div>
             </div>
           </div>
         )}

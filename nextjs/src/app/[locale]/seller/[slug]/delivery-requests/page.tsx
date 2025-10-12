@@ -44,7 +44,7 @@ export default function DeliveryRequestsPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const params = useParams();
-  const storeSlug = params.storeSlug as string;
+  const storeSlug = params.slug as string;
 
   const [loading, setLoading] = useState(true);
   const [requests, setRequests] = useState<DeliveryRequest[]>([]);
