@@ -68,7 +68,10 @@ jobs:
       if: ${{ (env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy') }}
       run: |
         echo "kisaan.com Docker image builder!"
-        echo "Build, tag, and push image to the given Docker Registry."
+        echo "Build, tag (int), and push image to the given Docker Registry."
+        ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
+
+        echo "Build, tag (${{ env.TARGET_ENV }}), and push image to the given Docker Registry."
           if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
               ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
           elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
@@ -78,7 +81,7 @@ jobs:
           elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
               ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
           else
-              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
+              echo "TARGET_ENV is not set to a valid value. Please choose from dev, test, acc, or prod. Int is always build and deployed."
           fi
       shell: bash
 
@@ -102,6 +105,7 @@ jobs:
       if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       run: |
           export KUBECONFIG=$(pwd)/kubeconfig
+          ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} "int"
           if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
               ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} "dev"
           elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
@@ -111,7 +115,7 @@ jobs:
           elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
               ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} "prod"
           else
-              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} "int"
+              echo "TARGET_ENV is not set to a valid value. Please choose from dev, test, acc, or prod. Int is always build and deployed."
           fi
       shell: bash
     - name: Check and Install kubectl Binary
@@ -141,6 +145,19 @@ jobs:
     - name: Deploy kisaan.com using custom Helm Chart
       if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
       run: |
+        echo "Deploying Helm Chart for kisaan.com in the Int environment."
+        echo "Using values file: ./devops/helm-charts/kisaan-chart/values-int.yaml"
+        echo "Helm Chart path: ./devops/helm-charts/kisaan-chart"
+        echo "Target Namespace: Int"
+        echo "Image Repository: ${{ env.DOCKER_REGISTRY }}/int"
+        echo "Image Tag: ${{ env.TARGET_IMAGE_TAG }}"
+        helm list -n int | grep -q "kisaan-int" && helm delete kisaan-int -n int || echo "Release kisaan-Int not found in namespace Int, skipping deletion"
+        helm upgrade --install kisaan-int -f ./devops/helm-charts/kisaan-chart/values-int.yaml ./devops/helm-charts/kisaan-chart \
+          --set image.repository=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO_NAME }}/${{ env.IMAGE_NAME }} \
+          --set image.tag=int \
+          --namespace int --create-namespace
+
+
         export KUBECONFIG=$(pwd)/kubeconfig
         echo "Deploying Helm Chart for kisaan.com in the ${{ env.TARGET_ENV }} environment."
         echo "Using values file: ./devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml"
