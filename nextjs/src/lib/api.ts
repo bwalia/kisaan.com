@@ -608,7 +608,7 @@ class ApiClient {
     return this.request(`/api/v2/delivery-requests/partner${query}`, { method: "GET" }, true);
   }
 
-  async getStoreDeliveryRequests(status?: string) {
+  async getAllStoreDeliveryRequests(status?: string) {
     const query = status ? `?status=${status}` : '';
     return this.request(`/api/v2/delivery-requests/store${query}`, { method: "GET" }, true);
   }
@@ -636,12 +636,13 @@ class ApiClient {
     return this.request(`/api/v2/delivery-partner/available-orders${query}`, { method: "GET" }, true);
   }
 
-  async getDeliveryEarnings(fromDate?: string, toDate?: string) {
-    const params = new URLSearchParams();
-    if (fromDate) params.append('from_date', fromDate);
-    if (toDate) params.append('to_date', toDate);
-    const query = params.toString() ? `?${params.toString()}` : '';
+  async getDeliveryEarnings(period?: string) {
+    const query = period ? `?period=${period}` : '';
     return this.request(`/api/v2/delivery-partner/earnings${query}`, { method: "GET" }, true);
+  }
+
+  async getDeliveryPartnerEarnings(period?: string) {
+    return this.getDeliveryEarnings(period);
   }
 
   // Store Delivery Partner Management
@@ -668,13 +669,6 @@ class ApiClient {
     }, true);
   }
 
-  // Get available orders in delivery partner's service area
-  async getAvailableOrders() {
-    return this.request("/api/v2/delivery-partner/available-orders", {
-      method: "GET"
-    });
-  }
-
   // Request to deliver an order (partner → seller)
   async requestOrderDelivery(data: { order_id: number; proposed_fee: number; message?: string }) {
     return this.request("/api/v2/delivery-partner/request-order", {
@@ -690,20 +684,6 @@ class ApiClient {
     });
   }
 
-  // Seller: Accept delivery request
-  async acceptDeliveryRequest(requestUuid: string) {
-    return this.request(`/api/v2/delivery-requests/${requestUuid}/accept`, {
-      method: "PUT"
-    });
-  }
-
-  // Seller: Reject delivery request
-  async rejectDeliveryRequest(requestUuid: string, reason?: string) {
-    return this.request(`/api/v2/delivery-requests/${requestUuid}/reject`, {
-      method: "PUT",
-      body: JSON.stringify({ reason })
-    });
-  }
 }
 
 

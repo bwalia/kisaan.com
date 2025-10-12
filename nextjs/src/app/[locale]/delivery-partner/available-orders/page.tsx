@@ -70,7 +70,7 @@ export default function AvailableOrders() {
 
   const handleRequestDelivery = async (order: AvailableOrder) => {
     setSelectedOrder(order);
-    setRequestMessage(`I would like to deliver this order. My service area covers ${order.shipping_city}, ${order.shipping_state}.`);
+    setRequestMessage(`I would like to deliver this order. My service area covers ${order.delivery_city}, ${order.delivery_state}.`);
     // Calculate suggested fee based on order amount (you can customize this logic)
     const suggestedFee = Math.max(50, Math.ceil(order.total_amount * 0.05));
     setProposedFee(suggestedFee.toString());
@@ -259,7 +259,7 @@ export default function AvailableOrders() {
                   <strong>Order Amount:</strong> ₹{selectedOrder.total_amount}
                 </p>
                 <p className="text-sm text-gray-600 mt-1">
-                  <strong>Delivery to:</strong> {selectedOrder.shipping_city}, {selectedOrder.shipping_state}
+                  <strong>Delivery to:</strong> {selectedOrder.delivery_city}, {selectedOrder.delivery_state}
                 </p>
               </div>
             </div>
