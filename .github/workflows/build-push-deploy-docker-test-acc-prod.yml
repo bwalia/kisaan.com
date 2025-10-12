@@ -1,0 +1,178 @@
+name: (Test,Acc,Prod) Build, Push to Docker and Deploy Kisaan.com
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      TARGET_ENV:
+        type: choice
+        description: 'Please choose the Target environment'
+        default: 'int'
+        required: true
+        options:
+            - int
+            - test
+            - acc
+            - prod
+
+      DEPLOYMENT_TYPE:
+        type: choice
+        description: 'Please select the build only, deploy only or build and deploy'
+        default: 'build-and-deploy'
+        required: true
+        options:
+            - build
+            - deploy
+            - build-and-deploy
+
+      ACTION:
+        type: choice
+        description: 'Please choose the action to perform'
+        default: 'purge-cache'
+        required: true
+        options:
+            - purge-cache
+            - create-worker
+            - update-worker
+            - deploy-worker
+            - get-worker
+            - delete-worker
+            - list-workers
+
+env:
+    DOCKER_REGISTRY: docker.io
+    DOCKER_REPO_NAME: bwalia
+    TARGET_STACK: nextjs
+    IMAGE_NAME: kisaan-nextjs
+    TARGET_IMAGE_TAG: latest
+    TARGET_ENV: ${{ github.event.inputs.TARGET_ENV || 'test' }}
+    DEPLOYMENT_TYPE: ${{ github.event.inputs.DEPLOYMENT_TYPE || 'build-and-deploy' }}
+    SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+    # WORKER_NAME: secrets.CLOUDFLARE_WORKER_NAME
+    # SCRIPT_PATH: nextjs/cloudflare/worker.js
+    ACTION: ${{ github.event.inputs.ACTION || 'purge-cache' }}      
+jobs:
+
+  build-public:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Build kisaan.com Docker image on Public runner and push to Docker Registry (docker.io)
+      if: ${{ (env.DEPLOYMENT_TYPE == 'build' || env.DEPLOYMENT_TYPE == 'build-and-deploy') }}
+      run: |
+        echo "kisaan.com Docker image builder!"
+        echo "Build, tag (${{ env.TARGET_ENV }}), and push image to the given Docker Registry."
+          if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} dev ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} dev
+          elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} test ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} test
+          elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} acc ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} acc
+          elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} prod ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} prod
+          else
+              ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
+          fi
+      shell: bash
+
+  deploy-public:
+    name: Deploy Helm Chart
+    runs-on: ubuntu-latest
+    needs: [ build-public ]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Decode and Export Kubeconfig
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      env:
+        KUBECONFIG_BASE64: ${{ secrets.KUBE_CONFIG_DATA_K3S }}
+      run: |
+        echo "$KUBECONFIG_BASE64" | base64 -d > kubeconfig
+        export KUBECONFIG=$(pwd)/kubeconfig
+        echo "Kubeconfig decoded and exported successfully."
+      shell: bash
+    - name: Kubeseal encrypt the env secrets file
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+          export KUBECONFIG=$(pwd)/kubeconfig
+          if [ "${{ env.TARGET_ENV }}" == "dev" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_DEV }} "dev"
+          elif [ "${{ env.TARGET_ENV }}" == "test" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_TEST }} "test"
+          elif [ "${{ env.TARGET_ENV }}" == "acc" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_ACC }} "acc"
+          elif [ "${{ env.TARGET_ENV }}" == "prod" ]; then
+              ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_PROD }} "prod"
+          else
+          ./devops/kubeseal/kubeseal_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} "int"
+          fi
+      shell: bash
+    - name: Check and Install kubectl Binary
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        if ! command -v kubectl &> /dev/null; then
+          echo "kubectl not found. Installing kubectl..."
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+        else
+          echo "kubectl is already installed."
+        fi
+      shell: bash
+  
+    - name: Check and Install Helm Binary
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        if ! command -v helm &> /dev/null; then
+          echo "Helm not found. Installing Helm..."
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        else
+          echo "Helm is already installed."
+        fi
+      shell: bash
+
+    - name: Deploy kisaan.com using custom Helm Chart
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        export KUBECONFIG=$(pwd)/kubeconfig
+        echo "Deploying Helm Chart for kisaan.com in the ${{ env.TARGET_ENV }} environment."
+        echo "Using values file: ./devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml"
+        echo "Helm Chart path: ./devops/helm-charts/kisaan-chart"
+        echo "Target Namespace: ${{ env.TARGET_ENV }}"
+        echo "Image Repository: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}"
+        echo "Image Tag: ${{ env.TARGET_IMAGE_TAG }}"
+        helm list -n ${{ env.TARGET_ENV }} | grep -q "kisaan-${{ env.TARGET_ENV }}" && helm delete kisaan-${{ env.TARGET_ENV }} -n ${{ env.TARGET_ENV }} || echo "Release kisaan-${{ env.TARGET_ENV }} not found in namespace ${{ env.TARGET_ENV }}, skipping deletion"
+        helm upgrade --install kisaan-${{ env.TARGET_ENV }} -f ./devops/helm-charts/kisaan-chart/values-${{ env.TARGET_ENV }}.yaml ./devops/helm-charts/kisaan-chart \
+          --set image.repository=${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_REPO_NAME }}/${{ env.IMAGE_NAME }} \
+          --set image.tag=${{ env.TARGET_ENV }} \
+          --namespace ${{ env.TARGET_ENV }} --create-namespace
+      shell: bash
+
+    - name: Purge Cloudflare Cache for kisaan.com
+      if: ${{ env.DEPLOYMENT_TYPE == 'deploy' || env.DEPLOYMENT_TYPE == 'build-and-deploy' }}
+      run: |
+        if [ "${{ env.ACTION }}" == "purge-cache" ]; then
+            curl https://api.cloudflare.com/client/v4/zones/${{ env.ZONE_ID }}/purge_cache \
+                -H 'Content-Type: application/json' \
+                -H "X-Auth-Email: ${{ env.CLOUDFLARE_EMAIL }}" \
+                -H "X-Auth-Key: ${{ env.CLOUDFLARE_API_TOKEN }}" \
+                -d '{"purge_everything": true}'
+        fi
+
+    - name: Fire Slack Notification for kisaan.com release to ${{ env.TARGET_ENV }} environment
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL: general
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'kisaan.com deployed to https://${{ env.TARGET_ENV }}.kisaan.com/ (${{ env.TARGET_ENV }}) env :rocket:'
+        SLACK_TITLE: kisaan.com deployment status
+        SLACK_USERNAME: rtCamp
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}     

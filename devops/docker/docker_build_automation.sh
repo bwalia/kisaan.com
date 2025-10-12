@@ -1,6 +1,10 @@
 #!/bin/bash
 
 # This bash script automates the process of build docker image and pushing it to nexus docker registry.
+# Example usage:
+# ./docker_build_automation.sh <base64_encoded_env_file_content> <env_ref> <docker_user> <docker_passwd> <docker_repo_name> <docker_registry> <docker
+# _image_name> <docker_image_tag>
+# ./devops/docker/docker_build_automation.sh ${{ secrets.DOT_KISAAN_UI_ENV_CREDS_INT }} int ${{ secrets.DOCKER_USERNAME }} ${{ secrets.DOCKER_PASSWD }} ${{ env.DOCKER_REPO_NAME }} ${{ env.DOCKER_REGISTRY }} ${{ env.IMAGE_NAME }} int
 
 # set -x
 
