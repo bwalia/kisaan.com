@@ -38,8 +38,12 @@ function ProductsContent() {
 
   // Form state
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState<ProductFormData>(getInitialProductFormData());
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<ProductFormData>(
+    getInitialProductFormData()
+  );
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [showCategorySelector, setShowCategorySelector] = useState(false);
 
@@ -132,10 +136,10 @@ function ProductsContent() {
 
   // Form handlers
   const handleFormDataChange = (newData: Partial<ProductFormData>) => {
-    setFormData(prev => ({ ...prev, ...newData }));
+    setFormData((prev) => ({ ...prev, ...newData }));
     // Clear validation errors for changed fields
     const clearedErrors = { ...validationErrors };
-    Object.keys(newData).forEach(key => {
+    Object.keys(newData).forEach((key) => {
       delete clearedErrors[key];
     });
     setValidationErrors(clearedErrors);
@@ -164,7 +168,7 @@ function ProductsContent() {
     try {
       const result = await api.createCategory({
         ...categoryData,
-        store_id: selectedStore
+        store_id: selectedStore,
       });
 
       // Reload categories
@@ -200,9 +204,14 @@ function ProductsContent() {
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
       // Scroll to first error
-      const firstErrorElement = document.querySelector(`[name="${Object.keys(errors)[0]}"]`);
+      const firstErrorElement = document.querySelector(
+        `[name="${Object.keys(errors)[0]}"]`
+      );
       if (firstErrorElement) {
-        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstErrorElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
       return;
     }
@@ -243,7 +252,7 @@ function ProductsContent() {
     setValidationErrors({});
 
     // Set selected category
-    const category = categories.find(cat => cat.uuid === product.category_id);
+    const category = categories.find((cat) => cat.uuid === product.category_id);
     setSelectedCategory(category);
 
     setShowForm(true);
@@ -260,7 +269,9 @@ function ProductsContent() {
       await api.deleteProduct(deleteDialog.product.uuid);
       loadProductsForStore(selectedStore);
     } catch (error: any) {
-      alert("Failed to delete product: " + (error.message || "Please try again"));
+      alert(
+        "Failed to delete product: " + (error.message || "Please try again")
+      );
     } finally {
       setDeleteDialog({ open: false, product: null });
     }
@@ -278,7 +289,9 @@ function ProductsContent() {
   const handleContinueToVariants = () => {
     setShowSuccessModal(false);
     if (createdProduct && selectedStore) {
-      router.push(`/seller/products/${createdProduct.uuid}/variants?store=${selectedStore}`);
+      router.push(
+        `/seller/products/${createdProduct.uuid}/variants?store=${selectedStore}`
+      );
     }
   };
 
@@ -328,7 +341,8 @@ function ProductsContent() {
                         d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                       />
                     </svg>
-                    {products.length} {products.length === 1 ? "product" : "products"}
+                    {products.length}{" "}
+                    {products.length === 1 ? "product" : "products"}
                   </div>
                 </div>
               </div>
@@ -366,8 +380,12 @@ function ProductsContent() {
         <div className="card mb-8">
           <div className="card-body">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Store Selection</h2>
-              <p className="text-sm text-gray-500">Choose which store to manage products for</p>
+              <h2 className="text-xl font-semibold text-gray-900">
+                Store Selection
+              </h2>
+              <p className="text-sm text-gray-500">
+                Choose which store to manage products for
+              </p>
             </div>
             <div className="max-w-md">
               <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -414,11 +432,11 @@ function ProductsContent() {
         {/* Product Form Modal */}
         {showForm && (
           <div className="modal-overlay">
-            <div className="modal max-w-6xl">
-              <div className="modal-header">
+            <div className="modal max-w-7xl mx-4 sm:mx-auto max-h-[90vh] overflow-hidden flex flex-col">
+              <div className="modal-header flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                       <svg
                         className="icon icon-md text-blue-600"
                         fill="none"
@@ -434,18 +452,20 @@ function ProductsContent() {
                       </svg>
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-gray-900">
+                      <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                         {editingProduct ? "Edit Product" : "Add New Product"}
                       </h2>
-                      <p className="text-sm text-gray-500">
-                        {editingProduct ? "Update product details" : "Create a new product for your store"}
+                      <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">
+                        {editingProduct
+                          ? "Update product details"
+                          : "Create a new product for your store"}
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={resetForm}
                     disabled={creating}
-                    className="btn-ghost btn-icon text-gray-400 hover:text-gray-600"
+                    className="btn-ghost btn-icon text-gray-400 hover:text-gray-600 flex-shrink-0"
                   >
                     <svg
                       className="icon icon-md"
@@ -464,177 +484,233 @@ function ProductsContent() {
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="modal-body">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Left Column */}
-                  <div className="space-y-8">
-                    {/* Basic Info */}
-                    <ProductBasicInfo
-                      formData={formData}
-                      onChange={handleFormDataChange}
-                      errors={validationErrors}
-                      disabled={creating}
-                    />
+              <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+                <div className="modal-body">
+                  <div className="grid grid-cols-1 gap-6 lg:gap-8">
+                    {/* Left Column */}
+                    <div className="space-y-6">
+                      {/* Basic Info */}
+                      <ProductBasicInfo
+                        formData={formData}
+                        onChange={handleFormDataChange}
+                        errors={validationErrors}
+                        disabled={creating}
+                      />
 
-                    {/* Pricing */}
-                    <ProductPricing
-                      formData={formData}
-                      onChange={handleFormDataChange}
-                      errors={validationErrors}
-                      disabled={creating}
-                    />
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="space-y-8">
-                    {/* Images */}
-                    <div className="card">
-                      <div className="card-header">
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                            <svg
-                              className="w-4 h-4 text-indigo-600"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">Product Images</h3>
-                            <p className="text-sm text-gray-500">Upload images or add image URLs</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card-body">
-                        <ImageUpload
-                          images={formData.images}
-                          onImagesChange={(images) => handleFormDataChange({ images })}
-                          maxImages={5}
-                          disabled={creating}
-                        />
-                        {validationErrors.images && (
-                          <p className="mt-3 text-sm text-red-600">{validationErrors.images}</p>
-                        )}
-                      </div>
+                      {/* Pricing */}
+                      <ProductPricing
+                        formData={formData}
+                        onChange={handleFormDataChange}
+                        errors={validationErrors}
+                        disabled={creating}
+                      />
                     </div>
 
-                    {/* Category */}
-                    <div className="card">
-                      <div className="card-header">
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                            <svg
-                              className="w-4 h-4 text-purple-600"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">Category</h3>
-                            <p className="text-sm text-gray-500">Choose or create a product category</p>
+                    {/* Right Column */}
+                    <div className="space-y-6">
+                      {/* Images */}
+                      <div className="card">
+                        <div className="card-header">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                              <svg
+                                className="w-4 h-4 text-indigo-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                                Product Images
+                              </h3>
+                              <p className="text-xs sm:text-sm text-gray-500">
+                                Upload images or add image URLs
+                              </p>
+                            </div>
                           </div>
                         </div>
+                        <div className="card-body">
+                          <ImageUpload
+                            images={formData.images}
+                            onImagesChange={(images) =>
+                              handleFormDataChange({ images })
+                            }
+                            maxImages={5}
+                            disabled={creating}
+                          />
+                          {validationErrors.images && (
+                            <p className="mt-3 text-sm text-red-600">
+                              {validationErrors.images}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      <div className="card-body">
-                        <div className="mb-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Product Category <span className="text-red-500">*</span>
-                          </label>
-                          {selectedCategory ? (
-                            <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-md">
-                              <div className="flex items-center text-sm text-green-700">
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                </svg>
-                                <span className="font-medium">{selectedCategory.name}</span>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setSelectedCategory(null);
-                                  handleFormDataChange({ category_id: "" });
-                                }}
-                                className="text-green-600 hover:text-green-800"
-                                disabled={creating}
+
+                      {/* Category */}
+                      <div className="card">
+                        <div className="card-header">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
+                              <svg
+                                className="w-4 h-4 text-purple-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                               >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                              </button>
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                                />
+                              </svg>
                             </div>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => setShowCategorySelector(true)}
-                              className="w-full p-3 border-2 border-dashed border-gray-300 rounded-md hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              disabled={creating}
-                            >
-                              <div className="text-center">
-                                <svg className="mx-auto h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                                <div className="mt-2 text-sm text-gray-600">
-                                  <span className="font-medium text-blue-600 hover:text-blue-500">
-                                    Click to select category
+                            <div>
+                              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                                Category
+                              </h3>
+                              <p className="text-xs sm:text-sm text-gray-500">
+                                Choose or create a product category
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card-body">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Product Category{" "}
+                              <span className="text-red-500">*</span>
+                            </label>
+                            {selectedCategory ? (
+                              <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-md">
+                                <div className="flex items-center text-sm text-green-700 min-w-0">
+                                  <svg
+                                    className="w-4 h-4 mr-2 flex-shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                                    />
+                                  </svg>
+                                  <span className="font-medium truncate">
+                                    {selectedCategory.name}
                                   </span>
                                 </div>
-                                <p className="text-xs text-gray-500">Search existing or create new</p>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedCategory(null);
+                                    handleFormDataChange({ category_id: "" });
+                                  }}
+                                  className="text-green-600 hover:text-green-800 ml-2 flex-shrink-0"
+                                  disabled={creating}
+                                >
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                </button>
                               </div>
-                            </button>
-                          )}
-                          {validationErrors.category_id && (
-                            <p className="mt-1 text-sm text-red-600">{validationErrors.category_id}</p>
-                          )}
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setShowCategorySelector(true)}
+                                className="w-full p-3 sm:p-4 border-2 border-dashed border-gray-300 rounded-md hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                                disabled={creating}
+                              >
+                                <div className="text-center">
+                                  <svg
+                                    className="mx-auto h-6 w-6 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    />
+                                  </svg>
+                                  <div className="mt-2 text-sm text-gray-600">
+                                    <span className="font-medium text-blue-600 hover:text-blue-500">
+                                      Click to select category
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Search existing or create new
+                                  </p>
+                                </div>
+                              </button>
+                            )}
+                            {validationErrors.category_id && (
+                              <p className="mt-1 text-sm text-red-600">
+                                {validationErrors.category_id}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+
+                  {/* Full Width Section */}
+                  <div className="mt-6 lg:mt-8">
+                    <ProductInventory
+                      formData={formData}
+                      onChange={handleFormDataChange}
+                      errors={validationErrors}
+                      categories={categories}
+                      disabled={creating}
+                    />
+                  </div>
                 </div>
 
-                {/* Full Width Section */}
-                <div className="mt-8">
-                  <ProductInventory
-                    formData={formData}
-                    onChange={handleFormDataChange}
-                    errors={validationErrors}
-                    categories={categories}
-                    disabled={creating}
-                  />
-                </div>
-
-                <div className="modal-footer">
+                <div className="modal-footer flex-shrink-0">
                   <button
                     type="button"
                     onClick={resetForm}
                     disabled={creating}
-                    className="btn-outline btn-md"
+                    className="btn-outline btn-md flex-1 sm:flex-initial"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={creating}
-                    className="btn-primary btn-md inline-flex items-center gap-2"
+                    className="btn-primary btn-md inline-flex items-center justify-center gap-2 flex-1 sm:flex-initial"
                   >
                     {creating ? (
                       <>
                         <div className="loading-spinner"></div>
-                        {editingProduct ? "Updating..." : "Creating..."}
+                        <span className="hidden sm:inline">
+                          {editingProduct ? "Updating..." : "Creating..."}
+                        </span>
+                        <span className="sm:hidden">
+                          {editingProduct ? "Update" : "Create"}
+                        </span>
                       </>
                     ) : (
                       <>
@@ -651,7 +727,12 @@ function ProductsContent() {
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                           />
                         </svg>
-                        {editingProduct ? "Update Product" : "Create Product"}
+                        <span className="hidden sm:inline">
+                          {editingProduct ? "Update Product" : "Create Product"}
+                        </span>
+                        <span className="sm:hidden">
+                          {editingProduct ? "Update" : "Create"}
+                        </span>
                       </>
                     )}
                   </button>
@@ -759,12 +840,11 @@ function ProductsContent() {
                     🎉 Product Created Successfully!
                   </h2>
                   <p className="text-gray-600 mb-4 text-balance">
-                    <strong>"{createdProduct.name}"</strong> has been added to your store.
+                    <strong>"{createdProduct.name}"</strong> has been added to
+                    your store.
                   </p>
                   <div className="flex items-center justify-center text-sm text-gray-500 bg-gray-50 rounded-lg p-3 mx-auto max-w-sm">
-                    <span className="font-mono">
-                      SKU: {createdProduct.sku}
-                    </span>
+                    <span className="font-mono">SKU: {createdProduct.sku}</span>
                   </div>
                 </div>
 
@@ -818,7 +898,9 @@ function ProductsContent() {
         <ConfirmDialog
           open={deleteDialog.open}
           title="Delete Product"
-          message={`Are you sure you want to delete "${deleteDialog.product?.name || ""}"?`}
+          message={`Are you sure you want to delete "${
+            deleteDialog.product?.name || ""
+          }"?`}
           confirmText="Delete"
           onCancel={() => setDeleteDialog({ open: false, product: null })}
           onConfirm={confirmDelete}
@@ -876,7 +958,8 @@ function ProductsContent() {
               Ready to Add Your First Product?
             </h2>
             <p className="text-gray-600 mb-6 max-w-md mx-auto text-balance">
-              Start selling by adding products to your store. Include great photos, detailed descriptions, and competitive pricing.
+              Start selling by adding products to your store. Include great
+              photos, detailed descriptions, and competitive pricing.
             </p>
 
             <div className="space-y-4">
@@ -950,7 +1033,7 @@ function ProductsContent() {
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = '/placeholder-image.png';
+                          target.src = "/placeholder-image.png";
                         }}
                       />
                     ) : (
@@ -1001,14 +1084,17 @@ function ProductsContent() {
                         <span className="text-lg font-semibold text-gray-900">
                           {formatPrice(product.price)}
                         </span>
-                        {product.compare_price && product.compare_price > product.price && (
-                          <span className="text-sm text-gray-500 line-through">
-                            {formatPrice(product.compare_price)}
-                          </span>
-                        )}
+                        {product.compare_price &&
+                          product.compare_price > product.price && (
+                            <span className="text-sm text-gray-500 line-through">
+                              {formatPrice(product.compare_price)}
+                            </span>
+                          )}
                       </div>
                       {product.is_featured && (
-                        <div className="badge badge-warning text-xs">Featured</div>
+                        <div className="badge badge-warning text-xs">
+                          Featured
+                        </div>
                       )}
                     </div>
                   </div>
@@ -1035,7 +1121,11 @@ function ProductsContent() {
                       Edit
                     </button>
                     <button
-                      onClick={() => router.push(`/seller/products/${product.uuid}/variants?store=${selectedStore}`)}
+                      onClick={() =>
+                        router.push(
+                          `/seller/products/${product.uuid}/variants?store=${selectedStore}`
+                        )
+                      }
                       className="btn-ghost btn-sm text-blue-600 hover:bg-blue-50 border border-blue-200 px-3"
                     >
                       <svg

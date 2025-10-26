@@ -31,7 +31,14 @@ export default function DeliveryPartnerOnboarding() {
     // Company Information
     company_name: "",
     company_registration_number: "",
-    business_address: "",
+
+    // Business Address (Structured)
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    state: "",
+    postal_code: "",
+    country: "India",
 
     // Contact Information
     contact_person_name: user?.name || "",
@@ -202,19 +209,98 @@ export default function DeliveryPartnerOnboarding() {
                   />
                 </div>
 
+                {/* Business Address - Structured for Geolocation */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Business Address *
+                    Business Address - Street Address *
                   </label>
-                  <textarea
-                    name="business_address"
+                  <input
+                    type="text"
+                    name="address_line1"
                     required
-                    rows={3}
-                    value={formData.business_address}
+                    value={formData.address_line1}
                     onChange={handleChange}
                     className="input"
-                    placeholder="Complete business address"
+                    placeholder="House/Building number, Street name"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Address Line 2
+                  </label>
+                  <input
+                    type="text"
+                    name="address_line2"
+                    value={formData.address_line2}
+                    onChange={handleChange}
+                    className="input"
+                    placeholder="Apartment, suite, unit, etc. (Optional)"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      City *
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      required
+                      value={formData.city}
+                      onChange={handleChange}
+                      className="input"
+                      placeholder="e.g., Ludhiana"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      State/Province *
+                    </label>
+                    <input
+                      type="text"
+                      name="state"
+                      required
+                      value={formData.state}
+                      onChange={handleChange}
+                      className="input"
+                      placeholder="e.g., Punjab"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Postal Code *
+                    </label>
+                    <input
+                      type="text"
+                      name="postal_code"
+                      required
+                      value={formData.postal_code}
+                      onChange={handleChange}
+                      className="input"
+                      placeholder="e.g., 141001"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Country *
+                    </label>
+                    <input
+                      type="text"
+                      name="country"
+                      required
+                      value={formData.country}
+                      onChange={handleChange}
+                      className="input"
+                      placeholder="India"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
