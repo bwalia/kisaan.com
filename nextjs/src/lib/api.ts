@@ -626,6 +626,12 @@ class ApiClient {
     }, true);
   }
 
+  async cancelDeliveryRequest(uuid: string) {
+    return this.request(`/api/v2/delivery-requests/${uuid}/cancel`, {
+      method: "PUT"
+    }, true);
+  }
+
   // Delivery Partner Dashboard
   async getDeliveryPartnerDashboard() {
     return this.request("/api/v2/delivery-partner/dashboard", { method: "GET" }, true);
@@ -643,6 +649,21 @@ class ApiClient {
 
   async getDeliveryPartnerEarnings(period?: string) {
     return this.getDeliveryEarnings(period);
+  }
+
+  // Delivery Partner Verification (Phone OTP)
+  async sendVerificationOtp(phoneNumber: string) {
+    return this.request("/api/v2/delivery-partners/verification/send-otp", {
+      method: "POST",
+      body: JSON.stringify({ phone_number: phoneNumber })
+    });
+  }
+
+  async verifyDeliveryPartnerOtp(phoneNumber: string, otp: string) {
+    return this.request("/api/v2/delivery-partners/verification/verify-otp", {
+      method: "POST",
+      body: JSON.stringify({ phone_number: phoneNumber, otp: otp })
+    });
   }
 
   // Store Delivery Partner Management
