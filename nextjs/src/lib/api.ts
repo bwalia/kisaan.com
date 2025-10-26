@@ -626,6 +626,12 @@ class ApiClient {
     }, true);
   }
 
+  async cancelDeliveryRequest(uuid: string) {
+    return this.request(`/api/v2/delivery-requests/${uuid}/cancel`, {
+      method: "PUT"
+    }, true);
+  }
+
   // Delivery Partner Dashboard
   async getDeliveryPartnerDashboard() {
     return this.request("/api/v2/delivery-partner/dashboard", { method: "GET" }, true);

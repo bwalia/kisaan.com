@@ -4,12 +4,14 @@ import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
+import { formatCurrency } from "@/lib/currency";
 
 interface Store {
   uuid: string;
   name: string;
   description?: string;
   slug: string;
+  currency?: string;
   created_at?: string;
 }
 
@@ -18,11 +20,17 @@ interface Order {
   order_number?: string;
   status: string;
   total_amount: number;
+  currency?: string;
   customer_email?: string;
   customer_first_name?: string;
   customer_last_name?: string;
   created_at: string;
   items?: any[];
+  delivery_partner_id?: number;
+  delivery_partner?: {
+    company_name: string;
+    contact_person_phone?: string;
+  };
 }
 
 export default function StoreSpecificDashboard() {
@@ -161,6 +169,8 @@ export default function StoreSpecificDashboard() {
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      confirmed: 'bg-blue-100 text-blue-800 border-blue-200',
+      processing: 'bg-purple-100 text-purple-800 border-purple-200',
       accepted: 'bg-blue-100 text-blue-800 border-blue-200',
       preparing: 'bg-purple-100 text-purple-800 border-purple-200',
       packing: 'bg-indigo-100 text-indigo-800 border-indigo-200',
@@ -173,16 +183,54 @@ export default function StoreSpecificDashboard() {
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
-  const getNextStatus = (currentStatus: string): string | null => {
-    const transitions: Record<string, string> = {
-      pending: 'accepted',
-      accepted: 'preparing',
-      preparing: 'packing',
-      packing: 'shipping',
-      shipping: 'shipped',
-      shipped: 'delivered',
+  const getStatusLabel = (status: string, hasDeliveryPartner: boolean = false) => {
+    const labels: Record<string, string> = {
+      pending: 'Payment Pending',
+      confirmed: 'Order Confirmed',
+      processing: 'Processing Order',
+      accepted: 'Order Accepted',
+      preparing: 'Preparing Items',
+      packing: hasDeliveryPartner ? 'Ready for Pickup' : 'Packing Order',
+      shipping: 'Out for Delivery',
+      shipped: 'Shipped',
+      delivered: 'Delivered',
+      cancelled: 'Cancelled',
+      refunded: 'Refunded',
+    };
+    return labels[status] || status;
+  };
+
+  const getNextStatus = (currentStatus: string, hasDeliveryPartner: boolean = false): string | null => {
+    const transitions: Record<string, string | null> = {
+      pending: 'confirmed',          // Payment confirmed → Confirm order
+      confirmed: 'processing',       // Confirmed → Start processing
+      processing: 'packing',         // Processing → Mark as packed (ready for pickup)
+      // packing: Seller must assign delivery partner, then wait for pickup
+      packing: null,                 // No status change - delivery partner picks up (changes to shipping)
+      shipping: null,                // Delivery partner handles delivery
+      shipped: null,                 // Delivery partner handles delivery
+      delivered: null,               // Final status
+      cancelled: null,               // Final status
+      refunded: null,                // Final status
     };
     return transitions[currentStatus] || null;
+  };
+
+  const getNextStatusLabel = (currentStatus: string, hasDeliveryPartner: boolean = false): string => {
+    const next = getNextStatus(currentStatus, hasDeliveryPartner);
+    if (!next) {
+      if (currentStatus === 'packing') {
+        return hasDeliveryPartner ? 'Waiting for Pickup' : 'Assign Delivery Partner';
+      }
+      return '';
+    }
+    const labels: Record<string, string> = {
+      confirmed: 'Confirm Order',
+      processing: 'Start Processing',
+      packing: 'Mark as Packed',
+      delivered: 'Mark as Delivered',
+    };
+    return labels[next] || `Update to ${next}`;
   };
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
@@ -276,7 +324,7 @@ export default function StoreSpecificDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Revenue</p>
-                <p className="text-3xl font-bold text-green-600 mt-2">${stats.total_revenue.toFixed(2)}</p>
+                <p className="text-3xl font-bold text-green-600 mt-2">{formatCurrency(stats.total_revenue, currentStore?.currency || 'USD')}</p>
               </div>
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -437,7 +485,11 @@ export default function StoreSpecificDashboard() {
             ) : (
               <div className="space-y-4">
                 {filteredOrders.map((order) => {
-                  const nextStatus = getNextStatus(order.status);
+                  const hasDeliveryPartner = !!order.delivery_partner_id;
+                  const nextStatus = getNextStatus(order.status, hasDeliveryPartner);
+                  const statusLabel = getStatusLabel(order.status, hasDeliveryPartner);
+                  const nextStatusLabel = getNextStatusLabel(order.status, hasDeliveryPartner);
+
                   return (
                     <div key={order.uuid} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
@@ -447,13 +499,22 @@ export default function StoreSpecificDashboard() {
                               Order #{order.order_number || order.uuid.slice(0, 8)}
                             </h3>
                             <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(order.status)}`}>
-                              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                              {statusLabel}
                             </span>
                           </div>
                           <div className="text-sm text-gray-600 space-y-1">
                             <p>Customer: {order.customer_first_name} {order.customer_last_name}</p>
                             {order.customer_email && <p>Email: {order.customer_email}</p>}
-                            <p>Total: ${parseFloat(order.total_amount?.toString() || '0').toFixed(2)}</p>
+                            <p>Total: {formatCurrency(order.total_amount, order.currency || 'USD')}</p>
+                            {hasDeliveryPartner && order.delivery_partner && (
+                              <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                                <p className="text-xs font-medium text-green-800">🚚 Delivery Partner Assigned</p>
+                                <p className="text-xs text-green-700">{order.delivery_partner.company_name}</p>
+                                {order.status === 'packing' && (
+                                  <p className="text-xs text-green-600 mt-1">⏳ Waiting for pickup</p>
+                                )}
+                              </div>
+                            )}
                             <p className="text-xs text-gray-400">
                               {new Date(order.created_at).toLocaleDateString()} at {new Date(order.created_at).toLocaleTimeString()}
                             </p>
@@ -461,15 +522,50 @@ export default function StoreSpecificDashboard() {
                         </div>
 
                         <div className="flex flex-col gap-2 w-full sm:w-auto">
+                          {/* Status progression buttons */}
                           {nextStatus && order.status !== 'delivered' && order.status !== 'cancelled' && order.status !== 'refunded' && (
                             <button
                               onClick={() => handleStatusUpdate(order.uuid, nextStatus)}
                               className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
                             >
-                              Mark as {nextStatus.charAt(0).toUpperCase() + nextStatus.slice(1)}
+                              {nextStatusLabel}
                             </button>
                           )}
-                          {(order.status === 'pending' || order.status === 'accepted') && (
+
+                          {/* Packing status - Must assign delivery partner before pickup */}
+                          {order.status === 'packing' && !hasDeliveryPartner && (
+                            <>
+                              <div className="px-4 py-2 bg-yellow-50 border border-yellow-300 rounded-lg text-sm text-center">
+                                <p className="text-yellow-800 font-medium">⚠️ Order Packed</p>
+                                <p className="text-xs text-yellow-700">Assign delivery partner to proceed</p>
+                              </div>
+                              <button
+                                onClick={() => router.push(`/seller/${storeSlug}/delivery-requests`)}
+                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                              >
+                                📦 Assign Delivery Partner
+                              </button>
+                            </>
+                          )}
+
+                          {/* Packing status with delivery partner assigned - waiting for pickup */}
+                          {order.status === 'packing' && hasDeliveryPartner && (
+                            <div className="px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-sm text-center">
+                              <p className="text-indigo-700 font-medium">✅ Ready for Pickup</p>
+                              <p className="text-xs text-indigo-600">Waiting for delivery partner to pick up</p>
+                            </div>
+                          )}
+
+                          {/* Shipping status - delivery partner is handling */}
+                          {(order.status === 'shipping' || order.status === 'shipped') && hasDeliveryPartner && (
+                            <div className="px-4 py-2 bg-cyan-50 border border-cyan-200 rounded-lg text-sm text-center">
+                              <p className="text-cyan-700 font-medium">🚚 Out for Delivery</p>
+                              <p className="text-xs text-cyan-600">Delivery partner is handling delivery</p>
+                            </div>
+                          )}
+
+                          {/* Cancel order - only available for pending/confirmed */}
+                          {(order.status === 'pending' || order.status === 'confirmed') && (
                             <button
                               onClick={() => handleStatusUpdate(order.uuid, 'cancelled')}
                               className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium transition-colors border border-red-200"

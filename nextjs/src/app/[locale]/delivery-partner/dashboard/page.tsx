@@ -41,6 +41,8 @@ interface DeliveryRequest {
   proposed_fee: number;
   message: string;
   created_at: string;
+  request_type: 'partner_to_seller' | 'seller_to_partner';
+  status: string;
 }
 
 export default function DeliveryPartnerDashboard() {
@@ -141,6 +143,20 @@ export default function DeliveryPartnerDashboard() {
       loadDashboardData();
     } catch (error: any) {
       toast.error(error.message || "Failed to reject request");
+    }
+  };
+
+  const handleCancelRequest = async (requestUuid: string) => {
+    if (!confirm("Are you sure you want to cancel this delivery request?")) {
+      return;
+    }
+
+    try {
+      await api.cancelDeliveryRequest(requestUuid);
+      toast.success("Request cancelled successfully");
+      loadDashboardData();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to cancel request");
     }
   };
 
@@ -422,43 +438,79 @@ export default function DeliveryPartnerDashboard() {
                     <p className="text-gray-500">No pending requests</p>
                   </div>
                 ) : (
-                  pendingRequests.map((request) => (
-                    <div key={request.uuid} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="font-semibold text-gray-900">Order #{request.order_number}</h3>
-                          <p className="text-sm text-gray-600">{request.store_name}</p>
-                        </div>
-                        <span className="text-lg font-semibold text-green-600">₹{request.proposed_fee}</span>
-                      </div>
+                  pendingRequests.map((request) => {
+                    // Determine request ownership and available actions
+                    const isPartnerToSeller = request.request_type === 'partner_to_seller';
+                    const isSellerToPartner = request.request_type === 'seller_to_partner';
 
-                      {request.message && (
-                        <p className="text-sm text-gray-700 mb-4 p-3 bg-gray-50 rounded">
-                          {request.message}
-                        </p>
-                      )}
+                    return (
+                      <div key={request.uuid} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h3 className="font-semibold text-gray-900">Order #{request.order_number}</h3>
+                            <p className="text-sm text-gray-600">{request.store_name}</p>
+                            {isPartnerToSeller && (
+                              <span className="inline-block mt-1 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
+                                Your Request
+                              </span>
+                            )}
+                            {isSellerToPartner && (
+                              <span className="inline-block mt-1 px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded">
+                                Seller's Request
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-lg font-semibold text-green-600">₹{request.proposed_fee}</span>
+                        </div>
 
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-500">
-                          Requested {new Date(request.created_at).toLocaleDateString()}
-                        </span>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleRejectRequest(request.uuid)}
-                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-                          >
-                            Reject
-                          </button>
-                          <button
-                            onClick={() => handleAcceptRequest(request.uuid)}
-                            className="btn-primary"
-                          >
-                            Accept
-                          </button>
+                        {request.message && (
+                          <p className="text-sm text-gray-700 mb-4 p-3 bg-gray-50 rounded">
+                            {request.message}
+                          </p>
+                        )}
+
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-500">
+                            Requested {new Date(request.created_at).toLocaleDateString()}
+                          </span>
+                          <div className="flex gap-2">
+                            {/* Partner's own request (partner_to_seller) - Can only cancel */}
+                            {isPartnerToSeller && (
+                              <>
+                                <button
+                                  onClick={() => handleCancelRequest(request.uuid)}
+                                  className="px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50"
+                                >
+                                  Cancel Request
+                                </button>
+                                <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                                  <p className="text-xs text-blue-700">⏳ Waiting for seller approval</p>
+                                </div>
+                              </>
+                            )}
+
+                            {/* Seller's request (seller_to_partner) - Can accept or reject */}
+                            {isSellerToPartner && (
+                              <>
+                                <button
+                                  onClick={() => handleRejectRequest(request.uuid)}
+                                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                                >
+                                  Reject
+                                </button>
+                                <button
+                                  onClick={() => handleAcceptRequest(request.uuid)}
+                                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+                                >
+                                  Accept
+                                </button>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             )}
