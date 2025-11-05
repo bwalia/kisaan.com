@@ -84,7 +84,7 @@ jobs:
 
   deploy-public:
     name: Deploy Helm Chart
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [ build-public ]
     steps:
     - name: Checkout code
