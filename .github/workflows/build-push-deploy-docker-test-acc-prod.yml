@@ -1,7 +1,11 @@
 name: (Test,Acc,Prod) Build, Push to Docker and Deploy Kisaan.com
 
 on:
-  push:
+  # Triggered after the Int workflow completes successfully
+  workflow_run:
+    workflows: ["(Int) Build, Push to Docker and Deploy Kisaan.com"]
+    types:
+      - completed
     branches:
       - main
 
@@ -61,6 +65,8 @@ jobs:
 
   build-public:
     runs-on: ubuntu-latest
+    # Only run if triggered by workflow_dispatch OR if the Int workflow succeeded
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
