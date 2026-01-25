@@ -47,13 +47,7 @@ export default function ProductCard({
     e.stopPropagation();
     setIsAdding(true);
     
-    addToCart({
-      id,
-      name,
-      price,
-      image,
-      quantity: 1,
-    });
+    await addToCart(id, 1);
 
     // Brief animation delay
     await new Promise((resolve) => setTimeout(resolve, 500));
