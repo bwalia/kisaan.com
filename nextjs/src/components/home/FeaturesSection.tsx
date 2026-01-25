@@ -1,166 +1,182 @@
+'use client';
+
 import Link from 'next/link';
 
+const features = [
+  {
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    title: 'Global Network',
+    description: 'Connect with verified farmers from 150+ countries. Access authentic, locally-sourced produce.',
+    color: 'bg-blue-500',
+    lightColor: 'bg-blue-50',
+    textColor: 'text-blue-600',
+  },
+  {
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
+    ),
+    title: '100% Organic Certified',
+    description: 'Every product verified for authenticity. No pesticides, no GMOs—just pure, natural goodness.',
+    color: 'bg-emerald-500',
+    lightColor: 'bg-emerald-50',
+    textColor: 'text-emerald-600',
+  },
+  {
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    title: 'Fair Trade Prices',
+    description: 'Farmers receive 80% of the sale price directly. Support sustainable livelihoods.',
+    color: 'bg-amber-500',
+    lightColor: 'bg-amber-50',
+    textColor: 'text-amber-600',
+  },
+  {
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+    title: 'Fast & Fresh Delivery',
+    description: 'From harvest to your doorstep in 24-48 hours. Eco-friendly packaging included.',
+    color: 'bg-purple-500',
+    lightColor: 'bg-purple-50',
+    textColor: 'text-purple-600',
+  },
+];
+
+const testimonials = [
+  {
+    quote: "Kisaan has transformed how I sell my produce. I now reach customers across 3 countries!",
+    author: "Rajesh Kumar",
+    role: "Wheat Farmer, Punjab",
+    avatar: "👨‍🌾",
+  },
+  {
+    quote: "The quality is unmatched. Fresh vegetables delivered the same day they're harvested.",
+    author: "Sarah Mitchell",
+    role: "Happy Customer, London",
+    avatar: "👩",
+  },
+  {
+    quote: "Finally, a platform that truly supports small-scale organic farmers like us.",
+    author: "Maria Santos",
+    role: "Organic Farmer, Portugal",
+    avatar: "👩‍🌾",
+  },
+];
+
 export default function FeaturesSection() {
-  const features = [
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      emoji: "🌍",
-      title: "Global Farmer Network",
-      description: "Connect with farmers from 150+ countries. From Indian spices to French lavender.",
-      color: "from-[#2d6a4f] to-[#1b4332]",
-      bgGlow: "bg-green-100",
-      link: "/support"
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-      ),
-      emoji: "🌿",
-      title: "100% Organic Certified",
-      description: "All products verified for authenticity. No pesticides, no GMOs, just pure goodness.",
-      color: "from-[#059669] to-[#047857]",
-      bgGlow: "bg-emerald-100",
-      link: "/security"
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      emoji: "💰",
-      title: "Fair Trade Prices",
-      description: "Farmers get 80% of sale price. Support sustainable livelihoods directly.",
-      color: "from-amber-500 to-amber-600",
-      bgGlow: "bg-amber-100",
-      link: "/pricing"
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-      ),
-      emoji: "📦",
-      title: "Farm Fresh Delivery",
-      description: "From harvest to your home in 24-48 hours. Eco-friendly packaging included.",
-      color: "from-[#78350f] to-[#92400e]",
-      bgGlow: "bg-orange-100",
-      link: "/returns"
-    }
-  ];
-
-  // Farmer testimonials
-  const farmers = [
-    { name: "Rajesh Kumar", location: "Punjab, India", crop: "Wheat & Rice", image: "👨‍🌾" },
-    { name: "Maria Santos", location: "Alentejo, Portugal", crop: "Olive Oil", image: "👩‍🌾" },
-    { name: "John Okonkwo", location: "Lagos, Nigeria", crop: "Cocoa & Coffee", image: "👨‍🌾" },
-  ];
-
   return (
-    <section className="py-20 bg-gradient-to-b from-[#fefdfb] to-[#f5f5f4] relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-green-100 rounded-full blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-amber-100 rounded-full blur-3xl opacity-40 translate-x-1/3 translate-y-1/3"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
+    <section className="py-20 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-[#2d6a4f]/10 text-[#2d6a4f] rounded-full px-4 py-2 mb-4">
-            <span>🌾</span>
-            <span className="text-sm font-semibold">Why Farmers Love Us</span>
+          <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 rounded-full px-4 py-1.5 mb-4 text-sm font-medium">
+            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+            Why Choose Kisaan
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Why Choose <span className="text-[#2d6a4f]">Kisaan</span>?
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            The Smarter Way to
+            <span className="text-emerald-600"> Shop Fresh</span>
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            We&apos;re building a future where every farmer thrives. Join the agricultural revolution.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            We&apos;re building a future where every farmer thrives and every family 
+            has access to fresh, organic produce.
           </p>
         </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
           {features.map((feature, index) => (
-            <Link
-              key={index}
-              href={feature.link}
-              className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl border border-stone-100 hover:border-[#2d6a4f]/30 transition-all duration-500 transform hover:-translate-y-2 block relative overflow-hidden"
+            <div
+              key={feature.title}
+              className="group relative bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
-              {/* Background glow on hover */}
-              <div className={`absolute -top-20 -right-20 w-40 h-40 ${feature.bgGlow} rounded-full blur-3xl opacity-0 group-hover:opacity-60 transition-opacity duration-500`}></div>
-              
-              <div className="relative z-10">
-                {/* Icon with emoji */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                    {feature.icon}
-                  </div>
-                  <span className="text-3xl">{feature.emoji}</span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#2d6a4f] transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed text-sm mb-4">
-                  {feature.description}
-                </p>
-                <span className="text-[#2d6a4f] font-semibold inline-flex items-center gap-1 text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                  Learn more
-                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </span>
+              {/* Icon */}
+              <div className={`w-14 h-14 ${feature.lightColor} rounded-xl flex items-center justify-center ${feature.textColor} mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                {feature.icon}
               </div>
-            </Link>
+              
+              {/* Content */}
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {feature.description}
+              </p>
+
+              {/* Decorative corner */}
+              <div className={`absolute top-0 right-0 w-20 h-20 ${feature.color} opacity-[0.03] rounded-bl-[100px] rounded-tr-2xl transition-opacity group-hover:opacity-[0.08]`} />
+            </div>
           ))}
         </div>
 
-        {/* Farmer Spotlight Section */}
-        <div className="bg-gradient-to-br from-[#2d6a4f] to-[#1b4332] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
-          {/* Decorative pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-amber-300 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-300 rounded-full blur-3xl"></div>
-          </div>
+        {/* Testimonials */}
+        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-8 md:p-12 overflow-hidden relative">
+          {/* Background decorations */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl" />
           
           <div className="relative z-10">
             <div className="text-center mb-10">
-              <span className="text-4xl mb-4 block">👨‍🌾</span>
-              <h3 className="text-3xl md:text-4xl font-bold mb-3">Meet Our Farmers</h3>
-              <p className="text-green-100 max-w-2xl mx-auto">
-                Real farmers, real stories, real impact. Every purchase supports a farming family.
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                Loved by Farmers & Customers
+              </h3>
+              <p className="text-gray-400 max-w-xl mx-auto">
+                Join thousands of happy users who trust Kisaan for fresh, organic produce.
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {farmers.map((farmer, index) => (
-                <div 
-                  key={index}
-                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group"
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={testimonial.author}
+                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors"
                 >
-                  <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{farmer.image}</div>
-                  <h4 className="font-bold text-lg mb-1">{farmer.name}</h4>
-                  <p className="text-green-200 text-sm mb-2">{farmer.location}</p>
-                  <div className="inline-flex items-center gap-2 bg-amber-500/20 text-amber-200 px-3 py-1 rounded-full text-xs">
-                    <span>🌱</span> {farmer.crop}
+                  {/* Stars */}
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  
+                  {/* Quote */}
+                  <p className="text-gray-300 text-sm mb-5 leading-relaxed">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </p>
+                  
+                  {/* Author */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center text-lg">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <div className="text-white font-medium text-sm">{testimonial.author}</div>
+                      <div className="text-gray-500 text-xs">{testimonial.role}</div>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-            
+
+            {/* CTA */}
             <div className="text-center mt-10">
-              <Link 
+              <Link
                 href="/seller-guide"
-                className="inline-flex items-center gap-2 bg-white text-[#2d6a4f] px-8 py-3 rounded-full font-bold hover:bg-amber-50 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 hover:-translate-y-0.5"
               >
-                <span>🚜</span>
-                Join 10,000+ Farmers
+                <span>Join 10,000+ Farmers</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -169,18 +185,17 @@ export default function FeaturesSection() {
           </div>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        {/* Trust badges */}
+        <div className="mt-16 flex flex-wrap justify-center items-center gap-8 md:gap-12">
           {[
-            { icon: "🏆", label: "Award Winning Platform", sublabel: "AgriTech 2024" },
-            { icon: "🔒", label: "Secure Payments", sublabel: "256-bit SSL" },
-            { icon: "♻️", label: "Eco-Friendly", sublabel: "Carbon Neutral" },
-            { icon: "🤝", label: "Fair Trade", sublabel: "Certified Partner" },
-          ].map((item, index) => (
-            <div key={index} className="bg-white rounded-xl p-4 shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
-              <div className="text-3xl mb-2">{item.icon}</div>
-              <div className="font-semibold text-gray-900 text-sm">{item.label}</div>
-              <div className="text-xs text-gray-500">{item.sublabel}</div>
+            { icon: '🏆', text: 'AgriTech Award 2024' },
+            { icon: '🔒', text: 'Secure Payments' },
+            { icon: '♻️', text: 'Carbon Neutral' },
+            { icon: '✓', text: 'Fair Trade Certified' },
+          ].map((badge) => (
+            <div key={badge.text} className="flex items-center gap-2 text-gray-500">
+              <span className="text-xl">{badge.icon}</span>
+              <span className="text-sm font-medium">{badge.text}</span>
             </div>
           ))}
         </div>

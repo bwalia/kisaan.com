@@ -1,114 +1,158 @@
 'use client';
 
-import { CategoryFilterProps } from '@/types/home';
-import { formatProductCount } from '@/lib/home-utils';
+import { useState, useRef, useEffect } from 'react';
 
-const CategoryFilter: React.FC<CategoryFilterProps> = ({
-  categories,
-  selectedCategory,
-  onCategorySelect,
-  showAll = true,
-}) => {
+interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+}
+
+const categories: Category[] = [
+  { id: 'all', name: 'All Products', icon: '🌾', color: 'emerald' },
+  { id: 'vegetables', name: 'Vegetables', icon: '🥬', color: 'green' },
+  { id: 'fruits', name: 'Fruits', icon: '🍎', color: 'red' },
+  { id: 'dairy', name: 'Dairy', icon: '🥛', color: 'blue' },
+  { id: 'grains', name: 'Grains', icon: '🌾', color: 'amber' },
+  { id: 'herbs', name: 'Herbs', icon: '🌿', color: 'teal' },
+  { id: 'organic', name: 'Organic', icon: '🍃', color: 'lime' },
+  { id: 'spices', name: 'Spices', icon: '🌶️', color: 'orange' },
+];
+
+interface CategoryFilterProps {
+  selectedCategory?: string;
+  onCategoryChange?: (categoryId: string) => void;
+}
+
+export default function CategoryFilter({
+  selectedCategory = 'all',
+  onCategoryChange,
+}: CategoryFilterProps) {
+  const [activeCategory, setActiveCategory] = useState(selectedCategory);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   const handleCategoryClick = (categoryId: string) => {
-    // If clicking the same category, deselect it
-    if (selectedCategory === categoryId) {
-      onCategorySelect('');
-    } else {
-      onCategorySelect(categoryId);
+    setActiveCategory(categoryId);
+    onCategoryChange?.(categoryId);
+  };
+
+  const checkScrollButtons = () => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      setShowLeftArrow(container.scrollLeft > 0);
+      setShowRightArrow(
+        container.scrollLeft < container.scrollWidth - container.clientWidth - 10
+      );
+    }
+  };
+
+  useEffect(() => {
+    checkScrollButtons();
+    window.addEventListener('resize', checkScrollButtons);
+    return () => window.removeEventListener('resize', checkScrollButtons);
+  }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollAmount = 200;
+      container.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+      setTimeout(checkScrollButtons, 300);
     }
   };
 
   return (
-    <div className="bg-white border-b border-stone-200 sticky top-16 z-40 shadow-sm">
-      <div className="container mx-auto px-6 py-5">
-        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
-          {/* All Products option */}
-          {showAll && (
+    <section className="py-8 bg-gradient-to-b from-gray-50 to-white sticky top-20 z-30">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative">
+          {/* Left Arrow */}
+          {showLeftArrow && (
             <button
-              onClick={() => onCategorySelect('')}
-              className={`flex-shrink-0 px-6 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold ${
-                selectedCategory === ''
-                  ? 'bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white border-[#2d6a4f] shadow-lg transform scale-105'
-                  : 'bg-white text-stone-700 border-stone-200 hover:border-[#2d6a4f] hover:text-[#2d6a4f] hover:shadow-md'
-              }`}
+              onClick={() => scroll('left')}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-emerald-600 transition-colors"
             >
-              <span className="flex items-center gap-2">
-                <span>🌾</span>
-                All Products
-              </span>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
             </button>
           )}
 
-          {/* Category options */}
-          {categories.map((category) => (
+          {/* Right Arrow */}
+          {showRightArrow && (
             <button
-              key={category.uuid}
-              onClick={() => handleCategoryClick(category.uuid)}
-              className={`flex-shrink-0 px-6 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold ${
-                selectedCategory === category.uuid
-                  ? 'bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white border-[#2d6a4f] shadow-lg transform scale-105'
-                  : 'bg-white text-stone-700 border-stone-200 hover:border-[#2d6a4f] hover:text-[#2d6a4f] hover:shadow-md'
-              }`}
+              onClick={() => scroll('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-emerald-600 transition-colors"
             >
-              <div className="flex items-center gap-2.5">
-                {category.image && (
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-5 h-5 rounded-lg object-cover"
-                  />
-                )}
-                <span>{category.name}</span>
-                {category.productCount > 0 && (
-                  <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${
-                    selectedCategory === category.uuid
-                      ? 'bg-white/20 text-white'
-                      : 'bg-stone-100 text-stone-600'
-                  }`}>
-                    {category.productCount}
-                  </span>
-                )}
-              </div>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
-          ))}
-
-          {/* Loading placeholder */}
-          {categories.length === 0 && (
-            <div className="flex items-center gap-3">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="flex-shrink-0 h-11 w-28 bg-stone-200 rounded-xl animate-pulse"
-                />
-              ))}
-            </div>
           )}
+
+          {/* Categories Container */}
+          <div
+            ref={scrollContainerRef}
+            onScroll={checkScrollButtons}
+            className="flex gap-3 overflow-x-auto scrollbar-hide px-2 py-2"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {categories.map((category) => {
+              const isActive = activeCategory === category.id;
+              
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategoryClick(category.id)}
+                  className={`relative flex items-center gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all duration-300 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/30 scale-105'
+                      : 'bg-white text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 border border-gray-200 hover:border-emerald-300 shadow-sm hover:shadow-md'
+                  }`}
+                >
+                  <span className="text-lg">{category.icon}</span>
+                  <span>{category.name}</span>
+                  
+                  {/* Active Indicator Dot */}
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-sm" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Category description */}
-        {selectedCategory && (
-          <div className="mt-3 pt-3 border-t border-stone-100">
-            {(() => {
-              const category = categories.find(c => c.uuid === selectedCategory);
-              return category ? (
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-stone-900">{category.name}</h3>
-                    {category.description && (
-                      <p className="text-sm text-stone-600 mt-1">{category.description}</p>
-                    )}
-                  </div>
-                  <span className="text-sm text-stone-500">
-                    {formatProductCount(category.productCount)}
-                  </span>
-                </div>
-              ) : null;
-            })()}
+        {/* Filter Stats Bar */}
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+          <p className="text-sm text-gray-500">
+            Showing products in{' '}
+            <span className="font-medium text-gray-900">
+              {categories.find((c) => c.id === activeCategory)?.name}
+            </span>
+          </p>
+          
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
+              </svg>
+              Sort
+            </button>
+            <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+              </svg>
+              Filters
+            </button>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default CategoryFilter;
+}
