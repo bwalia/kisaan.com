@@ -33,50 +33,53 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-50 backdrop-blur-lg bg-opacity-95">
+    <nav className="bg-white/95 shadow-sm border-b border-stone-200 sticky top-0 z-50 backdrop-blur-lg">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-[#16a34a] to-[#15803d] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
-              <span className="text-white font-bold text-xl">K</span>
+            <div className="w-11 h-11 bg-gradient-to-br from-[#2d6a4f] to-[#1b4332] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105 relative overflow-hidden">
+              <span className="text-2xl">🌾</span>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-[#16a34a] to-[#15803d] bg-clip-text text-transparent">
-              Kisaan
-            </span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] bg-clip-text text-transparent">
+                Kisaan
+              </span>
+              <span className="text-[10px] text-stone-500 font-medium -mt-1 tracking-wide">Farm to Table</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
+              className="text-stone-700 hover:text-[#2d6a4f] font-medium transition-all duration-200 relative group"
             >
               {t("home")}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#2d6a4f] group-hover:w-full transition-all duration-300"></span>
             </Link>
 
             <Link
               href="/support"
-              className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
+              className="text-stone-700 hover:text-[#2d6a4f] font-medium transition-all duration-200 relative group"
             >
               {t("support")}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#2d6a4f] group-hover:w-full transition-all duration-300"></span>
             </Link>
 
             {user && (
               <Link
                 href="/orders"
-                className="text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 relative group"
+                className="text-stone-700 hover:text-[#2d6a4f] font-medium transition-all duration-200 relative group"
               >
                 Orders
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16a34a] group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#2d6a4f] group-hover:w-full transition-all duration-300"></span>
               </Link>
             )}
 
             <Link
               href="/cart"
-              className="relative text-gray-700 hover:text-[#16a34a] font-medium transition-all duration-200 group"
+              className="relative text-stone-700 hover:text-[#2d6a4f] font-medium transition-all duration-200 group"
             >
               <div className="flex items-center space-x-2">
                 <div className="relative">
@@ -94,7 +97,7 @@ export default function Navbar() {
                     />
                   </svg>
                   {itemCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-lg animate-pulse">
+                    <span className="absolute -top-2 -right-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-lg">
                       {itemCount}
                     </span>
                   )}
@@ -105,9 +108,9 @@ export default function Navbar() {
 
             {user ? (
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-600 font-medium">
+                <span className="text-sm text-stone-600 font-medium">
                   {t("welcome")},{" "}
-                  <span className="text-[#16a34a]">{user.name}</span>
+                  <span className="text-[#2d6a4f]">{user.name}</span>
                 </span>
                 {user.role === "seller" && (
                   <div className="flex items-center space-x-2">
@@ -117,13 +120,14 @@ export default function Navbar() {
                           ? `/seller/${primaryStoreSlug}`
                           : "/seller/stores"
                       }
-                      className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                      className="bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2"
                     >
+                      <span>🌱</span>
                       {t("dashboard")}
                     </Link>
                     <Link
                       href="/seller/orders"
-                      className="text-gray-700 hover:text-[#16a34a] font-medium transition-colors duration-200"
+                      className="text-stone-700 hover:text-[#2d6a4f] font-medium transition-colors duration-200"
                     >
                       {t("orders")}
                     </Link>
@@ -132,14 +136,14 @@ export default function Navbar() {
                 {user.role === "delivery_partner" && (
                   <Link
                     href="/delivery-partner/dashboard"
-                    className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                    className="bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
                   >
                     {t("deliveryDashboard")}
                   </Link>
                 )}
                 <button
                   onClick={logout}
-                  className="text-gray-500 hover:text-red-600 font-medium transition-colors duration-200"
+                  className="text-stone-500 hover:text-red-600 font-medium transition-colors duration-200"
                 >
                   {t("logout")}
                 </button>
@@ -148,14 +152,15 @@ export default function Navbar() {
               <div className="flex items-center space-x-4">
                 <Link
                   href="/login"
-                  className="text-gray-700 hover:text-[#16a34a] font-medium transition-colors duration-200"
+                  className="text-stone-700 hover:text-[#2d6a4f] font-medium transition-colors duration-200"
                 >
                   {t("login")}
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                  className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-xl hover:from-amber-400 hover:to-amber-500 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2"
                 >
+                  <span>🌱</span>
                   {t("getStarted")}
                 </Link>
               </div>
@@ -167,7 +172,7 @@ export default function Navbar() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-1.5 rounded-md hover:bg-gray-100"
+            className="md:hidden p-1.5 rounded-md hover:bg-stone-100"
           >
             <svg
               className="w-5 h-5"
@@ -187,29 +192,29 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-3 border-t border-gray-100">
+          <div className="md:hidden py-3 border-t border-stone-100">
             <div className="flex flex-col space-y-2">
               <Link
                 href="/"
-                className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
+                className="text-stone-600 hover:text-[#2d6a4f] text-sm font-medium py-1"
               >
                 {t("home")}
               </Link>
               {user && (
                 <Link
                   href="/orders"
-                  className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
+                  className="text-stone-600 hover:text-[#2d6a4f] text-sm font-medium py-1"
                 >
                   Orders
                 </Link>
               )}
               <Link
                 href="/cart"
-                className="text-gray-600 hover:text-[#16a34a] text-sm font-medium flex items-center py-1"
+                className="text-stone-600 hover:text-[#2d6a4f] text-sm font-medium flex items-center py-1"
               >
                 {t("cart")}{" "}
                 {itemCount > 0 && (
-                  <span className="ml-2 bg-[#16a34a] text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                  <span className="ml-2 bg-amber-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
                     {itemCount}
                   </span>
                 )}
@@ -223,22 +228,22 @@ export default function Navbar() {
                           ? `/seller/${primaryStoreSlug}`
                           : "/seller/stores"
                       }
-                      className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
+                      className="text-stone-600 hover:text-[#2d6a4f] text-sm font-medium py-1 flex items-center gap-1"
                     >
-                      {t("dashboard")}
+                      <span>🌱</span> {t("dashboard")}
                     </Link>
                   )}
                   {user.role === "delivery_partner" && (
                     <Link
                       href="/delivery-partner/dashboard"
-                      className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
+                      className="text-stone-600 hover:text-[#2d6a4f] text-sm font-medium py-1"
                     >
                       {t("deliveryDashboard")}
                     </Link>
                   )}
                   <button
                     onClick={logout}
-                    className="text-left text-gray-400 hover:text-gray-600 text-sm py-1"
+                    className="text-left text-stone-400 hover:text-stone-600 text-sm py-1"
                   >
                     {t("logout")}
                   </button>
@@ -247,19 +252,19 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/login"
-                    className="text-gray-600 hover:text-[#16a34a] text-sm font-medium py-1"
+                    className="text-stone-600 hover:text-[#2d6a4f] text-sm font-medium py-1"
                   >
                     {t("login")}
                   </Link>
                   <Link
                     href="/register"
-                    className="btn-primary text-xs px-4 py-2 inline-block text-center mt-2"
+                    className="bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs px-4 py-2 inline-block text-center mt-2 rounded-lg font-semibold"
                   >
-                    {t("getStarted")}
+                    🌱 {t("getStarted")}
                   </Link>
                 </>
               )}
-              <div className="pt-2 mt-2 border-t border-gray-200">
+              <div className="pt-2 mt-2 border-t border-stone-200">
                 <LanguageSwitcher />
               </div>
             </div>

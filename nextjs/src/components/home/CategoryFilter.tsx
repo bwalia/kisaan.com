@@ -19,7 +19,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   return (
-    <div className="bg-white border-b border-gray-200 sticky top-16 z-40 shadow-sm">
+    <div className="bg-white border-b border-stone-200 sticky top-16 z-40 shadow-sm">
       <div className="container mx-auto px-6 py-5">
         <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
           {/* All Products option */}
@@ -28,11 +28,14 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               onClick={() => onCategorySelect('')}
               className={`flex-shrink-0 px-6 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold ${
                 selectedCategory === ''
-                  ? 'bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white border-[#16a34a] shadow-lg transform scale-105'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-[#16a34a] hover:text-[#16a34a] hover:shadow-md'
+                  ? 'bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white border-[#2d6a4f] shadow-lg transform scale-105'
+                  : 'bg-white text-stone-700 border-stone-200 hover:border-[#2d6a4f] hover:text-[#2d6a4f] hover:shadow-md'
               }`}
             >
-              <span>All Products</span>
+              <span className="flex items-center gap-2">
+                <span>🌾</span>
+                All Products
+              </span>
             </button>
           )}
 
@@ -43,8 +46,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               onClick={() => handleCategoryClick(category.uuid)}
               className={`flex-shrink-0 px-6 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold ${
                 selectedCategory === category.uuid
-                  ? 'bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white border-[#16a34a] shadow-lg transform scale-105'
-                  : 'bg-white text-gray-700 border-gray-200 hover:border-[#16a34a] hover:text-[#16a34a] hover:shadow-md'
+                  ? 'bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white border-[#2d6a4f] shadow-lg transform scale-105'
+                  : 'bg-white text-stone-700 border-stone-200 hover:border-[#2d6a4f] hover:text-[#2d6a4f] hover:shadow-md'
               }`}
             >
               <div className="flex items-center gap-2.5">
@@ -60,7 +63,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                   <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${
                     selectedCategory === category.uuid
                       ? 'bg-white/20 text-white'
-                      : 'bg-gray-100 text-gray-600'
+                      : 'bg-stone-100 text-stone-600'
                   }`}>
                     {category.productCount}
                   </span>
@@ -75,7 +78,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               {[1, 2, 3, 4, 5].map((i) => (
                 <div
                   key={i}
-                  className="flex-shrink-0 h-11 w-28 bg-gray-200 rounded-xl animate-pulse"
+                  className="flex-shrink-0 h-11 w-28 bg-stone-200 rounded-xl animate-pulse"
                 />
               ))}
             </div>
@@ -84,18 +87,18 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
         {/* Category description */}
         {selectedCategory && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
+          <div className="mt-3 pt-3 border-t border-stone-100">
             {(() => {
               const category = categories.find(c => c.uuid === selectedCategory);
               return category ? (
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold text-gray-900">{category.name}</h3>
+                    <h3 className="font-semibold text-stone-900">{category.name}</h3>
                     {category.description && (
-                      <p className="text-sm text-gray-600 mt-1">{category.description}</p>
+                      <p className="text-sm text-stone-600 mt-1">{category.description}</p>
                     )}
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-stone-500">
                     {formatProductCount(category.productCount)}
                   </span>
                 </div>
