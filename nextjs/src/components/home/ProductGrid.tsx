@@ -82,7 +82,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         {products.map((product) => (
           <ProductCard
             key={product.uuid}
-            product={product}
+            id={product.uuid}
+            name={product.name}
+            price={product.price}
+            image={product.images?.[0] || '/placeholder-product.jpg'}
+            isFeatured={product.is_featured}
           />
         ))}
 
