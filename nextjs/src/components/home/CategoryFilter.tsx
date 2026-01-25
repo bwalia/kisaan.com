@@ -1,43 +1,40 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { CategoryWithProducts } from '@/types/home';
 
-interface Category {
-  id: string;
-  name: string;
-  icon: string;
-  color: string;
-}
-
-const categories: Category[] = [
-  { id: 'all', name: 'All Products', icon: '🌾', color: 'emerald' },
-  { id: 'vegetables', name: 'Vegetables', icon: '🥬', color: 'green' },
-  { id: 'fruits', name: 'Fruits', icon: '🍎', color: 'red' },
-  { id: 'dairy', name: 'Dairy', icon: '🥛', color: 'blue' },
-  { id: 'grains', name: 'Grains', icon: '🌾', color: 'amber' },
-  { id: 'herbs', name: 'Herbs', icon: '🌿', color: 'teal' },
-  { id: 'organic', name: 'Organic', icon: '🍃', color: 'lime' },
-  { id: 'spices', name: 'Spices', icon: '🌶️', color: 'orange' },
-];
+// Category icon mapping
+const categoryIcons: Record<string, string> = {
+  vegetables: '🥬',
+  fruits: '🍎',
+  dairy: '🥛',
+  grains: '🌾',
+  herbs: '🌿',
+  organic: '🍃',
+  spices: '🌶️',
+  meat: '🥩',
+  seafood: '🐟',
+  bakery: '🍞',
+  beverages: '🧃',
+  default: '🛒',
+};
 
 interface CategoryFilterProps {
-  selectedCategory?: string;
-  onCategoryChange?: (categoryId: string) => void;
+  categories: CategoryWithProducts[];
+  selectedCategory: string;
+  onCategorySelect: (categoryId: string) => void;
+  showAll?: boolean;
 }
 
 export default function CategoryFilter({
-  selectedCategory = 'all',
-  onCategoryChange,
+  categories,
+  selectedCategory,
+  onCategorySelect,
+  showAll = true,
 }: CategoryFilterProps) {
-  const [activeCategory, setActiveCategory] = useState(selectedCategory);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    onCategoryChange?.(categoryId);
-  };
 
   const checkScrollButtons = () => {
     const container = scrollContainerRef.current;
@@ -66,6 +63,21 @@ export default function CategoryFilter({
       setTimeout(checkScrollButtons, 300);
     }
   };
+
+  const getIcon = (categoryName: string): string => {
+    const key = categoryName.toLowerCase().replace(/\s+/g, '');
+    return categoryIcons[key] || categoryIcons.default;
+  };
+
+  // Build display categories with optional "All" option
+  const displayCategories = showAll
+    ? [{ uuid: '', name: 'All Products', productCount: 0 }, ...categories]
+    : categories;
+
+  const activeCategory = selectedCategory || '';
+  const activeCategoryName = activeCategory
+    ? categories.find((c) => c.uuid === activeCategory)?.name || 'All Products'
+    : 'All Products';
 
   return (
     <section className="py-8 bg-gradient-to-b from-gray-50 to-white sticky top-20 z-30">
@@ -102,21 +114,29 @@ export default function CategoryFilter({
             className="flex gap-3 overflow-x-auto scrollbar-hide px-2 py-2"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {categories.map((category) => {
-              const isActive = activeCategory === category.id;
+            {displayCategories.map((category) => {
+              const isActive = activeCategory === category.uuid;
+              const icon = category.uuid === '' ? '🌾' : getIcon(category.name);
               
               return (
                 <button
-                  key={category.id}
-                  onClick={() => handleCategoryClick(category.id)}
+                  key={category.uuid || 'all'}
+                  onClick={() => onCategorySelect(category.uuid)}
                   className={`relative flex items-center gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all duration-300 ${
                     isActive
                       ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-lg shadow-emerald-500/30 scale-105'
                       : 'bg-white text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 border border-gray-200 hover:border-emerald-300 shadow-sm hover:shadow-md'
                   }`}
                 >
-                  <span className="text-lg">{category.icon}</span>
+                  <span className="text-lg">{icon}</span>
                   <span>{category.name}</span>
+                  {category.productCount > 0 && (
+                    <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                      isActive ? 'bg-white/20' : 'bg-gray-100'
+                    }`}>
+                      {category.productCount}
+                    </span>
+                  )}
                   
                   {/* Active Indicator Dot */}
                   {isActive && (
@@ -133,7 +153,7 @@ export default function CategoryFilter({
           <p className="text-sm text-gray-500">
             Showing products in{' '}
             <span className="font-medium text-gray-900">
-              {categories.find((c) => c.id === activeCategory)?.name}
+              {activeCategoryName}
             </span>
           </p>
           
