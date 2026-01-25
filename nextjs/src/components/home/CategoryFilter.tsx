@@ -19,23 +19,20 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   return (
-    <div className="bg-white border-b border-stone-200 sticky top-16 z-40 shadow-sm">
-      <div className="container mx-auto px-6 py-5">
-        <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide">
+    <div className="bg-gray-50 border-b border-gray-200 sticky top-16 z-40">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
           {/* All Products option */}
           {showAll && (
             <button
               onClick={() => onCategorySelect('')}
-              className={`flex-shrink-0 px-6 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold ${
+              className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedCategory === ''
-                  ? 'bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white border-[#2d6a4f] shadow-lg transform scale-105'
-                  : 'bg-white text-stone-700 border-stone-200 hover:border-[#2d6a4f] hover:text-[#2d6a4f] hover:shadow-md'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
-              <span className="flex items-center gap-2">
-                <span>🌾</span>
-                All Products
-              </span>
+              All
             </button>
           )}
 
@@ -44,26 +41,19 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
             <button
               key={category.uuid}
               onClick={() => handleCategoryClick(category.uuid)}
-              className={`flex-shrink-0 px-6 py-2.5 rounded-xl border-2 transition-all duration-300 font-semibold ${
+              className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedCategory === category.uuid
-                  ? 'bg-gradient-to-r from-[#2d6a4f] to-[#1b4332] text-white border-[#2d6a4f] shadow-lg transform scale-105'
-                  : 'bg-white text-stone-700 border-stone-200 hover:border-[#2d6a4f] hover:text-[#2d6a4f] hover:shadow-md'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
-              <div className="flex items-center gap-2.5">
-                {category.image && (
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-5 h-5 rounded-lg object-cover"
-                  />
-                )}
+              <div className="flex items-center gap-2">
                 <span>{category.name}</span>
                 {category.productCount > 0 && (
-                  <span className={`text-xs px-2.5 py-1 rounded-lg font-bold ${
+                  <span className={`text-xs px-1.5 py-0.5 rounded ${
                     selectedCategory === category.uuid
                       ? 'bg-white/20 text-white'
-                      : 'bg-stone-100 text-stone-600'
+                      : 'bg-gray-100 text-gray-500'
                   }`}>
                     {category.productCount}
                   </span>
@@ -74,11 +64,11 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
           {/* Loading placeholder */}
           {categories.length === 0 && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div
                   key={i}
-                  className="flex-shrink-0 h-11 w-28 bg-stone-200 rounded-xl animate-pulse"
+                  className="flex-shrink-0 h-10 w-24 bg-gray-200 rounded-lg animate-pulse"
                 />
               ))}
             </div>
@@ -87,15 +77,15 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
         {/* Category description */}
         {selectedCategory && (
-          <div className="mt-3 pt-3 border-t border-stone-100">
+          <div className="mt-3 pt-3 border-t border-gray-200">
             {(() => {
               const category = categories.find(c => c.uuid === selectedCategory);
               return category ? (
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-semibold text-stone-900">{category.name}</h3>
+                    <h3 className="font-medium text-gray-900">{category.name}</h3>
                     {category.description && (
-                      <p className="text-sm text-stone-600 mt-1">{category.description}</p>
+                      <p className="text-sm text-gray-600 mt-0.5">{category.description}</p>
                     )}
                   </div>
                   <span className="text-sm text-stone-500">

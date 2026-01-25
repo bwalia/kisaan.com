@@ -43,7 +43,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fefdfb]">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <HeroSection onSearch={search} searchLoading={searchLoading} />
 
@@ -61,14 +61,14 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Filters Sidebar */}
           <div className="hidden lg:block lg:w-64 flex-shrink-0">
             <div className="sticky top-24">
-              <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-stone-900 mb-4 flex items-center gap-2">
-                  <span>🔍</span> Filters
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Filters
                 </h3>
                 <DesktopFilters
                   priceRange={priceRange}
@@ -85,17 +85,16 @@ export default function Home() {
           {/* Main Product Area */}
           <div className="flex-1 min-w-0">
             {/* Header with results and controls */}
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 mb-6">
+            <div className="mb-6">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex-1">
                   <h1
-                    className="text-3xl font-bold text-stone-900 flex items-center gap-2"
+                    className="text-2xl sm:text-3xl font-bold text-gray-900"
                     id="products"
                   >
-                    <span className="text-2xl">🌾</span>
                     {filters.query
-                      ? `Search results for "${filters.query}"`
-                      : "Fresh From the Farm"}
+                      ? `Results for "${filters.query}"`
+                      : "Fresh Products"}
                   </h1>
                   {filters.category && (
                     <p className="text-stone-600 mt-2 font-medium">

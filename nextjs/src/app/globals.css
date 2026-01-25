@@ -1,40 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  /* Farming-themed color palette */
-  --primary: #2d6a4f;
-  --primary-dark: #1b4332;
-  --primary-light: #40916c;
-  --primary-50: #f0f7f4;
-  --primary-100: #d8f3dc;
-  --primary-200: #b7e4c7;
-  --primary-500: #2d6a4f;
-  --primary-600: #1b4332;
-  --primary-700: #081c15;
-  --secondary: #b45309;
-  --accent: #d97706;
+  /* Clean, minimal color palette */
+  --primary: #16a34a;
+  --primary-dark: #15803d;
+  --primary-light: #22c55e;
+  --primary-50: #f0fdf4;
+  --primary-100: #dcfce7;
+  --primary-200: #bbf7d0;
+  --primary-500: #16a34a;
+  --primary-600: #15803d;
+  --primary-700: #166534;
+  --secondary: #f59e0b;
+  --accent: #f59e0b;
   --accent-light: #fbbf24;
-  --success: #059669;
-  --warning: #d97706;
-  --error: #dc2626;
-  --background: #fefdfb;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --background: #ffffff;
   --surface: #ffffff;
-  --surface-hover: #faf8f5;
-  --text-primary: #1a1a1a;
-  --text-secondary: #52525b;
-  --text-muted: #78716c;
-  --border: #e7e5e4;
-  --border-light: #f5f5f4;
-  
-  /* Earthy/Farm accent colors */
-  --earth-brown: #78350f;
-  --earth-tan: #a16207;
-  --earth-wheat: #fef3c7;
-  --earth-soil: #451a03;
-  --sky-blue: #0ea5e9;
-  --harvest-gold: #eab308;
-  --barn-red: #b91c1c;
-  --leaf-green: #22c55e;
+  --surface-hover: #f9fafb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border: #e5e7eb;
+  --border-light: #f3f4f6;
   
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -47,26 +37,11 @@
   --radius-sm: 0.5rem;
   --radius-lg: 1rem;
 
-  /* Enhanced design tokens */
+  /* Design tokens */
   --gradient-primary: linear-gradient(
     135deg,
     var(--primary) 0%,
     var(--primary-dark) 100%
-  );
-  --gradient-earth: linear-gradient(
-    135deg,
-    var(--earth-brown) 0%,
-    var(--earth-tan) 100%
-  );
-  --gradient-harvest: linear-gradient(
-    135deg,
-    var(--harvest-gold) 0%,
-    var(--accent) 100%
-  );
-  --gradient-secondary: linear-gradient(
-    135deg,
-    var(--secondary) 0%,
-    var(--accent) 100%
   );
   --blur-backdrop: blur(12px);
   --transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -75,15 +50,15 @@
   /* Design system variables */
   --primary-foreground: #ffffff;
   --card: #ffffff;
-  --card-foreground: #1a1a1a;
+  --card-foreground: #111827;
   --popover: #ffffff;
-  --popover-foreground: #1a1a1a;
-  --muted: #f5f5f4;
-  --muted-foreground: #78716c;
-  --destructive: #dc2626;
+  --popover-foreground: #111827;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --ring: #2d6a4f;
-  --input: #e7e5e4;
+  --ring: #16a34a;
+  --input: #e5e7eb;
 }
 
 /* Modern animations */
