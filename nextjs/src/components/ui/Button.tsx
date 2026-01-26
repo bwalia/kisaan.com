@@ -33,15 +33,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantClasses = {
       default:
-        "bg-primary text-white hover:bg-primary-dark focus-visible:ring-primary",
+        "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500",
       destructive:
         "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500",
       outline:
-        "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus-visible:ring-primary",
+        "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus-visible:ring-green-500",
       secondary:
         "bg-gray-200 text-gray-900 hover:bg-gray-300 focus-visible:ring-gray-500",
       ghost: "text-gray-700 hover:bg-gray-100 focus-visible:ring-gray-500",
-      link: "text-primary underline-offset-4 hover:underline",
+      link: "text-green-600 underline-offset-4 hover:underline",
       success:
         "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500",
       warning:

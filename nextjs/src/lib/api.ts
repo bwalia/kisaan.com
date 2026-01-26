@@ -1,11 +1,11 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.kisaan.com';
 
 class ApiClient {
   private baseURL: string;
   private token: string | null = null;
 
   constructor(baseURL: string) {
-    this.baseURL = baseURL;
+    this.baseURL = baseURL || 'https://api.kisaan.com';
     if (typeof window !== "undefined") {
       this.token = localStorage.getItem("token");
     }
