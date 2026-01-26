@@ -1,0 +1,38 @@
+# =============================================================================
+# ARCHIVED WORKFLOW - DO NOT USE
+# =============================================================================
+# This workflow has been superseded by build-deploy-kisaan.yml
+# which combines INT build/deploy with TEST promotion in a single workflow.
+# 
+# Kept for reference only. Auto-execution is disabled.
+# =============================================================================
+
+name: "[ARCHIVED] Legacy Build and Deploy Workflow"
+
+# Disabled - no automatic triggers
+on:
+  workflow_dispatch:
+    inputs:
+      CONFIRM:
+        type: boolean
+        description: 'This workflow is archived. Are you sure you want to run it?'
+        required: true
+        default: false
+
+jobs:
+  archived-notice:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.CONFIRM == 'true' }}
+    steps:
+    - name: Archived Workflow Notice
+      run: |
+        echo "⚠️ WARNING: This workflow is archived and should not be used."
+        echo "Please use the 'Build, Deploy and Promote Kisaan.com' workflow instead."
+        echo ""
+        echo "The new unified workflow:"
+        echo "  1. Builds Docker image once for INT"
+        echo "  2. Deploys to INT environment"
+        echo "  3. Promotes the same image to TEST (no rebuild)"
+        echo "  4. Deploys to TEST environment"
+        exit 1
+      shell: bash
