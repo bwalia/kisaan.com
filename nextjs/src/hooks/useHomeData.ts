@@ -283,12 +283,12 @@ const useHomeData = (): UseHomeDataResult => {
       console.error('Failed to load categories:', err);
       // Use mock categories when API fails
       const mockCategories: CategoryWithProducts[] = [
-        { uuid: 'vegetables', name: 'Fresh Vegetables', description: 'Farm-fresh vegetables', productCount: 2 },
-        { uuid: 'fruits', name: 'Organic Fruits', description: 'Seasonal organic fruits', productCount: 1 },
-        { uuid: 'dairy', name: 'Dairy Products', description: 'Fresh dairy from local farms', productCount: 2 },
-        { uuid: 'honey', name: 'Honey & Preserves', description: 'Natural honey and homemade preserves', productCount: 1 },
-        { uuid: 'grains', name: 'Grains & Pulses', description: 'Whole grains and legumes', productCount: 0 },
-        { uuid: 'herbs', name: 'Herbs & Spices', description: 'Fresh and dried herbs', productCount: 0 },
+        { id: '1', uuid: 'vegetables', store_id: 'store1', name: 'Fresh Vegetables', description: 'Farm-fresh vegetables', slug: 'vegetables', sort_order: 1, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), productCount: 2 },
+        { id: '2', uuid: 'fruits', store_id: 'store1', name: 'Organic Fruits', description: 'Seasonal organic fruits', slug: 'fruits', sort_order: 2, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), productCount: 1 },
+        { id: '3', uuid: 'dairy', store_id: 'store1', name: 'Dairy Products', description: 'Fresh dairy from local farms', slug: 'dairy', sort_order: 3, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), productCount: 2 },
+        { id: '4', uuid: 'honey', store_id: 'store1', name: 'Honey & Preserves', description: 'Natural honey and homemade preserves', slug: 'honey', sort_order: 4, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), productCount: 1 },
+        { id: '5', uuid: 'grains', store_id: 'store1', name: 'Grains & Pulses', description: 'Whole grains and legumes', slug: 'grains', sort_order: 5, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), productCount: 0 },
+        { id: '6', uuid: 'herbs', store_id: 'store1', name: 'Herbs & Spices', description: 'Fresh and dried herbs', slug: 'herbs', sort_order: 6, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), productCount: 0 },
       ];
       setCategories(mockCategories);
     } finally {

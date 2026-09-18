@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const fraunces = Fraunces({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
-  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-display",
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Kisaan - Farm to Table Marketplace | Fresh Produce from Local Farmers",
+  title: "Kisaan — Fresh produce, direct from farms",
   description:
-    "Connect directly with farmers worldwide. Buy fresh, organic produce and support sustainable agriculture. Empowering 10,000+ farmers across 150+ countries.",
+    "Browse organic produce from independent farms worldwide. Order direct, skip the middlemen, support sustainable farming.",
 };
 
 export default function RootLayout({
@@ -21,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className={`${inter.className} antialiased`}>
+    <html lang="en" className={`${fraunces.variable} ${jakarta.variable}`}>
+      <body className={`${jakarta.className} antialiased`}>
         {children}
       </body>
     </html>

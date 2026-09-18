@@ -3,24 +3,15 @@
 import { ProductGridProps } from '@/types/home';
 import ProductCard from '@/components/ProductCard';
 
-const ProductGrid: React.FC<ProductGridProps> = ({
-  products,
-  loading = false,
-  error,
-  onLoadMore,
-  hasMore = false,
-}) => {
+const SKEL_BG = ['#EEF5E8','#FDF4DC','#E3EDF6','#F0EAD9','#FDEAE0','#DFF0EC','#EEF5E8','#FDF4DC'];
+
+const ProductGrid: React.FC<ProductGridProps> = ({ products, loading = false, error, onLoadMore, hasMore = false }) => {
   if (error) {
     return (
       <div className="text-center py-16">
-        <div className="text-5xl mb-4">😕</div>
-        <p className="text-red-600 font-medium mb-4">{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-        >
-          Try Again
-        </button>
+        <p className="font-semibold text-red-700 mb-1">Something went wrong</p>
+        <p className="text-sm text-[var(--clay)] mb-4" style={{ maxWidth: 'none' }}>{error}</p>
+        <button onClick={() => window.location.reload()} className="text-sm font-semibold bg-[var(--pine)] text-white px-5 py-2.5 rounded-lg cursor-pointer">Try again</button>
       </div>
     );
   }
@@ -28,61 +19,36 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   if (!loading && products.length === 0) {
     return (
       <div className="text-center py-16">
-        <div className="text-5xl mb-4">🔍</div>
-        <p className="text-gray-600 font-medium mb-4">No products found</p>
-        <button
-          onClick={() => window.location.href = '/'}
-          className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors"
-        >
-          View All Products
-        </button>
+        <p className="font-semibold text-[var(--soil)] mb-1">No products found</p>
+        <p className="text-sm text-[var(--clay)] mb-4" style={{ maxWidth: 'none' }}>Try adjusting your search or filters.</p>
+        <button onClick={() => (window.location.href = '/')} className="text-sm font-semibold bg-[var(--surface)] text-[var(--soil)] px-5 py-2.5 rounded-lg hover:bg-[var(--border)] cursor-pointer transition-colors">View all products</button>
       </div>
     );
   }
 
   return (
     <div>
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {products.map((product) => (
-          <ProductCard
-            key={product.uuid}
-            id={product.uuid}
-            name={product.name}
-            price={product.price}
-            image={product.images?.[0]}
-            isFeatured={product.is_featured}
-          />
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+        {products.map((p) => (
+          <ProductCard key={p.uuid} id={p.uuid} name={p.name} price={p.price} image={p.images?.[0]} isFeatured={p.is_featured} />
         ))}
 
-        {/* Loading skeletons */}
-        {loading && Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden animate-pulse shadow-sm">
-            <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200" />
-            <div className="p-5 space-y-3">
-              <div className="h-3 bg-gray-200 rounded-full w-1/3" />
-              <div className="h-4 bg-gray-200 rounded-full w-3/4" />
-              <div className="h-3 bg-gray-200 rounded-full w-1/2" />
-              <div className="flex justify-between items-center pt-2">
-                <div className="h-6 bg-gray-200 rounded-full w-1/3" />
-                <div className="h-10 bg-gray-200 rounded-xl w-16" />
-              </div>
+        {loading && SKEL_BG.map((bg, i) => (
+          <div key={`sk-${i}`} className="bg-white rounded-xl border border-[var(--border)] overflow-hidden">
+            <div className="aspect-square" style={{ background: bg }} />
+            <div className="p-3.5 space-y-2">
+              <div className="h-3 bg-[var(--surface)] rounded w-1/3" />
+              <div className="h-4 bg-[var(--surface)] rounded w-3/4" />
+              <div className="h-3 bg-[var(--surface)] rounded w-1/2" />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Load More */}
       {!loading && hasMore && onLoadMore && (
-        <div className="text-center mt-12">
-          <button
-            onClick={onLoadMore}
-            className="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold transition-colors"
-          >
-            <span>Load More Products</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+        <div className="text-center mt-10">
+          <button onClick={onLoadMore} className="text-sm font-semibold text-[var(--pine)] border border-[var(--pine)] px-6 py-2.5 rounded-lg hover:bg-[var(--sage-light)] cursor-pointer transition-colors">
+            Load more
           </button>
         </div>
       )}

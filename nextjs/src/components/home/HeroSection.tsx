@@ -1,105 +1,85 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 
 interface HeroSectionProps {
   onSearch: (query: string) => void;
   searchLoading?: boolean;
 }
 
+const TILES = [
+  { label: 'Vegetables', emoji: '🥕', bg: '#EEF5E8' },
+  { label: 'Fruits',     emoji: '🍊', bg: '#FDEAE0' },
+  { label: 'Dairy',      emoji: '🥛', bg: '#E3EDF6' },
+  { label: 'Honey',      emoji: '🍯', bg: '#FDF4DC' },
+  { label: 'Grains',     emoji: '🌾', bg: '#F0EAD9' },
+  { label: 'Herbs',      emoji: '🌿', bg: '#DFF0EC' },
+];
+
 const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = false }) => {
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [query, setQuery] = React.useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      onSearch(searchQuery.trim());
-    }
+    if (query.trim()) onSearch(query.trim());
   };
 
   return (
-    <section className="relative bg-white pt-12 pb-16 overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white" />
-      
-      {/* Content */}
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-green-50 rounded-full px-5 py-2.5 mb-8 border border-green-100">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-green-700 text-sm font-medium tracking-wide">Trusted by 50,000+ farmers worldwide</span>
+    <section className="py-12 sm:py-16 lg:py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-16">
+          {/* Left: text + search */}
+          <div className="flex-1 max-w-xl">
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] mb-5 leading-[1.12]">
+              Fresh produce,{' '}
+              <span className="text-[var(--pine)]">straight from the farmer.</span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-[var(--clay)] mb-8 leading-relaxed">
+              Discover organic fruits, vegetables, dairy and more from independent farms worldwide. Fair prices, no middlemen.
+            </p>
+
+            {/* Search bar — the bold focal element */}
+            <form onSubmit={handleSubmit}>
+              <div className="flex rounded-xl border-2 border-[var(--border)] bg-white focus-within:border-[var(--pine)] focus-within:shadow-[0_0_0_3px_rgba(27,94,55,0.06)] transition-all overflow-hidden">
+                <div className="flex-1 flex items-center pl-4 gap-2.5">
+                  <svg className="w-5 h-5 text-[#bbb] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="M21 21l-4.35-4.35" />
+                  </svg>
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search for tomatoes, eggs, honey..."
+                    className="flex-1 py-3.5 outline-none bg-transparent border-0 text-[var(--soil)]"
+                    style={{ boxShadow: 'none' }}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={searchLoading}
+                  className="bg-[var(--pine)] hover:bg-[var(--pine-dark)] text-white px-6 text-sm font-semibold transition-colors cursor-pointer"
+                >
+                  {searchLoading
+                    ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
+                    : 'Search'}
+                </button>
+              </div>
+            </form>
           </div>
 
-          {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-[1.1] tracking-tight">
-            Fresh From the Farm
-            <span className="block text-green-600 mt-2">to Your Table</span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-xl mx-auto leading-relaxed">
-            Connect with local farmers. Buy fresh, organic produce at fair prices.
-          </p>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-10">
-            <div className="flex bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-              <div className="flex-1 flex items-center px-5">
-                <svg className="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search vegetables, fruits, dairy..."
-                  className="flex-1 py-4 text-gray-700 outline-none text-base placeholder:text-gray-400 bg-transparent"
-                />
-              </div>
+          {/* Right: category mosaic */}
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:w-[380px] flex-shrink-0">
+            {TILES.map((t) => (
               <button
-                type="submit"
-                disabled={searchLoading}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 font-semibold transition-colors"
+                key={t.label}
+                onClick={() => { setQuery(t.label); onSearch(t.label); }}
+                className="flex flex-col items-center justify-center rounded-2xl py-5 sm:py-7 transition-all hover:scale-[1.04] hover:shadow-md cursor-pointer border-0"
+                style={{ background: t.bg }}
               >
-                {searchLoading ? 'Searching...' : 'Search'}
+                <span className="text-3xl sm:text-4xl mb-2 block">{t.emoji}</span>
+                <span className="text-xs sm:text-sm font-semibold text-[var(--soil)]">{t.label}</span>
               </button>
-            </div>
-          </form>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg"
-            >
-              Start Selling
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link
-              href="#products"
-              className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-8 py-3.5 rounded-xl font-semibold transition-all border-2 border-gray-200 hover:border-gray-300"
-            >
-              Browse Products
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { value: '150+', label: 'Countries', icon: '🌍' },
-              { value: '10K+', label: 'Farmers', icon: '👨‍🌾' },
-              { value: '50K+', label: 'Products', icon: '🥬' },
-              { value: '100K+', label: 'Customers', icon: '😊' },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-gray-50 rounded-2xl p-5 border border-gray-100 hover:border-green-200 hover:bg-green-50/50 transition-colors">
-                <div className="text-2xl mb-1">{stat.icon}</div>
-                <div className="text-2xl font-bold text-gray-900 tracking-tight">{stat.value}</div>
-                <div className="text-sm text-gray-500 font-medium mt-1">{stat.label}</div>
-              </div>
             ))}
           </div>
         </div>
