@@ -29,30 +29,32 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses =
-      "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
+      "inline-flex items-center justify-center gap-2 font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none";
 
     const variantClasses = {
       default:
-        "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500",
+        "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:from-emerald-700 hover:to-teal-700 focus-visible:ring-emerald-500 shadow-md shadow-emerald-500/20 hover:shadow-lg rounded-xl",
       destructive:
-        "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500",
+        "bg-gradient-to-r from-red-600 to-rose-600 text-white hover:from-red-700 hover:to-rose-700 focus-visible:ring-red-500 shadow-md shadow-red-500/20 rounded-xl",
       outline:
-        "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus-visible:ring-green-500",
+        "border-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-emerald-300 hover:text-emerald-700 focus-visible:ring-emerald-500 rounded-xl",
       secondary:
-        "bg-gray-200 text-gray-900 hover:bg-gray-300 focus-visible:ring-gray-500",
-      ghost: "text-gray-700 hover:bg-gray-100 focus-visible:ring-gray-500",
-      link: "text-green-600 underline-offset-4 hover:underline",
+        "bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-500 rounded-xl",
+      ghost:
+        "text-gray-700 hover:bg-gray-100 focus-visible:ring-gray-500 rounded-xl",
+      link:
+        "text-emerald-600 underline-offset-4 hover:underline",
       success:
-        "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500",
+        "bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:from-emerald-700 hover:to-teal-700 focus-visible:ring-emerald-500 shadow-md shadow-emerald-500/20 rounded-xl",
       warning:
-        "bg-yellow-600 text-white hover:bg-yellow-700 focus-visible:ring-yellow-500",
+        "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 focus-visible:ring-amber-500 shadow-md shadow-amber-500/20 rounded-xl",
     };
 
     const sizeClasses = {
-      default: "h-10 py-2 px-4",
-      sm: "h-9 px-3 rounded-md",
-      lg: "h-11 px-8 rounded-md",
-      icon: "h-10 w-10",
+      default: "h-11 py-2.5 px-5 text-sm",
+      sm: "h-9 px-3.5 text-sm rounded-lg",
+      lg: "h-12 px-8 text-base rounded-xl",
+      icon: "h-10 w-10 rounded-xl",
     };
 
     const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
@@ -66,7 +68,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading && (
           <svg
-            className="mr-2 h-4 w-4 animate-spin"
+            className="h-4 w-4 animate-spin"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

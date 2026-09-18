@@ -6,13 +6,13 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Kisaan - Farm to Table Marketplace | Fresh Produce from Local Farmers",
+  title: "Kisaan - Farm to Table Marketplace | Fresh Organic Produce",
   description:
-    "Connect directly with farmers worldwide. Buy fresh, organic produce and support sustainable agriculture. Empowering 10,000+ farmers across 150+ countries.",
+    "Discover fresh, organic produce from local farmers. Kisaan connects you directly with growers for fair prices and sustainable agriculture. Join 50,000+ happy customers.",
 };
 
 export default function RootLayout({

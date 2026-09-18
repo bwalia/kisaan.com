@@ -279,39 +279,49 @@ export default function Home() {
       />
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-br from-emerald-900 via-green-800 to-emerald-900 py-20 mt-16 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
-        
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <span className="text-5xl mb-4 inline-block animate-bounce-slow">👨‍🌾</span>
-          <h2 className="text-4xl font-bold text-white mb-4">
-            Ready to Share Your Harvest?
-          </h2>
-          <p className="text-lg text-emerald-100/80 mb-8 max-w-2xl mx-auto">
-            Join thousands of farmers who are connecting directly with customers. 
-            Fair prices, sustainable practices, and a global community.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/register"
-              className="bg-gradient-to-r from-amber-400 to-amber-500 text-gray-900 px-10 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center gap-2"
-            >
-              <span>🌱</span>
-              Start Selling Today
-            </Link>
-            <Link
-              href="/seller-guide"
-              className="border-2 border-white/30 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-white/10 backdrop-blur-sm transition-all duration-300 inline-flex items-center gap-2"
-            >
-              <span>📖</span>
-              Read Seller Guide
-            </Link>
+      <section className="relative py-24 mt-16 overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-900" />
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-500/15 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-teal-400/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-amber-400/5 rounded-full blur-[80px]" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundSize: '40px 40px'
+        }} />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-5 py-2 mb-8 border border-white/20">
+              <svg className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <span className="text-emerald-100 text-sm font-medium">Join our growing community</span>
+            </div>
+
+            <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-5 tracking-tight leading-[1.1]">
+              Ready to Share<br/>
+              <span className="bg-gradient-to-r from-amber-300 to-orange-400 bg-clip-text text-transparent">Your Harvest?</span>
+            </h2>
+            <p className="text-lg text-emerald-100/70 mb-10 max-w-xl mx-auto leading-relaxed">
+              Join thousands of farmers connecting directly with customers. Fair prices, sustainable practices, and a thriving global community.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                href="/register"
+                className="group inline-flex items-center gap-2.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-orange-500 text-gray-900 px-8 py-4 rounded-2xl font-bold text-base shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-300 hover:-translate-y-0.5"
+              >
+                Start Selling Today
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </Link>
+              <Link
+                href="/seller-guide"
+                className="inline-flex items-center gap-2 border-2 border-white/20 hover:border-white/40 text-white px-8 py-4 rounded-2xl font-bold text-base hover:bg-white/5 backdrop-blur-sm transition-all duration-300"
+              >
+                Read Seller Guide
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
