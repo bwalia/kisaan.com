@@ -142,7 +142,10 @@ export default function Home() {
           <h2 className="text-3xl sm:text-4xl text-white mb-4" style={{ color: "white" }}>
             Sell on Kisaan
           </h2>
-          <p className="text-green-100 mb-8 leading-relaxed" style={{ maxWidth: "var(--measure)" }}>
+          <p
+            className="mb-8 leading-relaxed"
+            style={{ maxWidth: "var(--measure)", color: "rgba(220, 252, 231, 0.95)" }}
+          >
             Reach customers directly, set your own prices, and keep 80% of every sale. No setup fees, no hidden costs.
           </p>
           <div className="flex flex-wrap gap-3">
