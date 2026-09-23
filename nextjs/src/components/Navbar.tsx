@@ -76,7 +76,8 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/register"
-                    className="text-sm font-semibold bg-[var(--color-primary)] text-white px-4 py-2 rounded-xl hover:bg-[var(--color-primary-dark)] no-underline transition-colors duration-200 cursor-pointer"
+                    className="text-sm font-semibold bg-[var(--color-primary)] px-4 py-2 rounded-xl hover:bg-[var(--color-primary-dark)] no-underline transition-colors duration-200 cursor-pointer"
+                    style={{ color: '#FFFFFF' }}
                   >
                     List your farm
                   </Link>
@@ -139,7 +140,8 @@ export default function Navbar() {
                 <Link
                   href="/register"
                   onClick={() => setOpen(false)}
-                  className="flex-1 text-center text-sm font-semibold py-2.5 bg-[var(--color-primary)] text-white rounded-xl no-underline cursor-pointer"
+                  className="flex-1 text-center text-sm font-semibold py-2.5 bg-[var(--color-primary)] rounded-xl no-underline cursor-pointer"
+                  style={{ color: '#FFFFFF' }}
                 >
                   List your farm
                 </Link>

@@ -48,7 +48,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
           <h1 className="text-3xl sm:text-4xl lg:text-5xl text-white mb-4 leading-[1.15]" style={{ color: 'white' }}>
             Fresh from the farm to your table
           </h1>
-          <p className="text-base sm:text-lg text-white/85 mb-8 leading-relaxed m-0" style={{ maxWidth: 'var(--measure)' }}>
+          <p
+            className="text-base sm:text-lg mb-8 leading-relaxed m-0"
+            style={{ maxWidth: 'var(--measure)', color: 'rgba(255,255,255,0.92)' }}
+          >
             Organic produce from independent farms. Search, order direct, skip the middlemen.
           </p>
 
