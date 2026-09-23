@@ -1,22 +1,60 @@
 @import "tailwindcss";
 
-:root {
-  --pine: #1B5E37;
-  --pine-dark: #14472A;
-  --sage: #7CB07F;
-  --sage-light: #EEF5E8;
-  --marigold: #E8A817;
-  --marigold-light: #FDF4DC;
-  --soil: #262420;
-  --clay: #8A8278;
-  --border: #E8E5DD;
-  --surface: #F5F3EE;
-  --parchment: #FAFAF5;
-  --white: #FFFFFF;
+/* ============================================================
+   Kisaan — Organic Biophilic (ui-ux-pro-max design system)
+   Earth green + harvest gold | Lora + Raleway
+   ============================================================ */
 
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+:root {
+  /* Design system tokens */
+  --color-primary: #15803D;
+  --color-on-primary: #FFFFFF;
+  --color-primary-dark: #166534;
+  --color-secondary: #22C55E;
+  --color-on-secondary: #0F172A;
+  --color-accent: #A16207;
+  --color-on-accent: #FFFFFF;
+  --color-background: #F0FDF4;
+  --color-foreground: #14532D;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #14532D;
+  --color-muted: #E8F0F1;
+  --color-muted-foreground: #475569;
+  --color-border: #BBF7D0;
+  --color-destructive: #DC2626;
+  --color-on-destructive: #FFFFFF;
+  --color-ring: #15803D;
+
+  /* Legacy aliases (existing components) */
+  --pine: var(--color-primary);
+  --pine-dark: var(--color-primary-dark);
+  --sage: #4ADE80;
+  --sage-light: #DCFCE7;
+  --marigold: var(--color-accent);
+  --marigold-light: #FEF3C7;
+  --soil: var(--color-foreground);
+  --clay: var(--color-muted-foreground);
+  --border: var(--color-border);
+  --surface: var(--color-muted);
+  --parchment: var(--color-background);
+  --white: var(--color-card);
+
+  --font-display: 'Lora', Georgia, serif;
+  --font-body: 'Raleway', system-ui, sans-serif;
   --measure: 64ch;
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow-soft: 0 4px 24px rgba(20, 83, 45, 0.08);
+  --transition: 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 html {
@@ -28,37 +66,37 @@ html {
 
 body {
   margin: 0;
-  background: var(--parchment);
-  color: var(--soil);
+  background: var(--color-background);
+  color: var(--color-foreground);
   line-height: 1.6;
 }
 
 h1, h2, h3 {
   font-family: var(--font-display);
-  font-weight: 400;
-  line-height: 1.15;
+  font-weight: 600;
+  line-height: 1.2;
   letter-spacing: -0.01em;
-  color: var(--soil);
+  color: var(--color-foreground);
 }
 
 h4, h5, h6 {
   font-family: var(--font-body);
-  font-weight: 700;
-  color: var(--soil);
+  font-weight: 600;
+  color: var(--color-foreground);
 }
 
 p {
   max-width: var(--measure);
   line-height: 1.7;
-  color: var(--clay);
+  color: var(--color-muted-foreground);
 }
 
 a {
-  color: var(--pine);
+  color: var(--color-primary);
   text-decoration: none;
-  transition: color 150ms ease;
+  transition: color var(--transition);
 }
-a:hover { color: var(--pine-dark); }
+a:hover { color: var(--color-primary-dark); }
 
 .container {
   width: 100%;
@@ -72,22 +110,30 @@ input, textarea, select {
   font-family: inherit;
   font-size: 1rem;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--white);
-  color: var(--soil);
-  transition: border-color 150ms ease;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-card);
+  color: var(--color-foreground);
+  transition: border-color var(--transition), box-shadow var(--transition);
   width: 100%;
 }
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--pine);
-  box-shadow: 0 0 0 3px rgba(27,94,55,0.08);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
 }
-input::placeholder, textarea::placeholder { color: #bbb; }
+input::placeholder, textarea::placeholder { color: #94A3B8; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 .animate-spin { animation: spin 1s linear infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.45s ease both;
+}
 
 .line-clamp-2 {
   display: -webkit-box;
@@ -98,14 +144,14 @@ input::placeholder, textarea::placeholder { color: #bbb; }
 }
 
 *:focus-visible {
-  outline: 2px solid var(--pine);
+  outline: 2px solid var(--color-ring);
   outline-offset: 2px;
 }
 ::selection {
-  background: rgba(27,94,55,0.12);
-  color: var(--soil);
+  background: rgba(21, 128, 61, 0.18);
+  color: var(--color-foreground);
 }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #86EFAC; border-radius: 3px; }

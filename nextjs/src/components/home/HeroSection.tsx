@@ -1,21 +1,14 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 interface HeroSectionProps {
   onSearch: (query: string) => void;
   searchLoading?: boolean;
 }
 
-const TILES = [
-  { label: 'Vegetables', emoji: '🥕', bg: '#EEF5E8' },
-  { label: 'Fruits',     emoji: '🍊', bg: '#FDEAE0' },
-  { label: 'Dairy',      emoji: '🥛', bg: '#E3EDF6' },
-  { label: 'Honey',      emoji: '🍯', bg: '#FDF4DC' },
-  { label: 'Grains',     emoji: '🌾', bg: '#F0EAD9' },
-  { label: 'Herbs',      emoji: '🌿', bg: '#DFF0EC' },
-];
-
+/** Marketplace pattern: Hero (search-focused) — brand + one headline + search CTA on full-bleed farm visual */
 const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = false }) => {
   const [query, setQuery] = React.useState('');
 
@@ -25,63 +18,69 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
   };
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-16">
-          {/* Left: text + search */}
-          <div className="flex-1 max-w-xl">
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] mb-5 leading-[1.12]">
-              Fresh produce,{' '}
-              <span className="text-[var(--pine)]">straight from the farmer.</span>
-            </h1>
+    <section className="relative min-h-[78vh] sm:min-h-[85vh] flex items-end sm:items-center overflow-hidden">
+      {/* Full-bleed visual plane */}
+      <Image
+        src="/hero-farmers-world.jpg"
+        alt=""
+        fill
+        priority
+        className="object-cover object-center"
+        sizes="100vw"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(105deg, rgba(20,83,45,0.92) 0%, rgba(21,128,61,0.72) 42%, rgba(20,83,45,0.35) 100%)',
+        }}
+      />
 
-            <p className="text-base sm:text-lg text-[var(--clay)] mb-8 leading-relaxed">
-              Discover organic fruits, vegetables, dairy and more from independent farms worldwide. Fair prices, no middlemen.
-            </p>
+      <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+        <div className="max-w-xl animate-fade-up">
+          <p
+            className="text-3xl sm:text-4xl mb-4 m-0"
+            style={{ fontFamily: 'var(--font-display)', fontWeight: 600, maxWidth: 'none', color: '#FFFFFF' }}
+          >
+            Kisaan
+          </p>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-white mb-4 leading-[1.15]" style={{ color: 'white' }}>
+            Fresh from the farm to your table
+          </h1>
+          <p className="text-base sm:text-lg text-white/85 mb-8 leading-relaxed m-0" style={{ maxWidth: 'var(--measure)' }}>
+            Organic produce from independent farms. Search, order direct, skip the middlemen.
+          </p>
 
-            {/* Search bar — the bold focal element */}
-            <form onSubmit={handleSubmit}>
-              <div className="flex rounded-xl border-2 border-[var(--border)] bg-white focus-within:border-[var(--pine)] focus-within:shadow-[0_0_0_3px_rgba(27,94,55,0.06)] transition-all overflow-hidden">
-                <div className="flex-1 flex items-center pl-4 gap-2.5">
-                  <svg className="w-5 h-5 text-[#bbb] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-                    <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="M21 21l-4.35-4.35" />
-                  </svg>
-                  <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search for tomatoes, eggs, honey..."
-                    className="flex-1 py-3.5 outline-none bg-transparent border-0 text-[var(--soil)]"
-                    style={{ boxShadow: 'none' }}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={searchLoading}
-                  className="bg-[var(--pine)] hover:bg-[var(--pine-dark)] text-white px-6 text-sm font-semibold transition-colors cursor-pointer"
-                >
-                  {searchLoading
-                    ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
-                    : 'Search'}
-                </button>
+          <form onSubmit={handleSubmit} role="search" aria-label="Search products">
+            <div className="flex rounded-2xl bg-white shadow-[var(--shadow-soft)] overflow-hidden focus-within:ring-2 focus-within:ring-[var(--color-accent)] focus-within:ring-offset-2 focus-within:ring-offset-transparent transition-shadow duration-200">
+              <div className="flex-1 flex items-center pl-4 gap-2.5 min-w-0">
+                <svg className="w-5 h-5 text-[var(--color-muted-foreground)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="M21 21l-4.35-4.35" />
+                </svg>
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Tomatoes, eggs, honey…"
+                  className="flex-1 py-4 outline-none bg-transparent border-0 text-[var(--color-foreground)] min-w-0"
+                  style={{ boxShadow: 'none' }}
+                  aria-label="Search for produce"
+                />
               </div>
-            </form>
-          </div>
-
-          {/* Right: category mosaic */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:w-[380px] flex-shrink-0">
-            {TILES.map((t) => (
               <button
-                key={t.label}
-                onClick={() => { setQuery(t.label); onSearch(t.label); }}
-                className="flex flex-col items-center justify-center rounded-2xl py-5 sm:py-7 transition-all hover:scale-[1.04] hover:shadow-md cursor-pointer border-0"
-                style={{ background: t.bg }}
+                type="submit"
+                disabled={searchLoading}
+                className="bg-[var(--color-accent)] hover:bg-[#854D0E] text-white px-6 sm:px-8 text-sm font-semibold transition-colors duration-200 cursor-pointer flex-shrink-0"
               >
-                <span className="text-3xl sm:text-4xl mb-2 block">{t.emoji}</span>
-                <span className="text-xs sm:text-sm font-semibold text-[var(--soil)]">{t.label}</span>
+                {searchLoading ? (
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" aria-hidden="true" />
+                ) : (
+                  'Search'
+                )}
               </button>
-            ))}
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </section>

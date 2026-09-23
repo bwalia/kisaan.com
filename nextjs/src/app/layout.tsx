@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { Lora, Raleway } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const lora = Lora({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-display",
+  weight: ["400", "500", "600", "700"],
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const raleway = Raleway({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-body",
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${jakarta.variable}`}>
-      <body className={`${jakarta.className} antialiased`}>
+    <html lang="en" className={`${lora.variable} ${raleway.variable}`}>
+      <body className={`${raleway.className} antialiased`}>
         {children}
       </body>
     </html>

@@ -20,8 +20,7 @@ interface ProductCardProps {
   unit?: string;
 }
 
-const CARD_BG = ['#EEF5E8','#FDF4DC','#E3EDF6','#F0EAD9','#FDEAE0','#DFF0EC'];
-const CARD_EMOJI = ['🥬','🌽','🫑','🥕','🍅','🌿','🍊','🥦','🍋','🧅'];
+const CARD_BG = ['#DCFCE7', '#FEF3C7', '#E0F2FE', '#F5F5DC', '#FFEDD5', '#CCFBF1'];
 
 export default function ProductCard({
   id, name, price, currency = '€', category, rating, discount, unit = 'kg',
@@ -39,17 +38,26 @@ export default function ProductCard({
   };
 
   return (
-    <Link href={`/products/${id}`} className="no-underline block">
-      <article className="bg-white rounded-xl border border-[var(--border)] hover:border-[var(--sage)] transition-colors overflow-hidden group">
+    <Link href={`/products/${id}`} className="no-underline block group">
+      <article className="bg-[var(--color-card)] rounded-2xl border border-[var(--color-border)] hover:border-[var(--color-secondary)] hover:shadow-[var(--shadow-soft)] transition-all duration-200 overflow-hidden">
         <div
           className="aspect-square flex items-center justify-center relative"
           style={{ background: CARD_BG[idx % CARD_BG.length] }}
         >
-          <span className="text-5xl group-hover:scale-110 transition-transform duration-200">
-            {CARD_EMOJI[idx % CARD_EMOJI.length]}
-          </span>
-          {discount && (
-            <span className="absolute top-2.5 left-2.5 text-[11px] font-bold bg-[var(--marigold)] text-white px-2 py-0.5 rounded-md">
+          {/* Abstract produce mark — no emoji icons */}
+          <svg
+            className="w-14 h-14 text-[var(--color-primary)] opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-200"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth="1.25"
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c-1.5 3-4 5-4 9a4 4 0 008 0c0-4-2.5-6-4-9z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 12v9" />
+          </svg>
+          {discount != null && discount > 0 && (
+            <span className="absolute top-2.5 left-2.5 text-[11px] font-bold bg-[var(--color-accent)] text-white px-2 py-0.5 rounded-lg">
               -{discount}%
             </span>
           )}
@@ -57,26 +65,36 @@ export default function ProductCard({
 
         <div className="p-3.5">
           {category && (
-            <p className="text-[11px] font-semibold text-[var(--pine)] mb-1 m-0" style={{ maxWidth: 'none' }}>
+            <p className="text-[11px] font-semibold text-[var(--color-primary)] mb-1 m-0" style={{ maxWidth: 'none' }}>
               {category}
             </p>
           )}
-          <h3 className="text-sm font-medium text-[var(--soil)] leading-snug mb-2 line-clamp-2" style={{ fontFamily: 'var(--font-body)' }}>
+          <h3
+            className="text-sm font-medium text-[var(--color-foreground)] leading-snug mb-2 line-clamp-2"
+            style={{ fontFamily: 'var(--font-body)' }}
+          >
             {name}
           </h3>
           {rating !== undefined && (
-            <p className="text-xs text-[var(--clay)] mb-2 m-0" style={{ maxWidth: 'none' }}>{rating.toFixed(1)} rating</p>
+            <p className="text-xs text-[var(--color-muted-foreground)] mb-2 m-0" style={{ maxWidth: 'none' }}>
+              {rating.toFixed(1)} rating
+            </p>
           )}
           <div className="flex items-end justify-between gap-2">
             <div>
-              <span className="text-base font-bold text-[var(--soil)]">{currency}{price.toFixed(2)}</span>
-              <span className="text-[11px] text-[var(--clay)] block">per {unit}</span>
+              <span className="text-base font-bold text-[var(--color-foreground)]">
+                {currency}{price.toFixed(2)}
+              </span>
+              <span className="text-[11px] text-[var(--color-muted-foreground)] block">per {unit}</span>
             </div>
             <button
+              type="button"
               onClick={handleAdd}
               disabled={adding}
-              className={`text-xs font-semibold px-3 py-1.5 rounded-lg cursor-pointer transition-colors ${
-                adding ? 'bg-[var(--sage-light)] text-[var(--pine)]' : 'bg-[var(--pine)] text-white hover:bg-[var(--pine-dark)]'
+              className={`text-xs font-semibold px-3 py-1.5 rounded-xl cursor-pointer transition-colors duration-200 ${
+                adding
+                  ? 'bg-[var(--sage-light)] text-[var(--color-primary)]'
+                  : 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]'
               }`}
             >
               {adding ? 'Added' : 'Add'}
