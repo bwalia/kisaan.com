@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
-import { Lora, Raleway } from "next/font/google";
+import { Bricolage_Grotesque, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const lora = Lora({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const raleway = Raleway({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-body",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Kisaan — Fresh produce, direct from farms",
   description:
-    "Browse organic produce from independent farms worldwide. Order direct, skip the middlemen, support sustainable farming.",
+    "Browse organic produce from independent farms. Order direct, skip the middlemen, support growers.",
 };
 
 export default function RootLayout({
@@ -28,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${lora.variable} ${raleway.variable}`}>
-      <body className={`${raleway.className} antialiased`}>
+    <html lang="en" className={`${bricolage.variable} ${sourceSans.variable}`}>
+      <body className={`${sourceSans.className} antialiased`}>
         {children}
       </body>
     </html>

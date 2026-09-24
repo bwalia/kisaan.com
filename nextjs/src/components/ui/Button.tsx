@@ -9,24 +9,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className = "", variant = "default", size = "default", loading, disabled, children, ...props }, ref) => {
     const base =
-      "inline-flex items-center justify-center gap-2 font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-xl cursor-pointer";
+      "inline-flex items-center justify-center gap-2 font-semibold transition-colors duration-180 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
     const v: Record<string, string> = {
-      default:
-        "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] focus-visible:ring-[var(--color-ring)]",
-      destructive:
-        "bg-[var(--color-destructive)] text-white hover:bg-red-800 focus-visible:ring-red-600",
-      outline:
-        "border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-foreground)] hover:bg-[var(--color-muted)] focus-visible:ring-[var(--color-ring)]",
-      secondary:
-        "bg-[var(--color-muted)] text-[var(--color-foreground)] hover:bg-[var(--color-border)] focus-visible:ring-[var(--color-ring)]",
-      ghost:
-        "text-[var(--color-foreground)] hover:bg-[var(--color-muted)] focus-visible:ring-[var(--color-ring)]",
-      link: "text-[var(--color-primary)] underline-offset-4 hover:underline p-0 h-auto",
-      success:
-        "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] focus-visible:ring-[var(--color-ring)]",
-      warning:
-        "bg-[var(--color-accent)] text-white hover:bg-[#854D0E] focus-visible:ring-[var(--color-accent)]",
+      default: "bg-[var(--field)] text-white hover:bg-[var(--field-dark)] focus-visible:ring-[var(--field)]",
+      destructive: "bg-[var(--tomato)] text-white hover:bg-[var(--tomato-dark)] focus-visible:ring-[var(--tomato)]",
+      outline: "border border-[var(--line)] bg-[var(--card)] text-[var(--ink)] hover:bg-[var(--limewash)] focus-visible:ring-[var(--field)]",
+      secondary: "bg-[var(--color-muted)] text-[var(--ink)] hover:bg-[var(--line)] focus-visible:ring-[var(--field)]",
+      ghost: "text-[var(--ink)] hover:bg-[var(--color-muted)] focus-visible:ring-[var(--field)]",
+      link: "text-[var(--field)] underline-offset-4 hover:underline p-0 h-auto",
+      success: "bg-[var(--field)] text-white hover:bg-[var(--field-dark)] focus-visible:ring-[var(--field)]",
+      warning: "bg-[var(--mustard)] text-[var(--ink)] hover:opacity-90 focus-visible:ring-[var(--mustard)]",
     };
 
     const s: Record<string, string> = {
@@ -41,6 +34,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={`${base} ${v[variant]} ${s[size]} ${className}`}
         ref={ref}
         disabled={disabled || loading}
+        style={variant === "default" || variant === "destructive" || variant === "success" ? { color: "#FFFFFF" } : undefined}
         {...props}
       >
         {loading && (

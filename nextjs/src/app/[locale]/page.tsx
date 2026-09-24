@@ -136,28 +136,30 @@ export default function Home() {
         resultCount={products.length}
       />
 
-      {/* Seller CTA — marketplace pattern */}
-      <section className="py-16 lg:py-20 bg-[var(--color-primary)]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
-          <h2 className="text-3xl sm:text-4xl text-white mb-4" style={{ color: "white" }}>
+      {/* Seller CTA — ink board */}
+      <section className="py-16 lg:py-20" style={{ background: "var(--ink)" }}>
+        <div className="container mx-auto max-w-2xl">
+          <h2 className="text-3xl sm:text-4xl mb-4" style={{ color: "#F7F8F4" }}>
             Sell on Kisaan
           </h2>
           <p
             className="mb-8 leading-relaxed"
-            style={{ maxWidth: "var(--measure)", color: "rgba(220, 252, 231, 0.95)" }}
+            style={{ maxWidth: "var(--measure)", color: "rgba(247,248,244,0.78)" }}
           >
-            Reach customers directly, set your own prices, and keep 80% of every sale. No setup fees, no hidden costs.
+            Reach customers directly, set your own prices, and keep 80% of every sale. No setup fees.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/register"
-              className="text-sm font-semibold bg-white text-[var(--color-primary)] px-6 py-3 rounded-xl hover:bg-green-50 no-underline transition-colors duration-200 inline-block cursor-pointer"
+              className="text-sm font-semibold px-6 py-3 no-underline transition-colors inline-block cursor-pointer"
+              style={{ background: "var(--tomato)", color: "#FFFFFF" }}
             >
               Start selling
             </Link>
             <Link
               href="/seller-guide"
-              className="text-sm font-semibold text-white border border-white/30 px-6 py-3 rounded-xl hover:bg-white/10 no-underline transition-colors duration-200 inline-block cursor-pointer"
+              className="text-sm font-semibold px-6 py-3 no-underline transition-colors inline-block cursor-pointer border border-[rgba(247,248,244,0.35)] hover:bg-white/10"
+              style={{ color: "#F7F8F4" }}
             >
               Learn more
             </Link>

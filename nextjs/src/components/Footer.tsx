@@ -11,17 +11,22 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[var(--color-border)] py-12 bg-[var(--color-background)]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="border-t border-[var(--line)] py-12 bg-[var(--limewash)]">
+      <div className="container mx-auto">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-8">
           <div className="max-w-xs">
             <p
               className="text-xl mb-2 m-0"
-              style={{ fontFamily: "var(--font-display)", fontWeight: 600, color: "var(--color-foreground)", maxWidth: "none" }}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 700,
+                color: "var(--ink)",
+                maxWidth: "none",
+              }}
             >
               Kisaan
             </p>
-            <p className="text-sm text-[var(--color-muted-foreground)] m-0 leading-relaxed">
+            <p className="text-sm text-[var(--muted)] m-0 leading-relaxed">
               Fresh produce from independent farms, delivered to your door.
             </p>
           </div>
@@ -30,15 +35,15 @@ export default function Footer() {
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] no-underline transition-colors duration-200 cursor-pointer"
+                className="text-sm text-[var(--muted)] hover:text-[var(--ink)] no-underline transition-colors cursor-pointer"
               >
                 {l.label}
               </Link>
             ))}
           </nav>
         </div>
-        <div className="border-t border-[var(--color-border)] pt-6">
-          <p className="text-xs text-[var(--color-muted-foreground)] m-0" style={{ maxWidth: "none" }}>
+        <div className="border-t border-[var(--line)] pt-6">
+          <p className="text-xs text-[var(--muted)] m-0" style={{ maxWidth: "none" }}>
             &copy; {new Date().getFullYear()} Kisaan
           </p>
         </div>

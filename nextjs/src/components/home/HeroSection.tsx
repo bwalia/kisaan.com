@@ -8,7 +8,7 @@ interface HeroSectionProps {
   searchLoading?: boolean;
 }
 
-/** Marketplace pattern: Hero (search-focused) — brand + one headline + search CTA on full-bleed farm visual */
+/** Mandi Ink — brand wordmark is the memorable moment; search is the job */
 const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = false }) => {
   const [query, setQuery] = React.useState('');
 
@@ -18,8 +18,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
   };
 
   return (
-    <section className="relative min-h-[78vh] sm:min-h-[85vh] flex items-end sm:items-center overflow-hidden">
-      {/* Full-bleed visual plane */}
+    <section className="relative min-h-[82vh] sm:min-h-[88vh] flex items-end overflow-hidden">
       <Image
         src="/hero-farmers-world.jpg"
         alt=""
@@ -33,48 +32,55 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onSearch, searchLoading = fal
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(105deg, rgba(20,83,45,0.92) 0%, rgba(21,128,61,0.72) 42%, rgba(20,83,45,0.35) 100%)',
+            'linear-gradient(180deg, rgba(28,36,24,0.35) 0%, rgba(28,36,24,0.55) 45%, rgba(28,36,24,0.92) 100%)',
         }}
       />
 
-      <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-        <div className="max-w-xl animate-fade-up">
+      <div className="relative z-10 w-full container mx-auto px-4 sm:px-6 lg:px-8 pb-14 sm:pb-20 pt-28">
+        <div className="max-w-2xl">
           <p
-            className="text-3xl sm:text-4xl mb-4 m-0"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 600, maxWidth: 'none', color: '#FFFFFF' }}
+            className="m-0 mb-3 leading-none"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
+              fontSize: 'clamp(3.5rem, 12vw, 7rem)',
+              letterSpacing: '-0.04em',
+              color: '#FFFFFF',
+              maxWidth: 'none',
+            }}
           >
             Kisaan
           </p>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-white mb-4 leading-[1.15]" style={{ color: 'white' }}>
-            Fresh from the farm to your table
+          <h1
+            className="text-2xl sm:text-3xl mb-3 leading-snug m-0"
+            style={{ fontFamily: 'var(--font-body)', fontWeight: 500, color: '#FFFFFF' }}
+          >
+            Fresh from the field. Sold by the farmer.
           </h1>
           <p
-            className="text-base sm:text-lg mb-8 leading-relaxed m-0"
-            style={{ maxWidth: 'var(--measure)', color: 'rgba(255,255,255,0.92)' }}
+            className="text-base sm:text-lg mb-8 m-0 leading-relaxed"
+            style={{ maxWidth: 'var(--measure)', color: 'rgba(247,248,244,0.88)' }}
           >
-            Organic produce from independent farms. Search, order direct, skip the middlemen.
+            Search independent farms for produce harvested to order — no middlemen.
           </p>
 
           <form onSubmit={handleSubmit} role="search" aria-label="Search products">
-            <div className="flex rounded-2xl bg-white shadow-[var(--shadow-soft)] overflow-hidden focus-within:ring-2 focus-within:ring-[var(--color-accent)] focus-within:ring-offset-2 focus-within:ring-offset-transparent transition-shadow duration-200">
-              <div className="flex-1 flex items-center pl-4 gap-2.5 min-w-0">
-                <svg className="w-5 h-5 text-[var(--color-muted-foreground)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" aria-hidden="true">
-                  <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="M21 21l-4.35-4.35" />
-                </svg>
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Tomatoes, eggs, honey…"
-                  className="flex-1 py-4 outline-none bg-transparent border-0 text-[var(--color-foreground)] min-w-0"
-                  style={{ boxShadow: 'none' }}
-                  aria-label="Search for produce"
-                />
-              </div>
+            <div className="flex overflow-hidden bg-[var(--chalk)] focus-within:ring-2 focus-within:ring-[var(--mustard)]">
+              <label className="sr-only" htmlFor="hero-search">Search for produce</label>
+              <input
+                id="hero-search"
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Tomatoes, eggs, honey…"
+                className="flex-1 py-4 px-4 outline-none bg-transparent border-0 text-[var(--ink)] min-w-0 rounded-none"
+                style={{ boxShadow: 'none', borderRadius: 0 }}
+              />
               <button
                 type="submit"
                 disabled={searchLoading}
-                className="bg-[var(--color-accent)] hover:bg-[#854D0E] text-white px-6 sm:px-8 text-sm font-semibold transition-colors duration-200 cursor-pointer flex-shrink-0"
+                className="bg-[var(--tomato)] hover:bg-[var(--tomato-dark)] px-6 sm:px-8 text-sm font-semibold transition-colors duration-180 cursor-pointer flex-shrink-0"
+                style={{ color: '#FFFFFF', borderRadius: 0 }}
               >
                 {searchLoading ? (
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" aria-hidden="true" />

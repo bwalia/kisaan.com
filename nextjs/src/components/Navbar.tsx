@@ -12,13 +12,19 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-[var(--color-background)]/95 backdrop-blur-sm border-b border-[var(--color-border)]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      <nav className="sticky top-0 z-50 bg-[var(--limewash)] border-b border-[var(--line)]">
+        <div className="container mx-auto">
+          <div className="flex justify-between items-center h-14">
             <Link
               href="/"
               className="no-underline"
-              style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", fontWeight: 600, color: "var(--color-foreground)" }}
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "1.35rem",
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                color: "var(--ink)",
+              }}
             >
               Kisaan
             </Link>
@@ -32,7 +38,7 @@ export default function Navbar() {
                 <Link
                   key={item.l}
                   href={item.h}
-                  className="text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] text-sm font-medium no-underline transition-colors duration-200 cursor-pointer"
+                  className="text-[var(--muted)] hover:text-[var(--ink)] text-sm font-medium no-underline transition-colors cursor-pointer"
                 >
                   {item.l}
                 </Link>
@@ -42,14 +48,17 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <Link
                 href="/cart"
-                className="relative p-2 text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] no-underline transition-colors duration-200 cursor-pointer"
+                className="relative p-2 text-[var(--muted)] hover:text-[var(--ink)] no-underline transition-colors cursor-pointer"
                 aria-label={itemCount > 0 ? `Cart, ${itemCount} items` : "Cart"}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 {itemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-[var(--color-primary)] text-white text-[10px] min-w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold">
+                  <span
+                    className="absolute -top-0.5 -right-0.5 text-[10px] min-w-[18px] h-[18px] flex items-center justify-center font-bold"
+                    style={{ background: "var(--tomato)", color: "#FFFFFF" }}
+                  >
                     {itemCount}
                   </span>
                 )}
@@ -57,11 +66,11 @@ export default function Navbar() {
 
               {user ? (
                 <div className="hidden sm:flex items-center gap-3">
-                  <span className="text-sm text-[var(--color-muted-foreground)]">{user.name}</span>
+                  <span className="text-sm text-[var(--muted)]">{user.name}</span>
                   <button
                     type="button"
                     onClick={logout}
-                    className="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-destructive)] cursor-pointer transition-colors duration-200"
+                    className="text-sm text-[var(--muted)] hover:text-[var(--tomato)] cursor-pointer transition-colors"
                   >
                     Sign out
                   </button>
@@ -70,14 +79,14 @@ export default function Navbar() {
                 <div className="hidden sm:flex items-center gap-2">
                   <Link
                     href="/login"
-                    className="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] font-medium no-underline cursor-pointer"
+                    className="text-sm text-[var(--muted)] hover:text-[var(--ink)] font-medium no-underline cursor-pointer"
                   >
                     Sign in
                   </Link>
                   <Link
                     href="/register"
-                    className="text-sm font-semibold bg-[var(--color-primary)] px-4 py-2 rounded-xl hover:bg-[var(--color-primary-dark)] no-underline transition-colors duration-200 cursor-pointer"
-                    style={{ color: '#FFFFFF' }}
+                    className="text-sm font-semibold px-3.5 py-1.5 no-underline transition-colors cursor-pointer"
+                    style={{ background: "var(--tomato)", color: "#FFFFFF" }}
                   >
                     List your farm
                   </Link>
@@ -87,7 +96,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setOpen(!open)}
-                className="md:hidden p-2 text-[var(--color-muted-foreground)] cursor-pointer"
+                className="md:hidden p-2 text-[var(--muted)] cursor-pointer"
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
               >
@@ -106,9 +115,9 @@ export default function Navbar() {
 
       {open && (
         <div className="md:hidden fixed inset-0 z-[60]" onClick={() => setOpen(false)}>
-          <div className="absolute inset-0 bg-black/25" />
+          <div className="absolute inset-0 bg-black/30" />
           <div
-            className="absolute top-16 left-0 right-0 bg-[var(--color-card)] border-b border-[var(--color-border)] shadow-lg p-5"
+            className="absolute top-14 left-0 right-0 bg-[var(--chalk)] border-b border-[var(--line)] p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col gap-1">
@@ -122,26 +131,26 @@ export default function Navbar() {
                   key={x.l}
                   href={x.h}
                   onClick={() => setOpen(false)}
-                  className="px-3 py-2.5 text-[var(--color-foreground)] hover:bg-[var(--color-muted)] rounded-xl text-sm font-medium no-underline cursor-pointer"
+                  className="px-3 py-2.5 text-[var(--ink)] hover:bg-[var(--limewash)] text-sm font-medium no-underline cursor-pointer"
                 >
                   {x.l}
                 </Link>
               ))}
             </div>
             {!user && (
-              <div className="border-t border-[var(--color-border)] mt-3 pt-3 flex gap-2">
+              <div className="border-t border-[var(--line)] mt-3 pt-3 flex gap-2">
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="flex-1 text-center text-sm font-medium py-2.5 border border-[var(--color-border)] rounded-xl text-[var(--color-foreground)] no-underline cursor-pointer"
+                  className="flex-1 text-center text-sm font-medium py-2.5 border border-[var(--line)] text-[var(--ink)] no-underline cursor-pointer"
                 >
                   Sign in
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setOpen(false)}
-                  className="flex-1 text-center text-sm font-semibold py-2.5 bg-[var(--color-primary)] rounded-xl no-underline cursor-pointer"
-                  style={{ color: '#FFFFFF' }}
+                  className="flex-1 text-center text-sm font-semibold py-2.5 no-underline cursor-pointer"
+                  style={{ background: "var(--tomato)", color: "#FFFFFF" }}
                 >
                   List your farm
                 </Link>

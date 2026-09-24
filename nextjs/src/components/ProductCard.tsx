@@ -20,7 +20,7 @@ interface ProductCardProps {
   unit?: string;
 }
 
-const CARD_BG = ['#DCFCE7', '#FEF3C7', '#E0F2FE', '#F5F5DC', '#FFEDD5', '#CCFBF1'];
+const CARD_BG = ['#E8EDE4', '#F0E6D8', '#E4EAF0', '#ECE8DF', '#F0E4DE', '#E2EBE6'];
 
 export default function ProductCard({
   id, name, price, currency = '€', category, rating, discount, unit = 'kg',
@@ -39,14 +39,13 @@ export default function ProductCard({
 
   return (
     <Link href={`/products/${id}`} className="no-underline block group">
-      <article className="bg-[var(--color-card)] rounded-2xl border border-[var(--color-border)] hover:border-[var(--color-secondary)] hover:shadow-[var(--shadow-soft)] transition-all duration-200 overflow-hidden">
+      <article className="bg-[var(--card)] border border-[var(--line)] hover:border-[var(--ink)] transition-colors duration-180 overflow-hidden">
         <div
           className="aspect-square flex items-center justify-center relative"
           style={{ background: CARD_BG[idx % CARD_BG.length] }}
         >
-          {/* Abstract produce mark — no emoji icons */}
           <svg
-            className="w-14 h-14 text-[var(--color-primary)] opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-200"
+            className="w-12 h-12 text-[var(--field)] opacity-60 group-hover:opacity-90 transition-opacity duration-180"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -57,7 +56,10 @@ export default function ProductCard({
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 12v9" />
           </svg>
           {discount != null && discount > 0 && (
-            <span className="absolute top-2.5 left-2.5 text-[11px] font-bold bg-[var(--color-accent)] text-white px-2 py-0.5 rounded-lg">
+            <span
+              className="absolute top-2 left-2 text-[11px] font-bold px-2 py-0.5"
+              style={{ background: "var(--tomato)", color: "#FFFFFF" }}
+            >
               -{discount}%
             </span>
           )}
@@ -65,37 +67,37 @@ export default function ProductCard({
 
         <div className="p-3.5">
           {category && (
-            <p className="text-[11px] font-semibold text-[var(--color-primary)] mb-1 m-0" style={{ maxWidth: 'none' }}>
+            <p className="text-[11px] font-semibold text-[var(--field)] mb-1 m-0" style={{ maxWidth: 'none' }}>
               {category}
             </p>
           )}
           <h3
-            className="text-sm font-medium text-[var(--color-foreground)] leading-snug mb-2 line-clamp-2"
+            className="text-sm font-medium text-[var(--ink)] leading-snug mb-2 line-clamp-2"
             style={{ fontFamily: 'var(--font-body)' }}
           >
             {name}
           </h3>
           {rating !== undefined && (
-            <p className="text-xs text-[var(--color-muted-foreground)] mb-2 m-0" style={{ maxWidth: 'none' }}>
+            <p className="text-xs text-[var(--muted)] mb-2 m-0" style={{ maxWidth: 'none' }}>
               {rating.toFixed(1)} rating
             </p>
           )}
           <div className="flex items-end justify-between gap-2">
             <div>
-              <span className="text-base font-bold text-[var(--color-foreground)]">
+              <span className="text-base font-bold text-[var(--ink)]">
                 {currency}{price.toFixed(2)}
               </span>
-              <span className="text-[11px] text-[var(--color-muted-foreground)] block">per {unit}</span>
+              <span className="text-[11px] text-[var(--muted)] block">per {unit}</span>
             </div>
             <button
               type="button"
               onClick={handleAdd}
               disabled={adding}
-              className={`text-xs font-semibold px-3 py-1.5 rounded-xl cursor-pointer transition-colors duration-200 ${
-                adding
-                  ? 'bg-[var(--sage-light)] text-[var(--color-primary)]'
-                  : 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]'
-              }`}
+              className="text-xs font-semibold px-3 py-1.5 cursor-pointer transition-colors duration-180"
+              style={{
+                background: adding ? 'var(--sage-light)' : 'var(--field)',
+                color: adding ? 'var(--field)' : '#FFFFFF',
+              }}
             >
               {adding ? 'Added' : 'Add'}
             </button>
