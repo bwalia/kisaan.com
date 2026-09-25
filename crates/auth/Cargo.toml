@@ -1,0 +1,14 @@
+[package]
+name = "kisaan-auth"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+argon2 = { workspace = true }
+chrono = { workspace = true }
+jsonwebtoken = { workspace = true }
+kisaan-common = { path = "../common" }
+serde = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }

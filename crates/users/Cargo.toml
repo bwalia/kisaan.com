@@ -1,0 +1,14 @@
+[package]
+name = "kisaan-users"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+chrono = { workspace = true }
+kisaan-auth = { path = "../auth" }
+kisaan-common = { path = "../common" }
+serde = { workspace = true }
+sqlx = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }

@@ -1,0 +1,24 @@
+[package]
+name = "kisaan-api"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "kisaan-api"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+axum = { workspace = true }
+kisaan-auth = { path = "../../crates/auth" }
+kisaan-common = { path = "../../crates/common" }
+kisaan-countries = { path = "../../crates/countries" }
+kisaan-db = { path = "../../crates/db" }
+kisaan-users = { path = "../../crates/users" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sqlx = { workspace = true }
+tokio = { workspace = true }
+tower-http = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }

@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: kisaan
+          POSTGRES_PASSWORD: kisaan
+          POSTGRES_DB: kisaan
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U kisaan -d kisaan"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://kisaan:kisaan@localhost:5432/kisaan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: apps/web/yarn.lock
+      - run: yarn install --frozen-lockfile || yarn install
+      - run: yarn tsc --noEmit
+      - run: yarn build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8081

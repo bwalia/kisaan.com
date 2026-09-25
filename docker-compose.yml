@@ -1,0 +1,47 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kisaan
+      POSTGRES_PASSWORD: kisaan
+      POSTGRES_DB: kisaan
+    ports:
+      - "5432:5432"
+    volumes:
+      - kisaan_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kisaan -d kisaan"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    environment:
+      DATABASE_URL: postgres://kisaan:kisaan@postgres:5432/kisaan
+      JWT_SECRET: dev-only-change-me
+      API_BIND: 0.0.0.0:8081
+      RUST_LOG: kisaan_api=debug,tower_http=info
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8081
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8081
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  kisaan_pg:
