@@ -6,6 +6,35 @@ use uuid::Uuid;
 
 pub type UserId = Uuid;
 pub type ShopId = Uuid;
+pub type ProductId = Uuid;
+pub type VariantId = Uuid;
+
+/// Map URL market keys (`uk`) and aliases to ISO country codes stored in Postgres (`GB`).
+pub fn normalize_country_code(input: &str) -> Option<String> {
+    let s = input.trim().to_ascii_uppercase();
+    match s.as_str() {
+        "UK" | "GB" => Some("GB".into()),
+        "IN" => Some("IN".into()),
+        "US" => Some("US".into()),
+        "IE" => Some("IE".into()),
+        "DE" => Some("DE".into()),
+        "FR" => Some("FR".into()),
+        "CA" => Some("CA".into()),
+        "AU" => Some("AU".into()),
+        other if other.len() == 2 && other.chars().all(|c| c.is_ascii_alphabetic()) => {
+            Some(other.to_string())
+        }
+        _ => None,
+    }
+}
+
+/// Prefer friendly market keys in URLs (GB → uk).
+pub fn country_to_market_key(country_code: &str) -> String {
+    match country_code.trim().to_ascii_uppercase().as_str() {
+        "GB" => "uk".into(),
+        other => other.to_ascii_lowercase(),
+    }
+}
 
 /// Monetary amount in minor units (e.g. 1299 GBP = £12.99). Never use f64 for money.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -55,5 +84,12 @@ mod tests {
             currency: CurrencyCode::new("GBP").unwrap(),
         };
         assert_eq!(m.currency.as_str(), "GBP");
+    }
+
+    #[test]
+    fn country_aliases() {
+        assert_eq!(normalize_country_code("uk").as_deref(), Some("GB"));
+        assert_eq!(normalize_country_code("GB").as_deref(), Some("GB"));
+        assert_eq!(country_to_market_key("GB"), "uk");
     }
 }

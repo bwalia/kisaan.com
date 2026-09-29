@@ -6,6 +6,7 @@ members = [
     "crates/auth",
     "crates/users",
     "crates/countries",
+    "crates/shops",
     "crates/db",
 ]
 

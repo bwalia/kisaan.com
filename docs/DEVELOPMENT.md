@@ -54,12 +54,15 @@ yarn dev
 
 Open http://localhost:3000/uk
 
+Seller dashboard: http://localhost:3000/uk/seller
+
 ## Useful curls
 
 ```bash
 curl -s localhost:8081/healthz
 curl -s localhost:8081/readyz
 curl -s localhost:8081/api/v1/countries
+curl -s localhost:8081/api/v1/countries/uk/shops
 curl -s -X POST localhost:8081/api/v1/auth/register \
   -H 'content-type: application/json' \
   -d '{"email":"you@example.com","password":"secret123","name":"You"}'

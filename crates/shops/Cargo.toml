@@ -1,0 +1,12 @@
+[package]
+name = "kisaan-shops"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+chrono = { workspace = true }
+kisaan-common = { path = "../common" }
+serde = { workspace = true }
+sqlx = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }

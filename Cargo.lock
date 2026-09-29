@@ -831,6 +831,7 @@ dependencies = [
  "kisaan-common",
  "kisaan-countries",
  "kisaan-db",
+ "kisaan-shops",
  "kisaan-users",
  "serde",
  "serde_json",
@@ -839,6 +840,7 @@ dependencies = [
  "tower-http",
  "tracing",
  "tracing-subscriber",
+ "uuid",
 ]
 
 [[package]]
@@ -881,6 +883,18 @@ dependencies = [
  "anyhow",
  "sqlx",
  "tracing",
+]
+
+[[package]]
+name = "kisaan-shops"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "kisaan-common",
+ "serde",
+ "sqlx",
+ "thiserror",
+ "uuid",
 ]
 
 [[package]]

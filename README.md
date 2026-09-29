@@ -1,15 +1,15 @@
 # Kisaan.com
 
-Global **farmer-first grocery marketplace**. Consumers buy from independent farmer shops under one platform. More of the customer’s money reaches the grower.
+Global **farmer-first grocery marketplace**. Kisaan is the online warehouse; each seller runs a branded sub-shop with its own catalogue and currency.
 
-## Stack (Phase 1)
+## Stack (Phase 2)
 
 | Layer | Choice |
 |-------|--------|
-| Web | Next.js App Router (`apps/web`) |
+| Web | Next.js App Router (`apps/web`) — `/uk`, `/in`, `/us` markets |
 | API | Rust / Axum (`apps/api`) |
 | DB | **PostgreSQL 16** (primary). NebulaDB deferred for semantic search / AI. |
-| Domain | Shop is a first-class aggregate |
+| Domain | Shop is a first-class sub-shop aggregate (`crates/shops`) |
 
 ## Quick start
 
@@ -26,22 +26,25 @@ cargo run -p kisaan-api
 cd apps/web && cp .env.local.example .env.local && yarn dev
 ```
 
-- Web: http://localhost:3000 → redirects to `/uk`
+- Web: http://localhost:3000 → `/uk`
+- Shops: http://localhost:3000/uk/shops
+- Seller: http://localhost:3000/uk/seller
 - API: http://localhost:8081/healthz
 - Countries: http://localhost:8081/api/v1/countries
-- OpenAPI stub: http://localhost:8081/openapi.json
 
 ```bash
 chmod +x scripts/seed.sh && ./scripts/seed.sh
-# Demo: admin@kisaan.local / kisaan-demo
+# Admin:   admin@kisaan.local / kisaan-demo
+# Farmers: farmer.uk@kisaan.local (and .in / .us) / kisaan-demo
+# Demo shops: /uk/shops/cotswold-greens, /in/shops/punjab-harvest, /us/shops/valley-organics
 ```
 
 ## Repo layout
 
 ```text
-apps/web          Next.js
+apps/web          Next.js country storefront + seller dashboard
 apps/api          Axum binary
-crates/           common, auth, users, countries, db
+crates/           common, auth, users, countries, shops, db
 migrations/       SQLx SQL migrations
 docker/           Dockerfiles
 docs/             Architecture & development
@@ -55,8 +58,8 @@ docs/             Architecture & development
 
 ## Phases
 
-1. **Foundation** (this) — monorepo, Postgres, auth stubs, country config, homepage  
-2. Marketplace — farmers, shops, products, search  
+1. **Foundation** — monorepo, Postgres, auth stubs, country config, homepage  
+2. **Marketplace** (this) — multi-country shops, products, seller dashboard  
 3. Commerce — cart, multi-farmer checkout, payments  
 4–8 — fulfilment, farmer platform, AI, global, scale  
 
